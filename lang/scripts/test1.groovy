@@ -1,2 +1,2 @@
-source "/home/caesar/here.json"
+source "json" from "/home/caesar/here.json"
 export "TEST"

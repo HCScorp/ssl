@@ -13,4 +13,12 @@ public abstract class SensorData<V> {
     @JsonProperty("value")
     private V value;
 
+    @Override
+    public String toString() {
+        return "SensorData{" +
+                "time=" + time +
+                ", sensor='" + sensor + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

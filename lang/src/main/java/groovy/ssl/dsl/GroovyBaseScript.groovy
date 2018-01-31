@@ -3,16 +3,21 @@ package ssl.dsl;
 abstract class GroovyBaseScript extends Script {
 
     def source(String name) {
-        [source: {((GroovySSLBinding)this.getBinding()).getGrovySSLModel().createSource(name) }]
+        println "SOURCE"
+        [from: { address
+            -> ((GroovySSLBinding)this.getBinding()).getGrovySSLModel().createSource(name, address)
+        }]
+
     }
 
 
     def export(String name) {
+        println "EXPORT"
         println(((GroovySSLBinding) this.getBinding()).getGrovySSLModel().generateCode(name).toString())
     }
 
 
-    abstract void scriptBody();
+    abstract void scriptBody()
     int count = 0
 
     def  run() {
