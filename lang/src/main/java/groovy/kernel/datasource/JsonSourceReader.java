@@ -9,14 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class JsonSourceReader<V, T extends SensorDataList> implements SourceReader {
+public class JsonSourceReader implements SourceReader {
 
     private ObjectMapper mapper = new ObjectMapper();
 
     public SensorDataList readContent(String address) throws IOException {
-        System.out.println("Read the content of the adress.");
         UrlValidator urlValidator = new UrlValidator();
-        Object input = null;
         if (urlValidator.isValid(address)) {
             return mapper.readValue(new URL(address), SimpleListSensorData.class);
         } else {

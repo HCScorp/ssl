@@ -27,12 +27,14 @@ class GroovySensorDSL {
             methodDefinitionAllowed = true
             //empty white list => forbid imports
             importsWhitelist = [
-                    'java.lang.*'
+                    'java.lang.*',
+                    'org.apache.commons.*',
+                    'com.fasterxml.*'
             ]
             staticImportsWhitelist = []
             staticStarImportsWhitelist= []
             //language tokens disallowed
-//			tokensBlacklist= []
+            //tokensBlacklist= []
             //language tokens allowed
             tokensWhitelist= []
             //types allowed to be used  (including primitive types)

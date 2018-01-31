@@ -1,6 +1,7 @@
 package ssl.dsl;
 
 import groovy.lang.Binding;
+import kernel.datasource.DataSourceFactory;
 import kernel.datasource.JsonSourceReader;
 import kernel.entity.SensorDataList;
 
@@ -12,19 +13,21 @@ public class GroovySSLModel {
 
     private Binding binding;
 
-    SensorDataList sensorDataList;
+    private SensorDataList sensorDataList;
+    private DataSourceFactory dataSourceFactory = new DataSourceFactory();
 
-    GroovySSLModel(Binding binding){
+
+    GroovySSLModel(Binding binding) {
         this.binding = binding;
     }
 
 
-    public void createSource(String adress) throws IOException {
-        // simple have to be combined with abstract factory.
-        JsonSourceReader jsonSourceReader = new JsonSourceReader();
-        sensorDataList = jsonSourceReader.readContent(adress);
+    public void createSource(String type, String address) throws IOException {
+        System.out.println("Create source");
+        sensorDataList = DataSourceFactory.getDataSource(type).readContent(address);
     }
-    Object generateCode(String name){
+
+    Object generateCode(String name) {
         System.out.println("Generate the code ....");
         ArrayList<Integer> a = new ArrayList<>();
         a.add(1);
