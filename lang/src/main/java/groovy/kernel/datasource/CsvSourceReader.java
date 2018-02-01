@@ -1,6 +1,6 @@
 package kernel.datasource;
+
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import kernel.entity.SensorDataList;
 import kernel.entity.SimpleListSensorData;

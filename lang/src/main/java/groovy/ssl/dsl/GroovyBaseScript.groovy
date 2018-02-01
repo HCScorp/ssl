@@ -2,19 +2,30 @@ package ssl.dsl;
 
 abstract class GroovyBaseScript extends Script {
 
-    def source(String name) {
-        println("source ")
+
+    def source(String type) {
+
         [from: { address ->
-            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().createSource(name, address)
+            [name: { text ->
+                ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().createSource(type, address, text)
+            }]
+        }]
+
+    }
+
+    def make_noise(int bound) {
+        [name: { name ->
+            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().putNoise(bound, name)
+
         }]
     }
 
-    def make_noise(int bound){
-        ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().putNoise(bound)
-    }
+    def shift(String date) {
+        [name: {name ->
+            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().changeOffset(date, name)
 
-    def shitf(String date){
-        ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().changeOffset(date)
+        }
+        ]
     }
 
     def export(String name) {
