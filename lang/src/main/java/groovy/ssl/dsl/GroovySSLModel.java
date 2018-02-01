@@ -7,9 +7,11 @@ import kernel.entity.SensorData;
 import kernel.entity.SensorDataList;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class GroovySSLModel {
 
@@ -40,8 +42,23 @@ public class GroovySSLModel {
         });
     }
 
+    public void changeOffset(String dateFrom) throws ParseException {
+        DateFormat formatter;
+        formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = formatter.parse(dateFrom);
+        java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
+        Calendar c = Calendar.getInstance();
+        c.setTime(timeStampDate);
+        sensorDataList.getSensorDataList().forEach(sensor -> {
+            c.add(Calendar.MINUTE, 1);
+            timeStampDate.setTime(c.getTime().getTime());
+            ((SensorData) sensor).setTime(timeStampDate.getTime());
+        });
+    }
+
 
     Object generateCode(String name) {
+        System.out.println(sensorDataList);
         return null;
     }
 }

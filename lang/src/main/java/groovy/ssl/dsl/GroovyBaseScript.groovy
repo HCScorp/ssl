@@ -3,16 +3,22 @@ package ssl.dsl;
 abstract class GroovyBaseScript extends Script {
 
     def source(String name) {
-        [from: { address
-            -> ((GroovySSLBinding)this.getBinding()).getGrovySSLModel().createSource(name, address)
-                ["make_noise": { noise ->
-                    ((GroovySSLBinding)this.getBinding()).getGrovySSLModel().putNoise(noise)}
-                ]}]
-
+        println("source ")
+        [from: { address ->
+            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().createSource(name, address)
+        }]
     }
 
+    def make_noise(int bound){
+        ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().putNoise(bound)
+    }
+
+    def shitf(String date){
+        ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().changeOffset(date)
+    }
 
     def export(String name) {
+        println "Export the code."
         println(((GroovySSLBinding) this.getBinding()).getGrovySSLModel().generateCode(name).toString())
     }
 
@@ -20,13 +26,13 @@ abstract class GroovyBaseScript extends Script {
     abstract void scriptBody()
     int count = 0
 
-    def  run() {
-            if(count == 0) {
-                count++
-                scriptBody()
-            } else {
-                println( "Run method is disabled");
-            }
+    def run() {
+        if (count == 0) {
+            count++
+            scriptBody()
+        } else {
+            println("Run method is disabled");
         }
     }
+}
 
