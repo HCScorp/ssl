@@ -3,16 +3,16 @@ package ssl.dsl;
 abstract class GroovyBaseScript extends Script {
 
     def source(String name) {
-        println "SOURCE"
         [from: { address
             -> ((GroovySSLBinding)this.getBinding()).getGrovySSLModel().createSource(name, address)
-        }]
+                ["make_noise": { noise ->
+                    ((GroovySSLBinding)this.getBinding()).getGrovySSLModel().putNoise(noise)}
+                ]}]
 
     }
 
 
     def export(String name) {
-        println "EXPORT"
         println(((GroovySSLBinding) this.getBinding()).getGrovySSLModel().generateCode(name).toString())
     }
 

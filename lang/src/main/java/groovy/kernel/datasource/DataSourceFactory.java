@@ -9,9 +9,10 @@ public class DataSourceFactory {
     static {
         instances = new HashMap<>();
         instances.put("json", new JsonSourceReader());
+        instances.put("csv", new CsvSourceReader());
     }
 
-    public static <T extends SourceReader> T getDataSource(String source){
+    public static <T extends SourceReader> T getDataSource(String source) {
         return (T) instances.get(source);
     }
 

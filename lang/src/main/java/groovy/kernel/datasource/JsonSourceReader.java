@@ -14,6 +14,7 @@ public class JsonSourceReader implements SourceReader {
     private ObjectMapper mapper = new ObjectMapper();
 
     public SensorDataList readContent(String address) throws IOException {
+
         UrlValidator urlValidator = new UrlValidator();
         if (urlValidator.isValid(address)) {
             return mapper.readValue(new URL(address), SimpleListSensorData.class);

@@ -1,9 +1,23 @@
 package kernel.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
-public abstract class SensorDataList<V> {
+public class SensorDataList<V> {
 
+    public SensorDataList() {
+    }
+
+    @JsonProperty("data")
     List<SensorData<V>> sensorDataList;
+
+    public List<SensorData<V>> getSensorDataList() {
+        return sensorDataList;
+    }
+
+    public void setSensorDataList(List<SensorData<V>> sensorDataList) {
+        this.sensorDataList = sensorDataList;
+    }
 
 }
