@@ -16,14 +16,12 @@ abstract class GroovyBaseScript extends Script {
     def make_noise(int bound) {
         [name: { name ->
             ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().putNoise(bound, name)
-
         }]
     }
 
     def shift(String date) {
         [name: {name ->
             ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().changeOffset(date, name)
-
         }
         ]
     }
@@ -33,6 +31,12 @@ abstract class GroovyBaseScript extends Script {
         println(((GroovySSLBinding) this.getBinding()).getGrovySSLModel().generateCode(name).toString())
     }
 
+
+    def create(String name) {
+        ["with_law" : { law ->
+
+        }]
+    }
 
     abstract void scriptBody()
     int count = 0
