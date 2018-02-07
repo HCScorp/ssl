@@ -57,7 +57,9 @@ LAW.FUNCTION _variable.string_ {
 ///////////
 // Sensors
 
-_source.file_ FILE _file_ [with LINEAR_INTERPOLATION [RESTRICTED_TO _interval_ || ONLY_POSITIVE || ONLY_NEGATIVE]]
+_enum.header_ TIME || VALUE || NAME
+
+_source.file_ FILE _file_(, COLUMN _variable.number_ || string AS _enum.header_){3} [with LINEAR_INTERPOLATION [RESTRICTED_TO _interval_ || ONLY_POSITIVE || ONLY_NEGATIVE]]
 _source.law_ LAW _ref.law_
 
 SENSOR _variable.string_ {

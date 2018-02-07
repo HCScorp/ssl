@@ -37,7 +37,7 @@ LAW FUNCTION simpleCarre {
 // Sensors
 
 SENSOR capteurNombreVoiture {
-	SOURCE from FILE dataCar.json with LINEAR_INTERPOLATION [restricted to [-1, 1], ONLY POSITIVE, ONLY NEGATIVE, etc..]))
+	SOURCE from FILE dataCar.json, COLUMN 1 AS time, COLUMN 3 AS value, COLUMN 5 AS name [with LINEAR_INTERPOLATION [restricted to [-1, 1] || ONLY_POSITIVE || ONLY_NEGATIVE || [0,] || [,0] ]]
 	NOISE [-8,12] ou 10 (pour dire +-10) (dans le cas des chaines de markov on peut mettre du bruit mais entre -1 et 1 et qui faussera la valeur de changement d'état ? ou alors qui changera la valeur de la cellule de la chaine de markov mais faut s'assurer que c'est bien du meme type)
 	OFFSET RUN_AS_TODAY ou "10/12/2018" ou OFFSET -1000000 (appliqué sur tous les timestamp, si un timestamp est trop petit ou trop grand, on peut toujours soit prendre la valeur min (0) ou max, ou alors ignored la valeur, ou juste sortir une erreur)
 }
