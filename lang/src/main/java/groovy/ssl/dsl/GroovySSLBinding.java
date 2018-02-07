@@ -34,6 +34,7 @@ public class GroovySSLBinding extends Binding {
     }
 
     public Object getVariable(String name) {
+        System.out.println("get Variable == " + name);
         return super.getVariable(name);
     }
 

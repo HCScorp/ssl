@@ -26,7 +26,8 @@ public class GroovySSLModel {
     }
 
 
-    public void createSource(String type, String address, String name) throws IOException {
+    public void createSource(String name, String address) throws IOException {
+        String type = address.split(".")[1];
         sensorDataList.put(name, DataSourceFactory.getDataSource(type).readContent(address));
     }
 

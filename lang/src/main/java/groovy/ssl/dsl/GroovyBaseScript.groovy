@@ -1,42 +1,26 @@
-package ssl.dsl;
+package ssl.dsl
+
+import ssl.dsl.SSLBlock.MarkovBlock
+import ssl.dsl.SSLBlock.SensorBlock;
 
 abstract class GroovyBaseScript extends Script {
 
-
-    def source(String type) {
-
-        [from: { address ->
-            [name: { text ->
-                ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().createSource(type, address, text)
-            }]
-        }]
-
-    }
-
-    def make_noise(int bound) {
-        [name: { name ->
-            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().putNoise(bound, name)
-        }]
-    }
-
-    def shift(String date) {
-        [name: {name ->
-            ((GroovySSLBinding) this.getBinding()).getGrovySSLModel().changeOffset(date, name)
-        }
-        ]
-    }
-
-    def export(String name) {
-        println "Export the code."
-        println(((GroovySSLBinding) this.getBinding()).getGrovySSLModel().generateCode(name).toString())
+    def sensor(name, Closure closure){
+        println("sensor")
+        SensorBlock block = new SensorBlock((GroovySSLBinding) this.binding, name)
+        closure.delegate = block
+        closure.resolveStrategy = Closure.DELEGATE_FIRST
+        closure()
     }
 
 
-    def create(String name) {
-        ["with_law" : { law ->
-
-        }]
+    def markov_law(name, Closure closure){
+        MarkovBlock markovBlock = new MarkovBlock((GroovySSLBinding) this.binding, name)
+        closure.delegate = markovBlock
+        closure.resolveStrategy =Closure.DELEGATE_FIRST
+        closure()
     }
+
 
     abstract void scriptBody()
     int count = 0
