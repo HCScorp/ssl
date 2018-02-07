@@ -1,8 +1,6 @@
 package ssl.dsl;
 
 import groovy.lang.Binding;
-import kernel.datasource.DataSourceFactory;
-import kernel.datasource.JsonSourceReader;
 import kernel.entity.SensorData;
 import kernel.entity.SensorDataList;
 
@@ -13,22 +11,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class GroovySSLModel {
+public class SSLModel { // implements ISSLModel {
 
     private Binding binding;
 
     private Map<String, SensorDataList> sensorDataList;
-    private DataSourceFactory dataSourceFactory = new DataSourceFactory();
 
-    GroovySSLModel(Binding binding) {
+    SSLModel(Binding binding) {
         sensorDataList = new HashMap<>();
         this.binding = binding;
     }
 
 
     public void createSource(String type, String address, String name) throws IOException {
-        sensorDataList.put(name, DataSourceFactory.getDataSource(type).readContent(address));
+//        sensorDataList.put(name, DataSourceFactory.getDataSource(type).readContent(address));
     }
+
+    // create sensor string
+    // set noise (string sensor)
 
     // TODO : have to be changed : need to put value type in the dsl ?
     public void putNoise(int boundary, String name) throws Exception {

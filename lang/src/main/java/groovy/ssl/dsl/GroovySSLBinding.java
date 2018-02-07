@@ -9,7 +9,7 @@ public class GroovySSLBinding extends Binding {
 
     private Script script;
 
-    private GroovySSLModel model;
+    private SSLModel model;
 
     public GroovySSLBinding() {
         super();
@@ -29,7 +29,7 @@ public class GroovySSLBinding extends Binding {
         this.script = script;
     }
 
-    public void setGrovySSLModel(GroovySSLModel model) {
+    public void setGrovySSLModel(SSLModel model) {
         this.model = model;
     }
 
@@ -41,7 +41,7 @@ public class GroovySSLBinding extends Binding {
         super.setVariable(name, value);
     }
 
-    public GroovySSLModel getGrovySSLModel() {
+    public SSLModel getGrovySSLModel() {
         return this.model;
     }
 

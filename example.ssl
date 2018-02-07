@@ -1,50 +1,66 @@
-RANDOM_LAW temperatureNormale {
-	VALUE [18, 24]
-	FREQUENCY [1m, 2m] ou 10ms ou 5h
+///////////
+// Laws
+
+LAW RANDOM temperatureInterval {
+	VALUES in INTERVAL [18, 24]
+	FREQUENCY [90s, 140s]
 }
 
-MARKOV_LAW lumiDehors {
+LAW RANDOM temperatureEnsemble {
+	VALUES in SET {18, 12, 42, 24}
+	FREQUENCY 5m
+}
+
+LAW RANDOM presenceCoca {
+	VALUES in SET {"yep", "nop"}
+	FREQUENCY 24h
+}
+
+LAW MARKOV lumiDehors {
 	sunny → 0.1 → rainy
 	sunny → 0.9 → sunny
 	rainy → 0.5 → sunny
 	rainy → 0.5 → rainy
 }
 
-FUNCTION_LAW poly2 {
+LAW FUNCTION poly2 { // x is the timestamp, or time of measurement
 	x < 0.22 ⇒ 0
 	x < 2.28 ⇒ |-2x²+5x-1|
 	x > 2.27 ⇒ 0
 }
 
-FUNCTION_LAW simpleCarre {
+LAW FUNCTION simpleCarre {
 	x ⇒ x²
 }
 
+///////////
+// Sensors
 
 SENSOR capteurNombreVoiture {
-	SOURCE dataCar.json with LINEAR_INTERPOLATION [restricted to [-1, 1], ONLY POSITIVE, ONLY NEGATIVE, etc..]
+	SOURCE from FILE dataCar.json with LINEAR_INTERPOLATION [restricted to [-1, 1], ONLY POSITIVE, ONLY NEGATIVE, etc..]))
 	NOISE [-8,12] ou 10 (pour dire +-10) (dans le cas des chaines de markov on peut mettre du bruit mais entre -1 et 1 et qui faussera la valeur de changement d'état ? ou alors qui changera la valeur de la cellule de la chaine de markov mais faut s'assurer que c'est bien du meme type)
-	OFFSET RUN_AS_TODAY ou OFFSET -1000000 (appliqué sur tous les timestamp, si un timestamp est trop petit ou trop grand, on peut toujours soit prendre la valeur min (0) ou max, ou alors ignored la valeur, ou juste sortir une erreur)
+	OFFSET RUN_AS_TODAY ou "10/12/2018" ou OFFSET -1000000 (appliqué sur tous les timestamp, si un timestamp est trop petit ou trop grand, on peut toujours soit prendre la valeur min (0) ou max, ou alors ignored la valeur, ou juste sortir une erreur)
 }
 
 SENSOR capteurLumiFenetre {
-	SOURCE lumiDehors
+	SOURCE from LAW lumiDehors
 	NOISE [-0.05,+0.02]
 }
 
 SENSOR capteurTempSalle {
-	SOURCE temperatureNormale
+	SOURCE temperatureInterval
 }
 
-CONTEXT {
-	AREA parking {
-		capteurNombreVoiture(2) NOISE [1,6] # override default noise
-	}
+///////////
+// Areas
 
-	AREA classroom {
-		capteurLumiFenetre(3) IN_PARALLEL
-		capteurTempSalle(1) NOISE 4 IN_PARALLEL
-	}
+AREA parking {
+    capteurNombreVoiture(2) NOISE [1,6] # override default noise
+}
+
+AREA classroom {
+    capteurLumiFenetre(3) IN_PARALLEL
+    capteurTempSalle(1) NOISE 4 IN_PARALLEL
 }
 
 EXEC {

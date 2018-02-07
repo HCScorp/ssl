@@ -1,0 +1,86 @@
+_interval_ [int, int]
+_interval_ [double, double]
+
+_duration_
+_interval.time_ [_duration_, _duration_]
+
+_set_ {int..}
+_set_ {double..}
+_set_ {string..}
+
+_variable_ int
+_variable_ double
+_variable_ string
+_variable_ boolean
+
+_variable.int_ int
+_variable.number_ double || int
+
+_variable.string_
+
+_proba_ double in [0.0, 1.0]
+
+_math.condition.x_
+_math.equation.x_
+
+_ref.$type_ reference to a variable of a given $type
+
+_file_ url || path
+
+///////////
+// Laws
+
+_values.interval_ INTERVAL _interval_
+_values.set_ SET _set_
+
+LAW.RANDOM _variable.string_ {
+	VALUES in _values.interval_ || _values.set_
+	FREQUENCY _interval.time_ || _duration_
+}
+
+LAW.MARKOV _variable.string_ {
+	_variable_ → _proba_ → _variable_
+	.
+	.
+	_variable_ → _proba_ → _variable_
+}
+
+LAW.FUNCTION _variable.string_ {
+    // x is the timestamp
+	_math.condition.x_ ⇒ _math.equation.x_
+	.
+	.
+	_math.condition.x_ ⇒ _math.equation.x_
+}
+
+
+///////////
+// Sensors
+
+_source.file_ FILE _file_ [with LINEAR_INTERPOLATION [RESTRICTED_TO _interval_ || ONLY_POSITIVE || ONLY_NEGATIVE]]
+_source.law_ LAW _ref.law_
+
+SENSOR _variable.string_ {
+	SOURCE FROM _source.file_ || _source.law_
+	[NOISE _interval_ || _variable.number_]
+	[OFFSET _variable.string_]
+}
+
+///////////
+// Areas
+
+_sensor.instance.options_ [NOISE _interval_ || _variable.number_] [IN_PARALLEL]
+
+AREA _variable.string_ {
+    _ref.sensor_(_variable.int_) _sensor.instance.options_
+    .
+    .
+    _ref.sensor_(_variable.int_) _sensor.instance.options_
+}
+
+EXEC {
+	[OFFSET _variable.string_]
+
+	_ref.area_: _variable.string_, ..
+	classroom: _variable.string_, ..
+}

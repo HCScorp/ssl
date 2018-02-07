@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SensorData<V> {
     @JsonProperty("time")
-    private long time;
+    private long time; // TODO this is produced data, the input can be a date or an hour
 
     @JsonProperty("sensor")
     private String sensor;
