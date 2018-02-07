@@ -9,6 +9,10 @@
         <encoding>UTF-8</encoding>
         <groovy.version>2.3.10</groovy.version>
         <groovy.version.short>2.3</groovy.version.short>
+
+        <!-- Test -->
+        <junit.version>4.12</junit.version>
+        <mockiton.version>1.10.19</mockiton.version>
     </properties>
 
     <artifactId>lang</artifactId>
@@ -48,6 +52,19 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
             <version>2.8.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockiton.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

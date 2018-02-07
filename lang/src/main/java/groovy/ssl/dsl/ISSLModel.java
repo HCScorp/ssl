@@ -11,7 +11,7 @@ public interface ISSLModel {
     // Sensor
     void newSensor(String name);
 
-    // Area
+    // AreaType
     void newArea(String name);
 
     // Exec

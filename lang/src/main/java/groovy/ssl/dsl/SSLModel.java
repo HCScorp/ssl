@@ -1,8 +1,8 @@
 package ssl.dsl;
 
 import groovy.lang.Binding;
-import kernel.entity.SensorData;
-import kernel.entity.SensorDataList;
+import runtime.entity.SensorData;
+import runtime.entity.SensorDataList;
 
 import java.io.IOException;
 import java.sql.Timestamp;

@@ -1,19 +1,18 @@
 ///////////
 // Laws
 
-LAW RANDOM temperatureInterval {
+LAW RANDOM temperatureIntervalle {
 	VALUES in INTERVAL [18, 24]
-	FREQUENCY [90s, 140s]
 }
 
 LAW RANDOM temperatureEnsemble {
-	VALUES in SET {18, 12, 42, 24}
 	FREQUENCY 5m
+	VALUES in SET {18, 12, 42, 24}
 }
 
 LAW RANDOM presenceCoca {
-	VALUES in SET {"yep", "nop"}
 	FREQUENCY 24h
+	VALUES in SET {"yep", "nop"}
 }
 
 LAW MARKOV lumiDehors {
@@ -39,16 +38,20 @@ LAW FUNCTION simpleCarre {
 SENSOR capteurNombreVoiture {
 	SOURCE from FILE dataCar.json, COLUMN 1 AS time, COLUMN 3 AS value, COLUMN 5 AS name [with LINEAR_INTERPOLATION [restricted to [-1, 1] || ONLY_POSITIVE || ONLY_NEGATIVE || [0,] || [,0] ]]
 	NOISE [-8,12] ou 10 (pour dire +-10) (dans le cas des chaines de markov on peut mettre du bruit mais entre -1 et 1 et qui faussera la valeur de changement d'état ? ou alors qui changera la valeur de la cellule de la chaine de markov mais faut s'assurer que c'est bien du meme type)
-	OFFSET RUN_AS_TODAY ou "10/12/2018" ou OFFSET -1000000 (appliqué sur tous les timestamp, si un timestamp est trop petit ou trop grand, on peut toujours soit prendre la valeur min (0) ou max, ou alors ignored la valeur, ou juste sortir une erreur)
+	OFFSET "10/12/2018" ou OFFSET -1000000 (appliqué sur tous les timestamp, si un timestamp est trop petit ou trop grand, on peut toujours soit prendre la valeur min (0) ou max, ou alors ignored la valeur, ou juste sortir une erreur)
+	FREQUENCY 10m // or do we set the frequency to the average update time found in the file ?
+	// without interpolation we surely stick to the defined update time
 }
 
 SENSOR capteurLumiFenetre {
 	SOURCE from LAW lumiDehors
 	NOISE [-0.05,+0.02]
+	FREQUENCY 5m
 }
 
 SENSOR capteurTempSalle {
-	SOURCE temperatureInterval
+	SOURCE temperatureIntervalle
+	FREQUENCY [90s, 140s]
 }
 
 ///////////
@@ -63,9 +66,16 @@ AREA classroom {
     capteurTempSalle(1) NOISE 4 IN_PARALLEL
 }
 
-EXEC {
-	OFFSET RUN_AS_TODAY
-
+EXEC oldSchool {
 	parking: P1, P2
-	classroom: C1, C2, C3
+	classroom: C1, C2
+}
+
+EXEC newSchool {
+	parking: P3
+	classroom: C3, C4
+}
+
+GLOBAL {
+    OFFSET "10/12/2018"
 }
