@@ -1,32 +1,33 @@
 ///////////
 // Laws
 
-LAW RANDOM temperatureIntervalle {
+LAW.RANDOM temperatureIntervalle {
 	VALUES in INTERVAL [18.0, 24.5] // [inclusive, exclusive]
 }
 
-LAW RANDOM temperatureEnsemble {
+LAW.RANDOM temperatureEnsemble {
 	VALUES in LIST {18, 12, 42, 24}
 }
 
-LAW RANDOM presenceCoca {
+LAW.RANDOM presenceCoca {
 	VALUES in LIST {"yep", "nop"}
 }
 
-LAW MARKOV lumiDehors {
-	sunny >> 0.1 >> rainy // sunny will be set as initial value
-	sunny >> 0.9 >> sunny
-	rainy >> 0.5 >> sunny
-	rainy >> 0.5 >> rainy
+LAW.MARKOV lumiDehors {
+	sunny > 0.1 > rainy // sunny will be set as initial value
+	sunny > 0.9 > sunny
+	rainy > 0.5 > sunny
+	rainy > 0.5 > rainy
 }
 
-LAW FUNCTION polyMilieuJournee { // x is the timestamp, or time of measurement
+LAW.FUNCTION polyMilieuJournee { // x is the timestamp, or time of measurement
 	x%(3600*24) < 32200 ⇒ 4
-	x%(3600*24) > 32200 ⇒ |-2x²+5x-1|
+	x%(3600*24) > 32200 ⇒ abs(-(2*x^2) + 5*x - 1)
 	x%(3600*24) = 32200 ⇒ 0
+	// if every case are not covered, the default value (0, 0.0, false) will be returned
 }
 
-LAW FUNCTION simpleCarre {
+LAW.FUNCTION simpleCarre {
 	x ⇒ x²
 }
 
