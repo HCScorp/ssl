@@ -11,7 +11,7 @@ class GroovySensorDSL {
 
     GroovySensorDSL() {
         binding = new GroovySSLBinding()
-        binding.setGrovySSLModel(new SSLModel(binding));
+        binding.setSSLModel(new SSLModel(binding));
         configuration = getDSLConfiguration()
         configuration.setScriptBaseClass("ssl.dsl.GroovyBaseScript")
         shell = new GroovyShell(configuration)
