@@ -13,21 +13,8 @@ class MarkovBlock extends Block {
         super(binding, name)
     }
 
-
-    def state(MarkovBlock name) {
-        println(name.initialState + " " + name.secondState + " " + name.probability )
-        initialState = null
-        secondState = null
-    }
-
-    def methodMissing(String name, args){
-        println(name + args)
-        println("method")
-    }
-
     def rightShift(Object arg){
         if (arg instanceof BigDecimal){
-            println("Add the probability")
             probability = (Double) arg
         }
         return this
@@ -41,6 +28,8 @@ class MarkovBlock extends Block {
         }
         else {
             secondState = name
+            initialState = null
+            secondState = null
         }
         return this
     }
