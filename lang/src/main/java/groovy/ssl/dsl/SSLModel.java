@@ -32,28 +32,30 @@ public class SSLModel { // implements ISSLModel {
 
     // TODO : have to be changed : need to put value type in the dsl ?
     public void putNoise(int boundary, String name) throws Exception {
-        if (sensorDataList.get(name).getSensorDataList().isEmpty()){
-            throw new Exception("Dataset can't be null");
-        }
-        sensorDataList.get(name).getSensorDataList()
-                .stream().forEach(sensor -> {
-            Integer value = ((SensorData<Integer>) sensor).getValue();
-            ((SensorData<Integer>) sensor).setValue(value + new Random().nextInt(boundary));
-        });
+        // TODO
+//        if (sensorDataList.get(name).getSensorDataList().isEmpty()){
+//            throw new Exception("Dataset can't be null");
+//        }
+//        sensorDataList.get(name).getSensorDataList()
+//                .stream().forEach(sensor -> {
+//            Integer value = ((SensorData<Integer>) sensor).getValue();
+//            ((SensorData<Integer>) sensor).setValue(value + new Random().nextInt(boundary));
+//        });
     }
 
     public void changeOffset(String dateFrom, String name) throws ParseException {
-        DateFormat formatter;
-        formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = formatter.parse(dateFrom);
-        java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
-        Calendar c = Calendar.getInstance();
-        c.setTime(timeStampDate);
-        sensorDataList.get(name).getSensorDataList().forEach(sensor -> {
-            c.add(Calendar.MINUTE, 1);
-            timeStampDate.setTime(c.getTime().getTime());
-            ((SensorData) sensor).setTime(timeStampDate.getTime());
-        });
+        // TODO
+//        DateFormat formatter;
+//        formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Date date = formatter.parse(dateFrom);
+//        java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(timeStampDate);
+//        sensorDataList.get(name).getSensorDataList().forEach(sensor -> {
+//            c.add(Calendar.MINUTE, 1);
+//            timeStampDate.setTime(c.getTime().getTime());
+//            ((SensorData) sensor).setTime(timeStampDate.getTime());
+//        });
     }
 
 

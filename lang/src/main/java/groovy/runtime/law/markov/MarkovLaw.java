@@ -9,13 +9,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class MarkovLaw<T extends Serializable> extends Law<T> {
 
     private final Map<T, TreeMap<T, Double>> edgeMap;
-    private final Random rand;
 
     private T current;
 
     public MarkovLaw() {
         this.edgeMap = new HashMap<>();
-        this.rand = new Random();
+        // todo verify the model
     }
 
     protected void addEdge(T value, Double proba, T target) {

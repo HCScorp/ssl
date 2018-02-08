@@ -32,7 +32,6 @@ public abstract class FunctionLaw<T extends Serializable> extends Law<T> {
         this.condExprList.add(ce);
     }
 
-
     private void checkCondition(String condition, CondExpr ce) {
         if (TIMESTAMP_VAR.equals(condition)) {
             condition = "TRUE";

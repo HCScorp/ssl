@@ -3,12 +3,19 @@ package runtime.offset;
 
 public class Offset {
 
+    private final long offset;
+
     public Offset(String date) {
         // TODO parse date
+        this.offset = 0; // TODO
     }
 
     public Offset(long offset) {
         throw new UnsupportedOperationException();
+    }
+
+    public long apply(long timestamp) {
+        return timestamp + offset;
     }
 
 //    // Any offset apply on the produced

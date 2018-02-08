@@ -1,6 +1,8 @@
 package runtime.law;
 
 
+import runtime.source.Source;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,6 @@ import java.io.Serializable;
  *
  * @param <T> type of produced data
  */
-public abstract class Law<T extends Serializable> {
+public abstract class Law<T extends Serializable> extends Source<T> {
 
-    public abstract T produceValue(long timestamp);
 }

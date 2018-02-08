@@ -13,39 +13,6 @@ public class SensorData<V> {
     private V value;
 
     public SensorData() {
+        // empty for jackson
     }
-
-    @Override
-    public String toString() {
-        return "SensorData{" +
-                "time=" + time +
-                ", sensor='" + sensor + '\'' +
-                ", value=" + value +
-                '}';
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public String getSensor() {
-        return sensor;
-    }
-
-    public void setSensor(String sensor) {
-        this.sensor = sensor;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
-    }
-
 }

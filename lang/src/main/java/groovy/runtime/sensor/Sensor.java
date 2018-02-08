@@ -8,19 +8,25 @@ import java.io.Serializable;
 
 public class Sensor<T extends Serializable> implements Runnable {
 
-    private String name;
-    private Source<T> source; // a well defined law OR a complete CSV,
+    private final String name;
+    private final Source<T> source; // a well defined law OR a complete CSV,
+    private final Period period;
+
+//    private OutputInfluxDB out;
     private Offset offset;
-    private Period period;
 
+    public Sensor(String name, Source<T> source, Period period) {
+        this.name = name;
+        this.source = source;
+        this.period = period;
+    }
 
-    // TODO only update according to its period
+    public void setOffset(Offset offset) {
+        this.offset = offset;
+    }
 
     public T produceValue(long timestamp) {
-        // TODO check period
-        // TODO compute offset
-        // TODO get value from source using modified timestamp
-        return null; // TODO
+        return source.produceValue(offset.apply(timestamp));
     }
 
     public long getPeriod() {
@@ -29,6 +35,6 @@ public class Sensor<T extends Serializable> implements Runnable {
 
     @Override
     public void run() {
-
+        // TODO send produced value to influx db
     }
 }
