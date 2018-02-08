@@ -6,7 +6,6 @@ import ssl.dsl.SSLBlock.SensorBlock;
 abstract class GroovyBaseScript extends Script {
 
     def sensor(name, Closure closure){
-        println("sensor")
         SensorBlock block = new SensorBlock((GroovySSLBinding) this.binding, name)
         closure.delegate = block
         closure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -17,9 +16,14 @@ abstract class GroovyBaseScript extends Script {
     def markov_law(name, Closure closure){
         MarkovBlock markovBlock = new MarkovBlock((GroovySSLBinding) this.binding, name)
         closure.delegate = markovBlock
-        closure.resolveStrategy =Closure.DELEGATE_FIRST
+        closure.resolveStrategy = Closure.DELEGATE_FIRST
         closure()
     }
+
+    def propertyMissing(String name) {
+        return new MarkovBlock((GroovySSLBinding) this.binding, name)
+    }
+
 
 
     abstract void scriptBody()
