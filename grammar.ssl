@@ -59,7 +59,10 @@ LAW.FUNCTION _variable.string_ {
 
 _enum.header_ TIME || VALUE || NAME
 
-_source.file_ FILE _file_(, COLUMN _variable.number_ || string AS _enum.header_){3} [with LINEAR_INTERPOLATION [RESTRICTED_TO _interval_ || ONLY_POSITIVE || ONLY_NEGATIVE]]
+_location_ LOCAL || DISTANT
+ _file.type_ JSON || CSV
+
+_source.file_ _location_ _file.type_ _uri_(, COLUMN _variable.number_ || string AS _enum.header_){3} [with LINEAR_INTERPOLATION [RESTRICTED_TO _interval_ || ONLY_POSITIVE || ONLY_NEGATIVE]]
 _source.law_ LAW _ref.law_
 
 SENSOR _variable.string_ {
