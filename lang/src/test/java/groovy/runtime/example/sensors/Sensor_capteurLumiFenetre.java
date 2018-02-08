@@ -1,4 +1,6 @@
 package runtime.example.sensors;
 
-public class Sensor_capteurLumiFenetre {
+import runtime.sensor.Sensor;
+
+public class Sensor_capteurLumiFenetre extends Sensor<String> {
 }

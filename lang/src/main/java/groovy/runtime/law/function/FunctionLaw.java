@@ -44,11 +44,16 @@ public abstract class FunctionLaw<T extends Serializable> extends Law<T> {
             throw new IllegalArgumentException("condition \"" + condition + "\" must use the variable " + TIMESTAMP_VAR + " that represent the timestamp");
         }
 
+        cond.with(TIMESTAMP_VAR, BigDecimal.ZERO).eval();
+
         ce.condition = cond;
     }
 
     private void checkExpression(String expression, CondExpr ce) {
-        ce.expression = new Expression(expression);
+        Expression expr = new Expression(expression);
+        expr.with(TIMESTAMP_VAR, BigDecimal.ZERO).eval();
+
+        ce.expression = expr;
     }
 
     @Override
