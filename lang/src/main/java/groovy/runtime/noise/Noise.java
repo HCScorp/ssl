@@ -1,13 +1,18 @@
 package runtime.noise;
 
 
-public class Noise<T extends Number> {
+public abstract class Noise<T extends Number> {
 
-    void setNoise(T min, T max) {
-        // TODO
-    } // TODO exception?
+    protected final T min;
+    protected final T max;
 
-    void setNoise(T minMax) {
-        // TODO
-    }// TODO exception?
+    protected Noise(T min, T max) {
+        if (min.doubleValue() > max.doubleValue()) {
+            throw new IllegalArgumentException("minimum value (" + min + ") for noise interval must be inferior to the maximum (" + max + ")");
+        }
+        this.min = min;
+        this.max = max;
+    }
+
+    public abstract T apply(T val);
 }

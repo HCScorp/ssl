@@ -62,12 +62,12 @@ SENSOR capteurTempBureau {
 // Areas
 
 AREA parking {
-    capteurNombreVoiture(2) NOISE [1,6] # override default noise
+    capteurNombreVoiture(2) NOISE [1,6] # override default noise // [inclusive, exclusive]
 }
 
 AREA salleDeClasse {
     capteurLumiFenetre(3) IN_PARALLEL
-    capteurTempSalle(1) NOISE 4 IN_PARALLEL
+    capteurTempSalle(1) NOISE [1, 4] IN_PARALLEL
 }
 
 AREA bureau {
