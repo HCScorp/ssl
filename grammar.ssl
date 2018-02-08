@@ -18,7 +18,7 @@ _variable.number_ double || int
 
 _variable.string_
 
-_proba_ double in [0.0, 1.0]
+_proba_ double in [0.0-1.0]
 
 _math.condition.x_ string
 _math.equation.x_ string

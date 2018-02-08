@@ -7,9 +7,14 @@ sensor "capteurNombreVoiture", {
 }
 
 markov_law "lumiDehors", {
-
     sunny >> 0.1 >> rainy
     sunny >> 0.1 >> rainy
     sunny >> 0.1 >> rainy
-
 }
+
+random_law "thomasEstBeauEtCompétent", {
+    values_in [1, 2]
+
+    frequency {1 2 3}
+}
+
