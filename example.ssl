@@ -2,28 +2,28 @@
 // Laws
 
 LAW RANDOM temperatureIntervalle {
-	VALUES in INTERVAL [18, 24]
+	VALUES in INTERVAL [18.0, 24.5] // [inclusive, exclusive]
 }
 
 LAW RANDOM temperatureEnsemble {
-	VALUES in SET {18, 12, 42, 24}
+	VALUES in LIST {18, 12, 42, 24}
 }
 
 LAW RANDOM presenceCoca {
-	VALUES in SET {"yep", "nop"}
+	VALUES in LIST {"yep", "nop"}
 }
 
 LAW MARKOV lumiDehors {
-	sunny >> 0.1 >> rainy
+	sunny >> 0.1 >> rainy // sunny will be set as initial value
 	sunny >> 0.9 >> sunny
 	rainy >> 0.5 >> sunny
 	rainy >> 0.5 >> rainy
 }
 
-LAW FUNCTION poly2 { // x is the timestamp, or time of measurement
-	x < 0.22 ⇒ 0
-	x < 2.28 ⇒ |-2x²+5x-1|
-	x > 2.27 ⇒ 0
+LAW FUNCTION polyMilieuJournee { // x is the timestamp, or time of measurement
+	x%(3600*24) < 32200 ⇒ 4
+	x%(3600*24) > 32200 ⇒ |-2x²+5x-1|
+	x%(3600*24) = 32200 ⇒ 0
 }
 
 LAW FUNCTION simpleCarre {
@@ -52,6 +52,11 @@ SENSOR capteurTempSalle {
 	FREQUENCY [90s, 140s]
 }
 
+SENSOR capteurTempBureau {
+	SOURCE temperatureEnsemble
+	FREQUENCY 1m
+}
+
 ///////////
 // Areas
 
@@ -59,19 +64,24 @@ AREA parking {
     capteurNombreVoiture(2) NOISE [1,6] # override default noise
 }
 
-AREA classroom {
+AREA salleDeClasse {
     capteurLumiFenetre(3) IN_PARALLEL
     capteurTempSalle(1) NOISE 4 IN_PARALLEL
 }
 
+AREA bureau {
+    capteurTempBureau(2)
+}
+
 EXEC oldSchool {
 	parking: P1, P2
-	classroom: C1, C2
+	salleDeClasse: C1, C2
+	bureau: B1, B2, B3, B4
 }
 
 EXEC newSchool {
 	parking: P3
-	classroom: C3, C4
+	salleDeClasse: C3, C4
 }
 
 GLOBAL {

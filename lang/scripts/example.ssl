@@ -4,10 +4,10 @@ RANDOM_LAW temperatureNormale {
 }
 
 MARKOV_LAW lumiDehors {
-	sunny → 0.1 → rainy
-	sunny → 0.9 → sunny
-	rainy → 0.5 → sunny
-	rainy → 0.5 → rainy
+	sunny >> 0.1 >> rainy
+	sunny >> 0.9 >> sunny
+	rainy >> 0.5 >> sunny
+	rainy >> 0.5 >> rainy
 }
 
 FUNCTION_LAW poly2 {

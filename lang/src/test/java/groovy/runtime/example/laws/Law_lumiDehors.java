@@ -1,4 +1,4 @@
-package example.laws;
+package runtime.example.laws;
 
 import runtime.law.markov.MarkovLaw;
 
