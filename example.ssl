@@ -6,20 +6,18 @@ LAW RANDOM temperatureIntervalle {
 }
 
 LAW RANDOM temperatureEnsemble {
-	FREQUENCY 5m
 	VALUES in SET {18, 12, 42, 24}
 }
 
 LAW RANDOM presenceCoca {
-	FREQUENCY 24h
 	VALUES in SET {"yep", "nop"}
 }
 
 LAW MARKOV lumiDehors {
-	sunny → 0.1 → rainy
-	sunny → 0.9 → sunny
-	rainy → 0.5 → sunny
-	rainy → 0.5 → rainy
+	sunny >> 0.1 >> rainy
+	sunny >> 0.9 >> sunny
+	rainy >> 0.5 >> sunny
+	rainy >> 0.5 >> rainy
 }
 
 LAW FUNCTION poly2 { // x is the timestamp, or time of measurement
