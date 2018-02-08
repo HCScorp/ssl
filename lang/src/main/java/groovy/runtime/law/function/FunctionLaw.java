@@ -34,14 +34,18 @@ public abstract class FunctionLaw<T extends Serializable> extends Law<T> {
 
 
     private void checkCondition(String condition, CondExpr ce) {
-        Expression cond = new Expression(condition);
-
-        if (!cond.isBoolean()) {
-            throw new IllegalArgumentException("condition \"" + condition + "\" must be a boolean expression");
+        if (TIMESTAMP_VAR.equals(condition)) {
+            condition = "TRUE";
         }
 
-        if (!cond.getUsedVariables().contains(TIMESTAMP_VAR)) {
-            throw new IllegalArgumentException("condition \"" + condition + "\" must use the variable " + TIMESTAMP_VAR + " that represent the timestamp");
+        Expression cond = new Expression(condition);
+
+        if (!cond.isBoolean() && !condition.equals("TRUE")) {
+            throw new IllegalArgumentException("condition \"" + condition + "\" must be a boolean expression (e.g. TRUE) or 'x'");
+        }
+
+        if (cond.getUsedVariables().size() > 0 && !cond.getUsedVariables().contains(TIMESTAMP_VAR)) {
+            throw new IllegalArgumentException("condition \"" + condition + "\" must only use the variable " + TIMESTAMP_VAR + " that represent the timestamp");
         }
 
         cond.with(TIMESTAMP_VAR, BigDecimal.ZERO).eval();
@@ -61,12 +65,13 @@ public abstract class FunctionLaw<T extends Serializable> extends Law<T> {
         BigDecimal bTimestamp = BigDecimal.valueOf(timestamp);
         for (CondExpr ce : condExprList) {
             Expression cond = ce.condition.with(TIMESTAMP_VAR, bTimestamp);
-            if (!BigDecimal.ZERO.equals(cond.eval())) {
+            BigDecimal val = cond.eval();
+            if (!BigDecimal.ZERO.equals(val)) {
                 Expression expr = ce.expression.with(TIMESTAMP_VAR, bTimestamp);
                 return eval(expr.eval());
             }
         }
-        return null;
+        return eval(BigDecimal.ZERO);
     }
 
     protected abstract T eval(BigDecimal val);

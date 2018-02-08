@@ -1,21 +1,20 @@
-package runtime.frequency;
+package runtime.period;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Frequency {
+public class Period {
 
     private final Duration value;
-    private Instant lastUpdate;
 
-    public Frequency(String f) {
-        Pattern pattern = Pattern.compile("(\\d+)(ns|ms|s|m|h|d)");
+    public Period(String f) {
+        Pattern pattern = Pattern.compile("(\\d+)(ms|s|m|h|d)");
         Matcher matcher = pattern.matcher(f);
         if (!matcher.matches() || matcher.groupCount() != 2) {
-            throw new IllegalArgumentException("'" + f + "' is not a valid frequency (only units ns, ms, s, h, m, d are supported)");
+            throw new IllegalArgumentException("'" + f + "' is not a valid frequency (only units ms, s, h, m, d are supported)");
         }
+
 
         String valStr = matcher.group(1);
         String unitStr = matcher.group(2);
@@ -26,9 +25,6 @@ public class Frequency {
         }
 
         switch (unitStr) {
-            case "ns":
-                this.value = Duration.ofNanos(val);
-                break;
             case "ms":
                 this.value = Duration.ofMillis(val);
                 break;
@@ -49,13 +45,7 @@ public class Frequency {
         }
     }
 
-    public void update() {
-        lastUpdate = Instant.now();
+    public long getPeriod() {
+        return (value.getSeconds() * 1000) + (value.getNano() / 1000000);
     }
-
-    public boolean canUpdate() {
-        return Duration.between(lastUpdate, Instant.now()).getNano() > value.getNano();
-    }
-
-    // TODO maybe a updateIfPossible that returns a boolean to combine these two functions ?
 }
