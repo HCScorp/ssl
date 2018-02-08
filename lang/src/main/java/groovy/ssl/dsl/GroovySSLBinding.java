@@ -1,8 +1,10 @@
 package ssl.dsl;
 
 import groovy.lang.Binding;
+import groovy.lang.Closure;
 import groovy.lang.Script;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class GroovySSLBinding extends Binding {
@@ -34,11 +36,11 @@ public class GroovySSLBinding extends Binding {
     }
 
     public Object getVariable(String name) {
-        System.out.println("get Variable == " + name);
         return super.getVariable(name);
     }
 
     public void setVariable(String name, Object value) {
+        super.setVariable("-->", "-->");
         super.setVariable(name, value);
     }
 

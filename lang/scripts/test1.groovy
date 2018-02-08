@@ -7,8 +7,9 @@ sensor "capteurNombreVoiture", {
 }
 
 markov_law "lumiDehors", {
-    state "sunny" with 0.1 give "rainy"
-    state "sunny" with 0.9 give "sunny"
-    state "rainy" with 0.5 give "sunny"
-    state "rainy" with 0.5 give "rainy"
+
+    state sunny >> 0.1 >> rainy
+    state sunny >> 0.1 >> rainy
+    state sunny >> 0.1 >> rainy
+
 }

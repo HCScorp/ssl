@@ -10,25 +10,21 @@ class SensorBlock extends Block {
         super(binding, name)
     }
 
-    def source(source){
-        println("source : " + source)
+    def source( String source){
         // detect if source is an existed law
         [with: { function, args ->
             println(function + " " + args)
         }]
     }
 
-    def noise( maximus, minus ){
+    def noise( Integer maximus, Integer minus ){
         println(maximus + " " +  minus)
     }
 
-    def offset(offsetValue){
+    def offset(String offsetValue){
         println(offsetValue)
     }
 
-    def test(Closure cl){
-        def res = cl()
-        println(res)
-    }
+
 
 }

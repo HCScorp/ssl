@@ -10,7 +10,6 @@ class GroovySensorDSL {
     private GroovySSLBinding binding
 
     GroovySensorDSL() {
-        println "GroovySensorDSL constructor"
         binding = new GroovySSLBinding()
         binding.setGrovySSLModel(new SSLModel(binding));
         configuration = getDSLConfiguration()
@@ -35,8 +34,11 @@ class GroovySensorDSL {
             //language tokens disallowed
             //tokensBlacklist= []
             //language tokens allowed
-            tokensWhitelist= [Types.ARRAY_EXPRESSION, Types.PREFIX_MINUS, Types.INTEGER_NUMBER,
-                              Types.NUMBER, Types.MINUS, java.sql.Types.DECIMAL]
+            tokensWhitelist= [Types.ARRAY_EXPRESSION,
+                              Types.PREFIX_MINUS,
+                              Types.INTEGER_NUMBER,Types.NUMBER, Types.MINUS,
+                              Types.DECIMAL_NUMBER,
+            Types.LEFT_SHIFT, Types.RIGHT_SHIFT]
             //types allowed to be used  (including primitive types)
             constantTypesClassesWhiteList= [
                     int, Integer, Number, Integer.TYPE, String, Object, BigDecimal
