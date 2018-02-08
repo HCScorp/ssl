@@ -23,6 +23,7 @@ class MarkovBlock extends Block {
 
     // to be replaced...
     def propertyMissing(String name, String args){
+
         if (initialState == null){
             initialState = name
         }
