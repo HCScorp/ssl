@@ -34,11 +34,13 @@ class GroovySensorDSL {
             //language tokens disallowed
             //tokensBlacklist= []
             //language tokens allowed
-            tokensWhitelist= [Types.ARRAY_EXPRESSION,
+            tokensWhitelist= [
+                    Types.RIGHT_SQUARE_BRACKET, Types.LEFT_SQUARE_BRACKET,
+                    Types.ARRAY_EXPRESSION,
                               Types.PREFIX_MINUS,
                               Types.INTEGER_NUMBER,Types.NUMBER, Types.MINUS,
                               Types.DECIMAL_NUMBER,
-            Types.LEFT_SHIFT, Types.RIGHT_SHIFT]
+            Types.LEFT_SHIFT, Types.RIGHT_SHIFT, Types.KEYWORD_IN]
             //types allowed to be used  (including primitive types)
             constantTypesClassesWhiteList= [
                     int, Integer, Number, Integer.TYPE, String, Object, BigDecimal
