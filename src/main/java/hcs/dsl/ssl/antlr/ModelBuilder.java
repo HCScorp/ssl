@@ -26,10 +26,7 @@ public class ModelBuilder extends SSLBaseListener {
      ** Symbol tables **
      *******************/
 
-    private Map<String, String> sensors = new HashMap<>();
-    private Map<String, String> actuators = new HashMap<>();
-    private Map<String, String> states = new HashMap<>();
-    private Map<String, String> bindings = new HashMap<>();
+    private Map<String, String> todo = new HashMap<>();
 
     /**************************
      ** Listening mechanisms **
