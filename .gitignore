@@ -1,7 +1,3 @@
-.idea/*
-
-lang/.idea/*
-
+target/
 *.iml
-
-lang/target/*
+.idea/

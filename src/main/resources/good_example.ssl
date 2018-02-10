@@ -1,0 +1,93 @@
+# laws
+
+law random temperatureIntervalle {
+    values in interval [18.0,24.5]
+}
+
+law random temperatureEnsemble {
+    values in list (18, 12, 42, 24)
+}
+
+law random presenceCoca {
+    values in list ("yep", "nop")
+}
+
+law markov lumiDehors {
+    "sunny" -> 0.1 -> "rainy"
+    "sunny" -> 0.9 -> "sunny"
+    "rainy" -> 0.5 -> "sunny"
+    "rainy" -> 0.5 -> "rainy"
+}
+
+law function polyMilieuJournee {
+    `x%(3600*24) < 32200` => `4`
+    `x%(3600*24) > 32200` => `abs(-(2*x^2) + 5*x - 1)`
+    `x%(3600*24) = 32200` => `0`
+}
+
+law function simpleCarre {
+    `x` => `x^2`
+}
+
+
+
+# sensors
+
+sensor capteurNombreVoiture {
+    source from distant csv "dataCar.csv"
+        using column 1 as time, column 3 as value and column 5 as name
+        with linear interpolation restricted to [-1,1]
+    noise [0,2]
+    offset "10/12/2018"
+}
+
+sensor capteurPersonneBU {
+    source from local json "dataPersonneBU.json"
+        using field "t" as time, field "v" as value and field "n" as name
+}
+
+sensor capteurLumiFenetre {
+    source from law lumiDehors
+    period 5m
+}
+
+sensor capteurTempSalle {
+    source from law temperatureIntervalle
+    noise [-0.05,+0.02]
+    period 100s # [90s, 140s]
+}
+
+sensor capteurTempBureau {
+    source from law temperatureEnsemble
+    period 1m
+}
+
+# Areas
+
+area parking {
+    has 2 capteurNombreVoiture with noise [1,6]
+}
+
+area salleDeClasse {
+    has 3 capteurLumiFenetre running in parallel
+    has 1 capteurTempSalle with noise [1,4] running in parallel
+}
+
+area bureau {
+    has 2 capteurTempBureau
+}
+
+exec oldSchool {
+    parking: P1, P2
+    salleDeClasse: C1, C2
+    bureau: B1, B2, B3, B4
+}
+
+exec newSchool {
+    parking: P3
+    salleDeClasse: C3, C4
+}
+
+global {
+    offset "09/12/2018"
+}
