@@ -4,13 +4,39 @@
 public class Sensor_${sensor.name} extends Sensor<String>{
     public Sensor_${sensor.name}() {
         super("${sensor.name}"
-            #if(${sensor.name})
-            , new ${sensor.source}
-            #end
             )
-
     }
 
     }
 #end
 
+
+
+#foreach($law in $laws)
+    #if ($law.type.name() == "MARKOV")
+        public class Law_${law.name} extends MarkovLaw<$law.type.name()> {
+        public Law_${law.name} (){
+        super();
+        #foreach($edge in ${law.list})
+            #if ($law.type.name() == "String")
+                #set($edge.from = "$edge.from")
+                #set($edge.to = "$edge.to")
+            #end
+            addEdge($edge.from, $edge.proba, $edge.to );
+        #end
+        }
+        }
+    #elseif($law.type.name() == "RANDOM")
+        public class Law_${law.name} extends RandomLaw<$law.type.name()> {
+        public Law_${law.name} (){
+
+        }
+        }
+
+    #elseif($law.type.name() == "FUNCTION")
+
+    #end
+
+
+
+#end

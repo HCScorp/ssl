@@ -72,7 +72,7 @@ public class SSLAppGenerator implements Runnable {
         Map<String, Law> laws = new HashMap<>();
         Map<String, Sensor> sensors = new HashMap<>();
 
-        RandomLaw randomLaw = new RandomLaw("markov");
+        RandomLaw randomLaw = new RandomLaw("myRandom");
         randomLaw.setInterval(new Interval<>(1, 2));
 
         laws.put("random", randomLaw);
