@@ -3,13 +3,15 @@ package hcs.dsl.ssl.antlr;
 import hcs.dsl.ssl.antlr.grammar.*;
 import hcs.dsl.ssl.backend.Model;
 import hcs.dsl.ssl.backend.area.Area;
+import hcs.dsl.ssl.backend.area.SensorGroup;
+import hcs.dsl.ssl.backend.exec.AreaGroup;
 import hcs.dsl.ssl.backend.exec.Exec;
+import hcs.dsl.ssl.backend.global.Global;
 import hcs.dsl.ssl.backend.law.*;
 import hcs.dsl.ssl.backend.misc.Interval;
 import hcs.dsl.ssl.backend.misc.ListWrapper;
 import hcs.dsl.ssl.backend.misc.Var.Type;
 import hcs.dsl.ssl.backend.sensor.*;
-import jdk.nashorn.internal.objects.Global;
 import org.antlr.v4.runtime.Token;
 
 import java.util.HashMap;
@@ -196,7 +198,7 @@ public class ModelBuilder extends SSLBaseListener {
         if (ctx.law_ref() != null) {
             String lawRef = toString(ctx.law_ref().ref);
             if (!laws.containsKey(lawRef)) {
-                throw new IllegalArgumentException("law '" + lawRef + "' has is referenced before definition");
+                throw new IllegalArgumentException("law '" + lawRef + "' is referenced before definition");
             }
 
             src = new SourceLaw(lawRef);
@@ -320,17 +322,62 @@ public class ModelBuilder extends SSLBaseListener {
 
     @Override
     public void enterArea(AreaContext ctx) {
-        // TODO
+        Area area = new Area(toString(ctx.name),
+                ctx.area_def().sensor_group().stream()
+                        .map(this::buildSensorGroup)
+                        .collect(Collectors.toList()));
+
+        areas.put(area.getName(), area);
+    }
+
+    private SensorGroup buildSensorGroup(Sensor_groupContext ctx) {
+        String sensorRef = toString(ctx.sensor_ref);
+        if (!sensors.containsKey(sensorRef)) {
+            throw new IllegalArgumentException("sensor '" + sensorRef + "' is referenced before definition");
+        }
+
+        SensorGroup sg = new SensorGroup(sensorRef, toInt(ctx.nb));
+
+        if (ctx.noise_override() != null) {
+            sg.setNoise(buildInterval(ctx.noise_override().interval()));
+        }
+
+        if (ctx.parallel() != null) {
+            sg.setParallel(true);
+        }
+
+        return sg;
     }
 
     @Override
     public void enterExec(ExecContext ctx) {
-        // TODO
+        Exec exec = new Exec(toString(ctx.name),
+                ctx.exec_def().area_group().stream()
+                        .map(this::buildAreaGroup)
+                        .collect(Collectors.toList()));
+
+        execs.put(exec.getName(), exec);
+    }
+
+    private AreaGroup buildAreaGroup(Area_groupContext ctx) {
+        String areaRef = toString(ctx.area_ref);
+        if (!areas.containsKey(areaRef)) {
+            throw new IllegalArgumentException("area '" + areaRef + "' is referenced before definition");
+        }
+
+        return new AreaGroup(areaRef,
+                ctx.list_basic_string().elem.stream()
+                        .map(ModelBuilder::toString)
+                        .collect(Collectors.toList()));
     }
 
     @Override
     public void enterGlobal(GlobalContext ctx) {
-        // TODO
+        global = new Global();
+
+        if (ctx.global_def().offset() != null) {
+            global.setOffset(toString(ctx.global_def().offset().date));
+        }
     }
 
     public static Integer toInt(Token token) {

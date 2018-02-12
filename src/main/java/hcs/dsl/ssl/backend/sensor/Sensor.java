@@ -2,13 +2,9 @@ package hcs.dsl.ssl.backend.sensor;
 
 import hcs.dsl.ssl.backend.misc.Interval;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import static hcs.dsl.ssl.backend.check.Checker.checkOffset;
 
 public class Sensor {
-
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final String name;
 
@@ -39,7 +35,7 @@ public class Sensor {
     }
 
     public void setNoise(Interval noise) {
-        this.noise = noise;
+        this.noise = noise; // todo check noise applicable ?
     }
 
     public String getOffset() {
@@ -47,11 +43,7 @@ public class Sensor {
     }
 
     public void setOffset(String offset) {
-        try {
-            LocalDateTime.parse(offset, dtf);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("invalid offset date: ", e);
-        }
+        checkOffset(offset);
 
         this.offset = offset;
     }
@@ -61,7 +53,6 @@ public class Sensor {
     }
 
     public void setPeriod(String period) {
-        // TODO check period value
         this.period = period;
     }
 }
