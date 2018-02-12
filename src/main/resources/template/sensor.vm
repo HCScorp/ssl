@@ -27,7 +27,8 @@ public class Sensor_${sensor.name} extends Sensor<String>{
         }
         }
     #elseif($law.type.name() == "RANDOM")
-        public class Law_${law.name} extends RandomLaw<$law.type.name()> {
+        #if ($law.)
+        public class Law_${law.name} extends RandomLaw< ${law.interval.type.name()} ) > {
         public Law_${law.name} (){
 
         }

@@ -14,6 +14,7 @@ import hcs.dsl.ssl.backend.misc.Interval;
 import hcs.dsl.ssl.backend.sensor.Sensor;
 
 import hcs.dsl.ssl.runtime.law.random.RandomLawIntervalInteger;
+import okhttp3.internal.Internal;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -73,7 +74,7 @@ public class SSLAppGenerator implements Runnable {
         Map<String, Sensor> sensors = new HashMap<>();
 
         RandomLaw randomLaw = new RandomLaw("myRandom");
-        randomLaw.setInterval(new Interval<>(1, 2));
+        randomLaw.setInterval(new Interval<>(Interval.Type.Integer, 1, 2));
 
         laws.put("random", randomLaw);
 
