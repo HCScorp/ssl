@@ -81,10 +81,10 @@ public class ModelBuilder extends SSLBaseListener {
 
         if (ctx.interval_double() != null) {
             Interval_doubleContext dCtx = ctx.interval_double();
-            return new Interval<>(toDouble(dCtx.min), toDouble(dCtx.max));
+            return new Interval<>(Interval.Type.Double, toDouble(dCtx.min), toDouble(dCtx.max));
         } else if (ctx.interval_integer() != null) {
             Interval_integerContext iCtx = ctx.interval_integer();
-            return new Interval<>(toInt(iCtx.min), toInt(iCtx.max));
+            return new Interval<>(Interval.Type.Integer, toInt(iCtx.min), toInt(iCtx.max));
         }
 
         throw new IllegalArgumentException("invalid interval: " + ctx);
