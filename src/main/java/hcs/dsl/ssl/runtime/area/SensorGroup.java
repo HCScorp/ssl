@@ -19,9 +19,14 @@ public class SensorGroup implements Runnable {
 
     private boolean realtime;
 
-    public SensorGroup(int number, Class<? extends NoisableSensor> sensorClass, Noise noiseOverride, boolean parallelMode) throws IllegalAccessException, InstantiationException {
+    public SensorGroup(int number, Class<? extends NoisableSensor> sensorClass, Noise noiseOverride, boolean parallelMode) {
         for (int i = 0; i < number; i++) {
-            NoisableSensor s = sensorClass.newInstance();
+            NoisableSensor s;
+            try {
+                s = sensorClass.newInstance();
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
 
             if (noiseOverride != null) {
                 s.setNoise(noiseOverride);
@@ -33,9 +38,15 @@ public class SensorGroup implements Runnable {
         this.parallelMode = parallelMode;
     }
 
-    public SensorGroup(int number, Class<? extends Sensor> sensorClass, boolean parallelMode) throws IllegalAccessException, InstantiationException {
+    public SensorGroup(int number, Class<? extends Sensor> sensorClass, boolean parallelMode) {
         for (int i = 0; i < number; i++) {
-            Sensor s = sensorClass.newInstance();
+            Sensor s;
+            try {
+                s = sensorClass.newInstance();
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+
             sensors.add(s);
         }
         this.parallelMode = parallelMode;
@@ -56,7 +67,7 @@ public class SensorGroup implements Runnable {
 
     public void process(long timestamp) {
         for (Sensor s : sensors) {
-           s.process(timestamp);
+            s.process(timestamp);
         }
     }
 
