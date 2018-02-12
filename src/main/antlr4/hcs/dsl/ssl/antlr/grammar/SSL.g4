@@ -21,12 +21,11 @@ interval                :  '[' (interval_integer|interval_double) ']' ;
     interval_integer    :  min=INTEGER ',' max=INTEGER ;
     interval_double     :  min=DOUBLE  ',' max=DOUBLE  ;
 
-markov_def      :   edge+ ;
-    edge        :   TOK_TAB (edge_integer|edge_double|edge_boolean|edge_string) '\n';
-    edge_integer:   from=INTEGER ' -> ' proba=DOUBLE ' -> ' to=INTEGER ;
-    edge_double :   from=DOUBLE  ' -> ' proba=DOUBLE ' -> ' to=DOUBLE ;
-    edge_boolean:   from=BOOLEAN ' -> ' proba=DOUBLE ' -> ' to=BOOLEAN ;
-    edge_string :   from=STRING  ' -> ' proba=DOUBLE ' -> ' to=STRING ;
+markov_def      :   (edge_integer+|edge_double+|edge_boolean+|edge_string+) ;
+    edge_integer:   TOK_TAB from=INTEGER ' -> ' proba=DOUBLE ' -> ' to=INTEGER '\n';
+    edge_double :   TOK_TAB from=DOUBLE  ' -> ' proba=DOUBLE ' -> ' to=DOUBLE  '\n';
+    edge_boolean:   TOK_TAB from=BOOLEAN ' -> ' proba=DOUBLE ' -> ' to=BOOLEAN '\n';
+    edge_string :   TOK_TAB from=STRING  ' -> ' proba=DOUBLE ' -> ' to=STRING  '\n';
 
 function_def    :   caseFunc+ ;
     caseFunc    :   TOK_TAB cond=EXPRESSION ' => ' expr=EXPRESSION '\n';
@@ -126,7 +125,7 @@ HEADER_TYPE     :   'time'|'value'|'name';
 
 PERIOD          :   '1'..'9''0'..'9'*('ms'|'s'|'m'|'h'|'d');
 
-DATE            :   '"'DIGITS DIGITS '/' DIGITS DIGITS '/' DIGITS DIGITS DIGITS DIGITS'"';
+DATE            :   DIGITS DIGITS '/' DIGITS DIGITS '/' DIGITS DIGITS DIGITS DIGITS ' ' DIGITS DIGITS ':' DIGITS DIGITS;
 BOOLEAN         :   ('true'|'TRUE'|'false'|'FALSE');
 BASIC_STRING    :   (LETTERS)(LETTERS|'0'..'9'|'_'|'-')*;
 INTEGER         :   ('-'|'+')?UINT;

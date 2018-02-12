@@ -38,7 +38,7 @@ sensor capteurNombreVoiture {
         using column 1 as time, column 3 as value and column 5 as name
         with linear interpolation restricted to [-1,1]
     noise [0,2]
-    offset "10/12/2018"
+    offset 10/12/2018 00:00
 }
 
 sensor capteurPersonneBU {
@@ -89,5 +89,5 @@ exec newSchool {
 }
 
 global {
-    offset "09/12/2018"
+    offset 09/12/2018 00:00
 }
