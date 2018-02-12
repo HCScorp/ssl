@@ -2,7 +2,7 @@ package hcs.dsl.ssl.backend.sensor;
 
 import hcs.dsl.ssl.backend.misc.Interval;
 
-import static hcs.dsl.ssl.backend.check.Checker.checkOffset;
+import static hcs.dsl.ssl.backend.check.Checker.checkDate;
 
 public class Sensor {
 
@@ -11,8 +11,7 @@ public class Sensor {
     private Source source;
     private Interval noise;
     private String offset;
-    private String period;
-
+    private Period period;
 
     public Sensor(String name) {
         this.name = name;
@@ -43,16 +42,16 @@ public class Sensor {
     }
 
     public void setOffset(String offset) {
-        checkOffset(offset);
+        checkDate(offset);
 
         this.offset = offset;
     }
 
-    public String getPeriod() {
+    public Period getPeriod() {
         return period;
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        this.period = new Period(period);
     }
 }

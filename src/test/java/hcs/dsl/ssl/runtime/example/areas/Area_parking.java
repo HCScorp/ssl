@@ -1,4 +1,15 @@
 package hcs.dsl.ssl.runtime.example.areas;
 
-public class Area_parking {
+import hcs.dsl.ssl.runtime.area.AreaType;
+import hcs.dsl.ssl.runtime.area.SensorGroup;
+import hcs.dsl.ssl.runtime.example.sensors.Sensor_capteurNombreVoiture;
+import hcs.dsl.ssl.runtime.noise.NoiseInteger;
+
+public class Area_parking extends AreaType {
+
+    public Area_parking() throws InstantiationException, IllegalAccessException {
+        super(
+                new SensorGroup(2, Sensor_capteurNombreVoiture.class, new NoiseInteger(1, 6), false)
+        );
+    }
 }

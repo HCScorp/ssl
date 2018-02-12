@@ -3,8 +3,8 @@ package hcs.dsl.ssl.backend.misc;
 public class Interval<T extends Number> {
 
     public enum Type {
-        DOUBLE,
-        INTEGER
+        Double,
+        Integer
     }
 
     public T min;

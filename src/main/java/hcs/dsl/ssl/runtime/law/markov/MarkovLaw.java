@@ -16,7 +16,6 @@ public abstract class MarkovLaw<T extends Serializable> extends Law<T> {
 
     public MarkovLaw() {
         this.edgeMap = new HashMap<>();
-        // todo verify the model
     }
 
     protected void addEdge(T value, Double proba, T target) {

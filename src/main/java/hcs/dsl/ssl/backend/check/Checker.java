@@ -8,7 +8,7 @@ public class Checker {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public static void checkOffset(String offset) {
+    public static void checkDate(String offset) {
         try {
             LocalDateTime.parse(offset, dtf);
         } catch (DateTimeParseException e) {

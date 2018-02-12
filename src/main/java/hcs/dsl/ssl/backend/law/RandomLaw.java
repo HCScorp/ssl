@@ -6,7 +6,6 @@ import hcs.dsl.ssl.backend.misc.ListWrapper;
 
 public class RandomLaw extends Law {
 
-    // TODO
     private ListWrapper list;
     private Interval interval;
 

@@ -40,7 +40,7 @@ list_basic_string  : elem+=BASIC_STRING  (', ' elem+=BASIC_STRING)* ;
 
 // Sensor
 sensor                      : 'sensor ' name=BASIC_STRING ' {\n' sensor_def '}';
-    sensor_def              : source noise? period? offset?;
+    sensor_def              : source period? noise? offset?;
         source              : TOK_TAB 'source from ' (law_ref|file_input) '\n';
         noise               : TOK_TAB 'noise ' interval '\n';
         offset              : TOK_TAB 'offset ' date=DATE '\n';
@@ -70,7 +70,12 @@ exec                : 'exec ' name=BASIC_STRING ' {\n' exec_def '}' ;
 
 // Global
 global          : 'global {\n' global_def '}' ;
-    global_def  : offset?;
+    global_def  : TOK_TAB (realtime|replay);
+    realtime    : 'realtime' globalOffset? '\n';
+    globalOffset: ' offset ' date=DATE;
+    replay      : 'replay\n' start end;
+    start       : TOK_TAB TOK_TAB 'start ' date=DATE '\n';
+    end         : TOK_TAB TOK_TAB 'end ' date=DATE '\n';
 
 /*****************
  **    Token    **
@@ -101,6 +106,10 @@ TOK_AREA        : 'area';
 TOK_PARALLEL    : 'running in parallel';
 TOK_EXEC        : 'exec';
 TOK_GLOBAL      : 'global';
+TOK_REALTIME    : 'realtime';
+TOK_REPLAY      : 'replay';
+TOK_START       : 'start';
+TOK_END         : 'end';
 
 TOK_BR_OP       : '{';
 TOK_BR_CL       : '}';
