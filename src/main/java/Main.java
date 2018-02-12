@@ -2,6 +2,7 @@ import hcs.dsl.ssl.antlr.ModelBuilder;
 import hcs.dsl.ssl.antlr.StopErrorListener;
 import hcs.dsl.ssl.antlr.grammar.*;
 import hcs.dsl.ssl.backend.Model;
+import hcs.dsl.ssl.generator.SSLAppGenerator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -48,10 +49,8 @@ public class Main {
     }
 
     private static void exportToCode(Model model) {
-        // TODO
-//        Visitor codeGenerator = new ToWiring();
-//        theApp.accept(codeGenerator);
-//        System.out.println(codeGenerator.getResult());
+        SSLAppGenerator generator = new SSLAppGenerator(model);
+        generator.run();
     }
 
 }

@@ -49,11 +49,11 @@ public class ModelBuilder extends SSLBaseListener {
     @Override
     public void enterRoot(RootContext ctx) {
         this.built = false;
-        this.model = new Model();
     }
 
     @Override
     public void exitRoot(RootContext ctx) {
+        this.model = new Model(laws, sensors, areas, execs, global);
         this.built = true;
     }
 
