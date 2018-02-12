@@ -1,0 +1,16 @@
+
+
+#foreach($sensor in $sensors)
+public class Sensor_${sensor.name} extends Sensor<String>{
+    public Sensor_${sensor.name}() {
+        super("${sensor.name}"
+            #if(${sensor.name})
+            , new ${sensor.source}
+            #end
+            )
+
+    }
+
+    }
+#end
+

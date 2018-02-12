@@ -9,11 +9,11 @@ import hcs.dsl.ssl.backend.sensor.Sensor;
 import java.util.Map;
 
 public class Model {
-    private final Map<String, Law> laws;
-    private final Map<String, Sensor> sensors;
-    private final Map<String, Area> areas;
-    private final Map<String, Exec> execs;
-    private final Global global;
+    public final Map<String, Law> laws;
+    public final Map<String, Sensor> sensors;
+    public final Map<String, Area> areas;
+    public final Map<String, Exec> execs;
+    public final Global global;
 
     public Model(Map<String, Law> laws,
                  Map<String, Sensor> sensors,

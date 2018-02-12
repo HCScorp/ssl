@@ -1,0 +1,27 @@
+
+
+
+
+
+#foreach($law in $laws)
+
+    #if ($law.type.name() == "MARKOV")
+    public class Law_${law.name} extends MarkovLaw<String> {
+        public Law_${law.name} (){
+            super();
+            #foreach($edge in ${law.list})
+                #if ($law.type.name() == "String")
+                    #set($edge.from = "$edge.from")
+                    #set($edge.to = "$edge.to")
+                #end
+                addEdge($edge.from, $edge.proba, $edge.to );
+            #end
+            }
+        }
+    #elseif($law.type.name() == "RANDOM")
+
+
+    #end
+
+
+#end
