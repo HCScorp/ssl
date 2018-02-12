@@ -1,18 +1,35 @@
 package hcs.dsl.ssl.backend.global;
 
-import static hcs.dsl.ssl.backend.check.Checker.checkOffset;
+import static hcs.dsl.ssl.backend.check.Checker.checkDate;
 
 public class Global {
 
-    private String offset;
+    private boolean realtime;
 
-    public void setOffset(String offset) {
-        checkOffset(offset);
+    private String start;
+    private String end;
 
-        this.offset = offset;
+    public void setReaply(String start, String end) {
+        checkDate(start);
+        checkDate(end);
+
+        this.start = start;
+        this.end = end;
     }
 
-    public String getOffset() {
-        return offset;
+    public void setRealtime() {
+        this.realtime = true;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public boolean isRealtime() {
+        return realtime;
     }
 }

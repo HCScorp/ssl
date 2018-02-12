@@ -92,19 +92,19 @@ public class ModelBuilder extends SSLBaseListener {
 
     private static ListWrapper buildList(ListContext list) {
         if (list.list_double() != null) {
-            return new ListWrapper(Type.DOUBLE, list.list_double().elem.stream()
+            return new ListWrapper(Type.Double, list.list_double().elem.stream()
                     .map(ModelBuilder::toDouble)
                     .collect(Collectors.toList()));
         } else if (list.list_integer() != null) {
-            return new ListWrapper(Type.INTEGER, list.list_integer().elem.stream()
+            return new ListWrapper(Type.Integer, list.list_integer().elem.stream()
                     .map(ModelBuilder::toInt)
                     .collect(Collectors.toList()));
         } else if (list.list_boolean() != null) {
-            return new ListWrapper(Type.BOOLEAN, list.list_boolean().elem.stream()
+            return new ListWrapper(Type.Boolean, list.list_boolean().elem.stream()
                     .map(ModelBuilder::toBoolean)
                     .collect(Collectors.toList()));
         } else if (list.list_string() != null) {
-            return new ListWrapper(Type.STRING, list.list_string().elem.stream()
+            return new ListWrapper(Type.String, list.list_string().elem.stream()
                     .map(ModelBuilder::toStringTrim)
                     .collect(Collectors.toList()));
         }
@@ -123,22 +123,22 @@ public class ModelBuilder extends SSLBaseListener {
         Markov_defContext def = ctx.markov_def();
 
         if (!def.edge_double().isEmpty()) {
-            law.setValType(Type.DOUBLE);
+            law.setValType(Type.Double);
             law.setList(def.edge_double().stream()
                     .map(e -> new Edge<>(toDouble(e.from), toDouble(e.proba), toDouble(e.to)))
                     .collect(Collectors.toList()));
         } else if (!def.edge_integer().isEmpty()) {
-            law.setValType(Type.INTEGER);
+            law.setValType(Type.Integer);
             law.setList(def.edge_double().stream()
                     .map(e -> new Edge<>(toInt(e.from), toDouble(e.proba), toInt(e.to)))
                     .collect(Collectors.toList()));
         } else if (!def.edge_boolean().isEmpty()) {
-            law.setValType(Type.BOOLEAN);
+            law.setValType(Type.Boolean);
             law.setList(def.edge_double().stream()
                     .map(e -> new Edge<>(toBoolean(e.from), toDouble(e.proba), toBoolean(e.to)))
                     .collect(Collectors.toList()));
         } else if (!def.edge_string().isEmpty()) {
-            law.setValType(Type.STRING);
+            law.setValType(Type.String);
             law.setList(def.edge_double().stream()
                     .map(e -> new Edge<>(toStringTrim(e.from), toDouble(e.proba), toStringTrim(e.to)))
                     .collect(Collectors.toList()));
@@ -374,9 +374,14 @@ public class ModelBuilder extends SSLBaseListener {
     @Override
     public void enterGlobal(GlobalContext ctx) {
         global = new Global();
+        Global_defContext def = ctx.global_def();
 
-        if (ctx.global_def().offset() != null) {
-            global.setOffset(toString(ctx.global_def().offset().date));
+        if (def.replay() != null) {
+            global.setReaply(
+                    toString(def.replay().start().date),
+                    toString(def.replay().end().date));
+        } else {
+            global.setRealtime();
         }
     }
 

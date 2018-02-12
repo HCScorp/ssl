@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.runtime.period;
+package hcs.dsl.ssl.backend.sensor;
 
 import java.time.Duration;
 import java.util.regex.Matcher;
