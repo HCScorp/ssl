@@ -1,6 +1,9 @@
 package hcs.dsl.ssl.backend.global;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static hcs.dsl.ssl.backend.check.Checker.checkDate;
 
 public class Global {
@@ -42,6 +45,18 @@ public class Global {
 
     @Override
     public String toString() {
-        return ",new Config("+ Boolean.toString(realtime) +",\""+start+"\"," +"\"" + end + "\")";
+        Map<String, String> varStatus = new HashMap<>();
+        String offsetOuput = offset;
+        if (offset != null)
+            varStatus.put("offset", "\""+ offset + "\"");
+        if (start != null)
+            varStatus.put("start","\""+ start + "\"" );
+        if (end != null)
+            varStatus.put("end","\""+ end + "\"" );
+
+
+        return ",new Config("+ Boolean.toString(realtime) + ","
+                +varStatus.get("offset")+"," + varStatus.get("start") + ","
+        + varStatus.get("end") + ")";
     }
 }
