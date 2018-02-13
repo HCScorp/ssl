@@ -5,6 +5,7 @@ import hcs.dsl.ssl.backend.Model;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import hcs.dsl.ssl.backend.law.FunctionLaw;
 import hcs.dsl.ssl.backend.law.MarkovLaw;
@@ -13,6 +14,9 @@ import hcs.dsl.ssl.backend.sensor.SourceLaw;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class SSLAppGenerator implements Runnable {
 
@@ -25,7 +29,12 @@ public class SSLAppGenerator implements Runnable {
 
     private static final String TEMPLATE_SENSOR = "src/main/resources/template/sensor.vm";
     private static final String TEMPLATE_MAIN = "src/main/resources/template/main.vm";
-    private static final String OUT_NAME_FILE = "src/main/Simulation.java";
+
+    private static final String OUT_NAME_FILE = "src/main/java/Simulation.java";
+    private static final String OUT_MAIN_FILE = "src/main/java/Main.java";
+
+    File dockerfile = new File("src/main/resources/extern/Dockerfile");
+    File pom = new File("src/main/resources/extern/pom.xml");
 
     public SSLAppGenerator(Model model) {
         engine = new VelocityEngine();
@@ -55,10 +64,27 @@ public class SSLAppGenerator implements Runnable {
 
     public void writeTemplate(){
         model.execs.forEach((key, value) -> {
-            File f = new File(key + "/" + OUT_NAME_FILE);
-            createTree(f);
-            Template template = engine.getTemplate(TEMPLATE_SENSOR);
-            mergeTemplate(template, f);
+
+            String outPutPath = "generated/" +  key + "/";
+            File simulation = new File(outPutPath + OUT_NAME_FILE);
+            File main = new File(outPutPath + OUT_MAIN_FILE);
+            context.put("executor", key);
+            createTree(simulation);
+            File dockerOut = new File(outPutPath + "Dockerfile");
+            File pomOut = new File(outPutPath + "pom.xml");
+
+
+            try {
+                Files.copy(dockerfile.toPath(), dockerOut.toPath(),REPLACE_EXISTING );
+                Files.copy(pom.toPath(), pomOut.toPath(), REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Template templateSimulation = engine.getTemplate(TEMPLATE_SENSOR);
+            Template templateMain = engine.getTemplate(TEMPLATE_MAIN);
+
+            mergeTemplate(templateMain, main);
+            mergeTemplate(templateSimulation, simulation);
         });
 
     }

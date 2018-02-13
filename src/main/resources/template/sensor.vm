@@ -1,3 +1,14 @@
+import com.udojava.evalex.Expression;
+
+import hcs.dsl.ssl.runtime.area.*;
+import hcs.dsl.ssl.runtime.exec.*;
+import hcs.dsl.ssl.runtime.law.markov.*;
+import hcs.dsl.ssl.runtime.law.function.*;
+import hcs.dsl.ssl.runtime.law.random.*;
+import hcs.dsl.ssl.runtime.noise.*;
+import hcs.dsl.ssl.runtime.sensor.*;
+import hcs.dsl.ssl.runtime.source.*;
+
 
 #foreach($sensor in $sensors)
     #if (${sensor.getSource().getClass().getSimpleName()} == "SourceLaw")
@@ -17,8 +28,7 @@
     public Sensor_${sensor.name}() {
         super("${sensor.name}",
                 new Law_${law.name}()#if($sensor.period),${sensor.getPeriod().getPeriodMs()}#end
-                #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()} )
-                #end)
+                #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()})                #end);
     }}
     #end
 #end
@@ -79,7 +89,7 @@
 #foreach($area in $areas)
 class Area_$area.name extends AreaType {
 public Area_${area.name}() {
-    super("$area.name",
+    super("$area.name"
     #foreach($sensorGroup in ${area.getSensorGroups()})
         , $sensorGroup
     #end);
