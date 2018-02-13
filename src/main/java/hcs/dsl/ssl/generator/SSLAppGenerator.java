@@ -1,23 +1,22 @@
 package hcs.dsl.ssl.generator;
 
 import hcs.dsl.ssl.backend.Model;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
-
 import hcs.dsl.ssl.backend.law.*;
 import hcs.dsl.ssl.backend.misc.Interval;
 import hcs.dsl.ssl.backend.misc.ListWrapper;
 import hcs.dsl.ssl.backend.misc.Var;
 import hcs.dsl.ssl.backend.sensor.Sensor;
-
-import hcs.dsl.ssl.runtime.law.random.RandomLawIntervalInteger;
-import okhttp3.internal.Internal;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class SSLAppGenerator implements Runnable {

@@ -1,6 +1,6 @@
 package hcs.dsl.ssl.antlr;
 
-import hcs.dsl.ssl.antlr.grammar.*;
+import hcs.dsl.ssl.antlr.grammar.SSLBaseListener;
 import hcs.dsl.ssl.backend.Model;
 import hcs.dsl.ssl.backend.area.Area;
 import hcs.dsl.ssl.backend.area.SensorGroup;
