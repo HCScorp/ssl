@@ -18,6 +18,10 @@ public class NoisableSensor<T extends Number> extends Sensor<T> {
 
     @Override
     public T produceValue(long timestamp) {
-        return noise.apply(super.produceValue(timestamp));
+        if (noise != null) {
+            return noise.apply(super.produceValue(timestamp));
+        }
+
+        return super.produceValue(timestamp);
     }
 }

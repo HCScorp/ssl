@@ -45,7 +45,7 @@ public class Sensor<T extends Serializable> implements Runnable {
 
     @Override
     public void run() {
-        process(System.currentTimeMillis() * 1000);
+        process(System.currentTimeMillis() / 1000);
     }
 
     public void process(long timestamp) {

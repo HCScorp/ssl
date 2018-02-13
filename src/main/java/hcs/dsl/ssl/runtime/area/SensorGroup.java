@@ -14,12 +14,13 @@ import java.util.concurrent.TimeUnit;
 
 public class SensorGroup implements Runnable {
 
-    private List<Sensor> sensors;
+    private List<Sensor> sensors = new ArrayList<>();
     private boolean parallelMode;
 
-    private boolean realtime;
-
-    public SensorGroup(int number, Class<? extends NoisableSensor> sensorClass, Noise noiseOverride, boolean parallelMode) {
+    public <T extends Number> SensorGroup(int number,
+                                          Class<? extends NoisableSensor<T>> sensorClass,
+                                          Noise<T> noiseOverride,
+                                          boolean parallelMode) {
         for (int i = 0; i < number; i++) {
             NoisableSensor s;
             try {
@@ -38,7 +39,9 @@ public class SensorGroup implements Runnable {
         this.parallelMode = parallelMode;
     }
 
-    public SensorGroup(int number, Class<? extends Sensor> sensorClass, boolean parallelMode) {
+    public SensorGroup(int number,
+                       Class<? extends Sensor> sensorClass,
+                       boolean parallelMode) {
         for (int i = 0; i < number; i++) {
             Sensor s;
             try {
@@ -73,6 +76,8 @@ public class SensorGroup implements Runnable {
 
     @Override
     public void run() {
+        // TODO use parallelMode information ?
+
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         for (Sensor s : sensors) {
             executor.scheduleAtFixedRate(s, 0, s.getPeriod(), TimeUnit.SECONDS);

@@ -22,14 +22,15 @@ public class Exec implements Runnable {
 
     @Override
     public void run() {
-        InfluxDB influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "", "");
+        InfluxDB influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "hcs", "hcs");
         String dbName = "SSL";
         influxDB.createDatabase(dbName);
         influxDB.setDatabase(dbName);
 
-        String rpName = "defaultRet";
-        influxDB.createRetentionPolicy(rpName, dbName, "30d", "30m", 2, true);
-        influxDB.setRetentionPolicy(rpName);
+        // TODO ret policy ?
+//        String rpName = "defaultRet";
+//        influxDB.createRetentionPolicy(rpName, dbName, "9999w", "9999w", 1, true);
+//        influxDB.setRetentionPolicy(rpName);
 
         for (AreaInstance ai : areaInstances) {
             ai.configure(influxDB);
@@ -45,13 +46,13 @@ public class Exec implements Runnable {
 
             // TODO from START to END
             for (AreaInstance ai : areaInstances) {
-                ai.process(0L); // TODO
+                ai.process(1518480932L); // TODO
             }
             // TODO NOT REALTIME
         }
     }
 
-    public void applyOffset(String offsetStr) {
+    private void applyOffset(String offsetStr) {
         if (offsetStr != null) {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime offDate = LocalDateTime.parse(offsetStr, dtf);

@@ -70,7 +70,7 @@ area parking {
 
 area salleDeClasse {
     has 3 capteurLumiFenetre running in parallel
-    has 1 capteurTempSalle with noise [1,4] running in parallel
+    has 1 capteurTempSalle with noise [1.0,4.0] running in parallel
 }
 
 area bureau {

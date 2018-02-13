@@ -31,6 +31,10 @@ public abstract class FileSource<T extends Serializable> extends Source<T> {
     // TODO fetch
 }
 
+// TODO loop interval (get the min and max and loop when limits are reached)
+// TODO define period base on average update time
+// TODO ?
+
 
 // TODO take a path to file or an url
 // TODO when the file is fetch (csv or json) use a parser to build the list of tuple
