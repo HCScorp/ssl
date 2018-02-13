@@ -1,40 +1,62 @@
-
-
 #foreach($sensor in $sensors)
 public class Sensor_${sensor.name} extends Sensor<String>{
     public Sensor_${sensor.name}() {
-        super("${sensor.name}"
-            )
+        super("${sensor.name}" )
     }
 
     }
 #end
-
-
-
 #foreach($law in $laws)
-    #if ($law.type.name() == "MARKOV")
-        public class Law_${law.name} extends MarkovLaw<$law.type.name()> {
+    #if (${law.type.name()} == "MARKOV")
+    #set($markovLaw = $MarkovLaw.cast($law))
+        public class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType()}> {
         public Law_${law.name} (){
         super();
-        #foreach($edge in ${law.list})
-            #if ($law.type.name() == "String")
-                #set($edge.from = "$edge.from")
-                #set($edge.to = "$edge.to")
-            #end
-            addEdge($edge.from, $edge.proba, $edge.to );
+    #foreach($edge in ${markovLaw.getList()})
+
+        #if(${markovLaw.getValType()} == "String")
+            addEdge( "$edge.from", $edge.proba, "$edge.to" );
+        #else
+            addEdge( $edge.from, $edge.proba, $edge.to );
+        #end
+
+
         #end
         }
         }
-    #elseif($law.type.name() == "RANDOM")
-        #if ($law.)
-        public class Law_${law.name} extends RandomLaw< ${law.interval.type.name()} ) > {
-        public Law_${law.name} (){
+    #elseif(${law.type.name()} == "RANDOM")
+        #set($randomLaw = $RandomLaw.cast($law))
+        #if ($randomLaw.getList())
+                public class Law_${law.name} extends RandomLawArray<$randomLaw.list.type> {
+                public Law_${law.name} (){ super(${randomLaw.getList().toString()})
+                }
+
+        ## It's an interval
+        #else
+            #if ($randomLaw.type.name() == "Double")
+            public class Law_${law.name} extends RandomLawIntervalDouble {
+            #else
+                public class Law_${law.name} extends RandomLawIntervalInteger {
+            #end
+            public Law_${law.name} (){super(${randomLaw.interval});}
+            }
+
+
+        #end
+        }
+
+        #elseif(${law.type.name()} == "FUNCTION")
+        #set($functionLaw = $FunctionLaw.cast($law))
+### TODO: Just fonctionLawDouble :: To be modified.
+        public class Law_${law.name} extends FunctionLawDouble {
+        public Law_${law.name}() {
+            super();
+            #foreach($case in ${functionLaw.getCases()})
+
+                addCase("${case.condition}", "${case.expresion}");
+            #end
 
         }
-        }
-
-    #elseif($law.type.name() == "FUNCTION")
 
     #end
 
