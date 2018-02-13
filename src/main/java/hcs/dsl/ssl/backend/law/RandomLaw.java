@@ -6,8 +6,8 @@ import hcs.dsl.ssl.backend.misc.ListWrapper;
 
 public class RandomLaw extends Law {
 
-    private ListWrapper list;
-    private Interval interval;
+    public ListWrapper list;
+    public Interval interval;
 
     public RandomLaw(String name) {
         super(name, Type.RANDOM);
