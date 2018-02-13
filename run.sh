@@ -15,7 +15,9 @@ if [ ! -f $FILE ]; then
     fi
 
     echo "file '$FILE' not found"
+    exit 1
 fi
 
 mvn exec:java -Dexec.args="$FILE"
 
+# TODO build every docker images
