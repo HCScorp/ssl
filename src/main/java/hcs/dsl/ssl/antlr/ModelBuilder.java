@@ -192,6 +192,8 @@ public class ModelBuilder extends SSLBaseListener {
 
         if (def.period() != null) {
             sensor.setPeriod(toString(def.period().period_value));
+        } else {
+            sensor.setPeriod("5m");
         }
 
         sensors.put(sensor.getName(), sensor);
