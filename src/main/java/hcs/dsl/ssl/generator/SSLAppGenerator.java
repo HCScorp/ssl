@@ -6,13 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
-import hcs.dsl.ssl.backend.area.Area;
-import hcs.dsl.ssl.backend.area.SensorGroup;
-import hcs.dsl.ssl.backend.exec.AreaGroup;
-import hcs.dsl.ssl.backend.exec.Exec;
-import hcs.dsl.ssl.backend.global.Global;
-
 import hcs.dsl.ssl.backend.law.FunctionLaw;
 import hcs.dsl.ssl.backend.law.MarkovLaw;
 import hcs.dsl.ssl.backend.law.RandomLaw;
@@ -20,12 +13,6 @@ import hcs.dsl.ssl.backend.sensor.SourceLaw;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 public class SSLAppGenerator implements Runnable {
 

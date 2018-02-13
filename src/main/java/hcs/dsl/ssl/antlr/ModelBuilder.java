@@ -378,11 +378,16 @@ public class ModelBuilder extends SSLBaseListener {
         Global_defContext def = ctx.global_def();
 
         if (def.replay() != null) {
-            global.setReaply(
+            global.setReplay(
                     toString(def.replay().start().date),
                     toString(def.replay().end().date));
         } else {
             global.setRealtime();
+
+            if (def.realtime().globalOffset() != null) {
+                global.setOffset(
+                        toString(def.realtime().globalOffset().date));
+            }
         }
     }
 

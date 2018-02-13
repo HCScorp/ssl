@@ -1,6 +1,5 @@
 package hcs.dsl.ssl.backend.global;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import static hcs.dsl.ssl.backend.check.Checker.checkDate;
 
@@ -8,10 +7,16 @@ public class Global {
 
     private boolean realtime;
 
+    private String offset;
+
     private String start;
     private String end;
 
-    public void setReaply(String start, String end) {
+    public void setOffset(String offset) {
+        this.offset = offset;
+    }
+
+    public void setReplay(String start, String end) {
         checkDate(start);
         checkDate(end);
 
