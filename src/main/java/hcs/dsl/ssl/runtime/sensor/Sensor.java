@@ -59,8 +59,8 @@ public class Sensor<T extends Serializable> implements Runnable {
         return name;
     }
 
-    public long getPeriod() {
-        return period;
+    public long getPeriodMs() {
+        return period / 1000000;
     }
 
     @Override

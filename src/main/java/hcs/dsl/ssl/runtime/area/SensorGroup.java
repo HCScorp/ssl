@@ -5,7 +5,6 @@ import hcs.dsl.ssl.runtime.sensor.NoisableSensor;
 import hcs.dsl.ssl.runtime.sensor.Sensor;
 import org.influxdb.InfluxDB;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -62,9 +61,15 @@ public class SensorGroup implements Runnable {
 
 
     public void process(long start, long end) {
-        // TODO
-        for (Sensor s : sensors) {
-//            s.process(timestamp);
+        start *= 1000;
+        end *= 1000;
+
+        long period = sensors.get(0).getPeriodMs();
+
+        for (long i = start; i < end; i += period) {
+            for (Sensor s : sensors) {
+                s.process(i / 1000);
+            }
         }
     }
 
@@ -72,7 +77,7 @@ public class SensorGroup implements Runnable {
     public void run() {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         for (Sensor s : sensors) {
-            executor.scheduleAtFixedRate(s, 0, s.getPeriod(), TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(s, 0, s.getPeriodMs(), TimeUnit.MILLISECONDS);
         }
     }
 }
