@@ -3,7 +3,6 @@ package hcs.dsl.ssl.backend.law;
 import java.io.Serializable;
 
 public class Edge<T extends Serializable> {
-
     public T from;
     public Double proba;
     public T to;
@@ -13,4 +12,17 @@ public class Edge<T extends Serializable> {
         this.proba = proba;
         this.to = to;
     }
+
+    public T getFrom() {
+        return from;
+    }
+
+    public Double getProba() {
+        return proba;
+    }
+
+    public T getTo() {
+        return to;
+    }
+
 }
