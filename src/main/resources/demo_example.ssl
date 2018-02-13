@@ -34,12 +34,12 @@ law function simpleCarre {
 
 sensor capteurNombreVoiture {
     source from law simpleCarre
-    period 150ms
+    period 5m
 }
 
 sensor capteurPersonneBU {
     source from law simpleCarre
-    period 100ms
+    period 10m
 }
 
 sensor capteurLumiFenetre {

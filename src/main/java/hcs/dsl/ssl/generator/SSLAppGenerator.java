@@ -33,8 +33,8 @@ public class SSLAppGenerator implements Runnable {
     private static final String OUT_NAME_FILE = "src/main/java/Simulation.java";
     private static final String OUT_MAIN_FILE = "src/main/java/Main.java";
 
-    File dockerfile = new File("src/main/resources/extern/Dockerfile");
-    File pom = new File("src/main/resources/extern/pom.xml");
+    private File dockerfile = new File("src/main/resources/extern/Dockerfile");
+    private File pom = new File("src/main/resources/extern/pom.xml");
 
     public SSLAppGenerator(Model model) {
         engine = new VelocityEngine();
@@ -58,18 +58,20 @@ public class SSLAppGenerator implements Runnable {
     }
 
 
-    public void createTree(File newExec){
+    private void createTree(File newExec){
         newExec.getParentFile().mkdirs();
     }
 
-    public void writeTemplate(){
+    private void writeTemplate(){
         model.execs.forEach((key, value) -> {
 
             String outPutPath = "generated/" +  key + "/";
             File simulation = new File(outPutPath + OUT_NAME_FILE);
             File main = new File(outPutPath + OUT_MAIN_FILE);
+
             context.put("executor", key);
             createTree(simulation);
+
             File dockerOut = new File(outPutPath + "Dockerfile");
             File pomOut = new File(outPutPath + "pom.xml");
 
@@ -90,7 +92,7 @@ public class SSLAppGenerator implements Runnable {
     }
 
 
-    public void mergeTemplate(Template templateSensor, File templateFile){
+    private void mergeTemplate(Template templateSensor, File templateFile){
         try (FileWriter fw = new FileWriter(templateFile)) {
             templateSensor.merge(context, fw);
         } catch (IOException e) {

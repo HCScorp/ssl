@@ -134,17 +134,17 @@ public class ModelBuilder extends SSLBaseListener {
                     .collect(Collectors.toList()));
         } else if (!def.edge_integer().isEmpty()) {
             law.setValType(Type.Integer);
-            law.setList(def.edge_double().stream()
+            law.setList(def.edge_integer().stream()
                     .map(e -> new Edge<>(toInt(e.from), toDouble(e.proba), toInt(e.to)))
                     .collect(Collectors.toList()));
         } else if (!def.edge_boolean().isEmpty()) {
             law.setValType(Type.Boolean);
-            law.setList(def.edge_double().stream()
+            law.setList(def.edge_boolean().stream()
                     .map(e -> new Edge<>(toBoolean(e.from), toDouble(e.proba), toBoolean(e.to)))
                     .collect(Collectors.toList()));
         } else if (!def.edge_string().isEmpty()) {
             law.setValType(Type.String);
-            law.setList(def.edge_double().stream()
+            law.setList(def.edge_string().stream()
                     .map(e -> new Edge<>(toStringTrim(e.from), toDouble(e.proba), toStringTrim(e.to)))
                     .collect(Collectors.toList()));
         } else {
