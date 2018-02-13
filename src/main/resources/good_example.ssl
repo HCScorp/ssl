@@ -37,8 +37,8 @@ sensor capteurNombreVoiture {
         using column 1 as time, column 3 as value and column 5 as name
         with linear interpolation restricted to [-1,1]
     noise [0,2]
-    offset 10/12/2018 00:00
 }
+# offset 10/12/2018 12:00
 
 sensor capteurPersonneBU {
     source from local json "dataPersonneBU.json"
@@ -69,8 +69,8 @@ area parking {
 }
 
 area salleDeClasse {
-    has 3 capteurLumiFenetre running in parallel
-    has 1 capteurTempSalle with noise [1.0,4.0] running in parallel
+    has 3 capteurLumiFenetre
+    has 1 capteurTempSalle with noise [1.0,4.0]
 }
 
 area bureau {

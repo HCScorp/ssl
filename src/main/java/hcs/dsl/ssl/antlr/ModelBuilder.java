@@ -61,6 +61,10 @@ public class ModelBuilder extends SSLBaseListener {
     public void enterRandom(RandomContext ctx) {
         RandomLaw law = buildRandomLaw(ctx);
         laws.put(law.getName(), law);
+
+        // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
+        // TODO check math expression !!
+        // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     private static RandomLaw buildRandomLaw(RandomContext ctx) {
@@ -181,9 +185,9 @@ public class ModelBuilder extends SSLBaseListener {
             sensor.setNoise(buildInterval(def.noise().interval()));
         }
 
-        if (def.offset() != null) {
-            sensor.setOffset(toString(def.offset().date));
-        }
+//        if (def.offset() != null) {
+//            sensor.setOffset(toString(def.offset().date));
+//        }
 
         if (def.period() != null) {
             sensor.setPeriod(toString(def.period().period_value));
@@ -340,10 +344,6 @@ public class ModelBuilder extends SSLBaseListener {
 
         if (ctx.noise_override() != null) {
             sg.setNoise(buildInterval(ctx.noise_override().interval()));
-        }
-
-        if (ctx.parallel() != null) {
-            sg.setParallel(true);
         }
 
         return sg;

@@ -40,10 +40,10 @@ list_basic_string  : elem+=BASIC_STRING  (', ' elem+=BASIC_STRING)* ;
 
 // Sensor
 sensor                      : 'sensor ' name=BASIC_STRING ' {\n' sensor_def '}';
-    sensor_def              : source period? noise? offset?;
+    sensor_def              : source period? noise? ; // offset?;
         source              : TOK_TAB 'source from ' (law_ref|file_input) '\n';
         noise               : TOK_TAB 'noise ' interval '\n';
-        offset              : TOK_TAB 'offset ' date=DATE '\n';
+//        offset              : TOK_TAB 'offset ' date=DATE '\n';
         period              : TOK_TAB 'period ' period_value=PERIOD '\n';
 
 file_input  : location=FILE_LOCATION ' ' (type_json|type_csv) interpolation? ;
@@ -59,9 +59,8 @@ law_ref : 'law ' ref=BASIC_STRING;
 // Area
 area                        : 'area ' name=BASIC_STRING ' {\n' area_def '}'  ;
     area_def                : sensor_group+ ;
-        sensor_group        : TOK_TAB 'has ' nb=INTEGER ' ' sensor_ref=BASIC_STRING noise_override? parallel? '\n';
+        sensor_group        : TOK_TAB 'has ' nb=INTEGER ' ' sensor_ref=BASIC_STRING noise_override? '\n';
             noise_override  : ' with noise ' interval;
-            parallel        : ' running in parallel' ;
 
 // Exec
 exec                : 'exec ' name=BASIC_STRING ' {\n' exec_def '}' ;
@@ -103,7 +102,6 @@ TOK_AS          : 'as';
 TOK_PERIOD      : 'period';
 
 TOK_AREA        : 'area';
-TOK_PARALLEL    : 'running in parallel';
 TOK_EXEC        : 'exec';
 TOK_GLOBAL      : 'global';
 TOK_REALTIME    : 'realtime';

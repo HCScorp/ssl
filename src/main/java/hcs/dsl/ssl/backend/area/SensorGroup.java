@@ -7,10 +7,8 @@ public class SensorGroup {
     private final Integer number;
     private final String sensorRef;
     private Interval noise; // todo check noise applicable ?
-    private Boolean parallel;
 
     public SensorGroup(String sensorRef, Integer number) {
-        this.parallel = false;
         this.sensorRef = sensorRef;
         this.number = number;
     }
@@ -31,11 +29,4 @@ public class SensorGroup {
         this.noise = noise;
     }
 
-    public Boolean getParallel() {
-        return parallel;
-    }
-
-    public void setParallel(Boolean parallel) {
-        this.parallel = parallel;
-    }
 }

@@ -1,5 +1,7 @@
 package hcs.dsl.ssl.backend.law;
 
+import hcs.dsl.ssl.backend.misc.Var;
+
 import java.util.List;
 
 public class FunctionLaw extends Law {
@@ -16,5 +18,10 @@ public class FunctionLaw extends Law {
 
     public void setCases(List<CaseFunc> cases) {
         this.cases = cases;
+    }
+
+    @Override
+    public Var.Type getValType() {
+        return Var.Type.Double;
     }
 }

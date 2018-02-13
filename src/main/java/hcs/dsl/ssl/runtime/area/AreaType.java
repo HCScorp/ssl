@@ -2,11 +2,14 @@ package hcs.dsl.ssl.runtime.area;
 
 import org.influxdb.InfluxDB;
 
+
 public class AreaType implements Runnable {
 
     private final SensorGroup[] sensorGroups;
+    private final String name;
 
-    public AreaType(SensorGroup... sensorGroups) {
+    public AreaType(String name, SensorGroup... sensorGroups) {
+        this.name = name;
         this.sensorGroups = sensorGroups;
     }
 
@@ -16,15 +19,15 @@ public class AreaType implements Runnable {
         }
     }
 
-    public void configure(InfluxDB influxDB) {
+    public void configure(String execName, String areaInstance, InfluxDB influxDB) {
         for (SensorGroup sg : sensorGroups) {
-            sg.configure(influxDB);
+            sg.configure(execName, areaInstance, name, influxDB);
         }
     }
 
-    public void process(long timestamp) {
+    public void process(long start, long end) {
         for (SensorGroup sg : sensorGroups) {
-            sg.process(timestamp);
+            sg.process(start, end);
         }
     }
 

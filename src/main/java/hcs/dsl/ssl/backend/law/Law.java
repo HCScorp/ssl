@@ -1,6 +1,8 @@
 package hcs.dsl.ssl.backend.law;
 
-public class Law {
+import hcs.dsl.ssl.backend.misc.Var;
+
+public abstract class Law {
 
     public enum Type {
         RANDOM,
@@ -23,4 +25,6 @@ public class Law {
     public Type getType() {
         return type;
     }
+
+    public abstract Var.Type getValType();
 }

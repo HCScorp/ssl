@@ -5,57 +5,79 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 public class Exec implements Runnable {
 
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final AreaInstance[] areaInstances;
     private final Config conf;
+    private final String name;
+    private InfluxDB influxDB;
 
-    public Exec(Config conf, AreaInstance... areaInstances) {
+    public Exec(String name, Config conf, AreaInstance... areaInstances) {
+        this.name = name;
         this.areaInstances = areaInstances;
         this.conf = conf;
     }
 
     @Override
     public void run() {
-        InfluxDB influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "hcs", "hcs");
-        String dbName = "SSL";
+        influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "hcs", "hcs");
+        String dbName = "ssl";
         influxDB.createDatabase(dbName);
         influxDB.setDatabase(dbName);
 
-        // TODO ret policy ?
-//        String rpName = "defaultRet";
-//        influxDB.createRetentionPolicy(rpName, dbName, "9999w", "9999w", 1, true);
-//        influxDB.setRetentionPolicy(rpName);
-
         for (AreaInstance ai : areaInstances) {
-            ai.configure(influxDB);
+            ai.configure(name, influxDB);
         }
 
         if (conf.isRealtime()) {
-            applyOffset(conf.getOffset());
-            for (AreaInstance ai : areaInstances) {
-                new Thread(ai).start();
-            }
+            runRealtime();
         } else {
-            applyOffset(conf.getStart());
+            runReplay();
+        }
+    }
 
-            // TODO from START to END
-            for (AreaInstance ai : areaInstances) {
-                ai.process(1518480932L); // TODO
-            }
-            // TODO NOT REALTIME
+    private void runRealtime() {
+        influxDB.disableBatch();
+
+        applyOffset(conf.getOffset());
+        for (AreaInstance ai : areaInstances) {
+            new Thread(ai).start();
+        }
+
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            // TODO log error?
+        }
+    }
+
+    private void runReplay() {
+        applyOffset(conf.getStart());
+
+        influxDB.enableBatch(1024, 200, TimeUnit.MILLISECONDS);
+
+        LocalDateTime start = LocalDateTime.parse(conf.getStart(), DTF);
+        LocalDateTime end = LocalDateTime.parse(conf.getEnd(), DTF);
+
+        long startTs = start.atZone(ZoneId.systemDefault()).toEpochSecond();
+        long endTs = end.atZone(ZoneId.systemDefault()).toEpochSecond();
+
+        for (AreaInstance ai : areaInstances) {
+            ai.process(startTs, endTs);
         }
     }
 
     private void applyOffset(String offsetStr) {
         if (offsetStr != null) {
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime offDate = LocalDateTime.parse(offsetStr, dtf);
+            LocalDateTime offDate = LocalDateTime.parse(offsetStr, DTF);
             long offset = ChronoUnit.MILLIS.between(now, offDate);
             for (AreaInstance ai : areaInstances) {
                 ai.applyOffset(offset);

@@ -13,6 +13,7 @@ public class MarkovLaw extends Law {
         super(name, Type.MARKOV);
     }
 
+    @Override
     public Var.Type getValType() {
         return type;
     }

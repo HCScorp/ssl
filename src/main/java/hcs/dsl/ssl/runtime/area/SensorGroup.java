@@ -15,12 +15,10 @@ import java.util.concurrent.TimeUnit;
 public class SensorGroup implements Runnable {
 
     private List<Sensor> sensors = new ArrayList<>();
-    private boolean parallelMode;
 
     public <T extends Number> SensorGroup(int number,
                                           Class<? extends NoisableSensor<T>> sensorClass,
-                                          Noise<T> noiseOverride,
-                                          boolean parallelMode) {
+                                          Noise<T> noiseOverride) {
         for (int i = 0; i < number; i++) {
             NoisableSensor s;
             try {
@@ -35,13 +33,9 @@ public class SensorGroup implements Runnable {
 
             sensors.add(s);
         }
-
-        this.parallelMode = parallelMode;
     }
 
-    public SensorGroup(int number,
-                       Class<? extends Sensor> sensorClass,
-                       boolean parallelMode) {
+    public SensorGroup(int number, Class<? extends Sensor> sensorClass) {
         for (int i = 0; i < number; i++) {
             Sensor s;
             try {
@@ -52,7 +46,6 @@ public class SensorGroup implements Runnable {
 
             sensors.add(s);
         }
-        this.parallelMode = parallelMode;
     }
 
     public void applyOffset(long offset) {
@@ -61,26 +54,25 @@ public class SensorGroup implements Runnable {
         }
     }
 
-    public void configure(InfluxDB influxDB) {
+    public void configure(String execName, String areaInstance, String areaType, InfluxDB influxDB) {
         for (Sensor s : sensors) {
-            s.setInfluxDB(influxDB);
+            s.configure(execName, areaInstance, areaType, influxDB);
         }
     }
 
 
-    public void process(long timestamp) {
+    public void process(long start, long end) {
+        // TODO
         for (Sensor s : sensors) {
-            s.process(timestamp);
+//            s.process(timestamp);
         }
     }
 
     @Override
     public void run() {
-        // TODO use parallelMode information ?
-
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         for (Sensor s : sensors) {
-            executor.scheduleAtFixedRate(s, 0, s.getPeriod(), TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(s, 0, s.getPeriod(), TimeUnit.MILLISECONDS);
         }
     }
 }

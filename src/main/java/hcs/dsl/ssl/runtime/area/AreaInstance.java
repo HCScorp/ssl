@@ -16,12 +16,12 @@ public class AreaInstance implements Runnable {
         areaType.applyOffset(offset);
     }
 
-    public void configure(InfluxDB influxDB) {
-        areaType.configure(influxDB);
+    public void configure(String execName, InfluxDB influxDB) {
+        areaType.configure(execName, name, influxDB);
     }
 
-    public void process(long timestamp) {
-        areaType.process(timestamp);
+    public void process(long start, long end) {
+        areaType.process(start, end);
     }
 
     @Override

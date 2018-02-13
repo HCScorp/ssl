@@ -10,9 +10,9 @@ import hcs.dsl.ssl.runtime.noise.NoiseInteger;
 public class Area_salleDeClasse extends AreaType {
 
     public Area_salleDeClasse() {
-        super(
-                new SensorGroup(3, Sensor_capteurLumiFenetre.class, false),
-                new SensorGroup(1, Sensor_capteurTempSalle.class, new NoiseDouble(1.0, 4.0), true)
+        super("salleDeClasse",
+                new SensorGroup(3, Sensor_capteurLumiFenetre.class),
+                new SensorGroup(1, Sensor_capteurTempSalle.class, new NoiseDouble(1.0, 4.0))
         );
     }
 

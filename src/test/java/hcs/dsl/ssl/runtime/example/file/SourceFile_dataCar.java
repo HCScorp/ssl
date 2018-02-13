@@ -4,7 +4,7 @@ package hcs.dsl.ssl.runtime.example.file;
 import com.udojava.evalex.Expression;
 import hcs.dsl.ssl.runtime.source.InterpolatedSourceInteger;
 
-public class SourceFile_dataCar extends InterpolatedSourceInteger {
+public class SourceFile_dataCar extends InterpolatedSourceInteger { // Type defined by the value of the file
 
     public SourceFile_dataCar() {
         // TODO linear interpolation + complete file source

@@ -7,11 +7,11 @@ import hcs.dsl.ssl.runtime.example.areas.Area_salleDeClasse;
 import hcs.dsl.ssl.runtime.exec.Config;
 import hcs.dsl.ssl.runtime.exec.Exec;
 
-public class Exec_oldSchool extends Exec {
+public class Exec_oldSchoolRealtime extends Exec {
 
-    public Exec_oldSchool() {
-        super("oldSchoold",
-                new Config(false, null, "09/12/2018 00:00", "29/12/2018 00:00"),
+    public Exec_oldSchoolRealtime() {
+        super("oldSchoolRealtime",
+                new Config(true, null, null, null),
 
                 new AreaInstance(new Area_parking(), "P1"),
                 new AreaInstance(new Area_parking(), "P2"),

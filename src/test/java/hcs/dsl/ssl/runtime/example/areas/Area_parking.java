@@ -8,8 +8,8 @@ import hcs.dsl.ssl.runtime.noise.NoiseInteger;
 public class Area_parking extends AreaType {
 
     public Area_parking() {
-        super(
-                new SensorGroup(2, Sensor_capteurNombreVoiture.class, new NoiseInteger(1, 6), false)
+        super("parking",
+                new SensorGroup(2, Sensor_capteurNombreVoiture.class, new NoiseInteger(1, 6))
         );
     }
 }
