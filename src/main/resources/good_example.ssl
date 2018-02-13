@@ -38,7 +38,7 @@ sensor capteurNombreVoiture {
         with linear interpolation restricted to [-1,1]
     noise [0,2]
 }
-# offset 10/12/2018 12:00
+# offset 10/12/2017 12:00
 
 sensor capteurPersonneBU {
     source from local json "dataPersonneBU.json"
@@ -90,6 +90,6 @@ exec newSchool {
 
 global {
     replay
-        start 09/12/2018 00:00
-        end 29/12/2018 00:00
+        start 09/12/2017 00:00
+        end 10/12/2017 00:00
 }

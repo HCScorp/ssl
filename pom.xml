@@ -13,6 +13,13 @@
         <generated.package>hcs.dsl.ssl.antlr.grammar</generated.package>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>ssl-antlr</id>
+            <url>https://mymavenrepo.com/repo/N3WVdAIetPqMO0ZH6X5e/ssl-antlr</url>
+        </repository>
+    </distributionManagement>
+
 
     <dependencies>
         <dependency>

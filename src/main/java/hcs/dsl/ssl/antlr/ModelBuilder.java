@@ -1,6 +1,6 @@
 package hcs.dsl.ssl.antlr;
 
-import hcs.dsl.ssl.antlr.grammar.*;
+import hcs.dsl.ssl.antlr.grammar.SSLBaseListener;
 import hcs.dsl.ssl.backend.Model;
 import hcs.dsl.ssl.backend.area.Area;
 import hcs.dsl.ssl.backend.area.SensorGroup;
@@ -65,6 +65,7 @@ public class ModelBuilder extends SSLBaseListener {
         // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
         // TODO check math expression !!
         // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // TODO check noise type
     }
 
     private static RandomLaw buildRandomLaw(RandomContext ctx) {

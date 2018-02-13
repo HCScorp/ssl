@@ -5,25 +5,26 @@ import hcs.dsl.ssl.backend.Model;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+
 
 import hcs.dsl.ssl.backend.area.Area;
 import hcs.dsl.ssl.backend.area.SensorGroup;
 import hcs.dsl.ssl.backend.exec.AreaGroup;
 import hcs.dsl.ssl.backend.exec.Exec;
 import hcs.dsl.ssl.backend.global.Global;
-import hcs.dsl.ssl.backend.law.*;
-import hcs.dsl.ssl.backend.misc.Interval;
-import hcs.dsl.ssl.backend.misc.ListWrapper;
-import hcs.dsl.ssl.backend.misc.Var;
-import hcs.dsl.ssl.backend.sensor.Sensor;
 
+import hcs.dsl.ssl.backend.law.FunctionLaw;
+import hcs.dsl.ssl.backend.law.MarkovLaw;
+import hcs.dsl.ssl.backend.law.RandomLaw;
 import hcs.dsl.ssl.backend.sensor.SourceLaw;
-import hcs.dsl.ssl.runtime.law.random.RandomLawIntervalInteger;
-import okhttp3.internal.Internal;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class SSLAppGenerator implements Runnable {
@@ -48,7 +49,6 @@ public class SSLAppGenerator implements Runnable {
 
     public void createContext(){
         context.put("areas", model.areas);
-        context.put("execs", model.execs);
         context.put("laws", model.laws);
         context.put("sensors", model.sensors);
         context.put("global", model.global);
@@ -61,6 +61,7 @@ public class SSLAppGenerator implements Runnable {
 
     public void createExecs(){
         model.execs.forEach((key, value) -> {
+            context.put("execs", value);
 
         });
     }
