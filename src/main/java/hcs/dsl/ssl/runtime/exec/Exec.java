@@ -27,10 +27,8 @@ public class Exec implements Runnable {
 
     @Override
     public void run() {
-        influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "hcs", "hcs");
-        String dbName = "ssl";
-        influxDB.createDatabase(dbName);
-        influxDB.setDatabase(dbName);
+        influxDB = InfluxDBFactory.connect("http://62.210.181.35:5057", "admin", "");
+        influxDB.setDatabase("ssl");
 
         for (AreaInstance ai : areaInstances) {
             ai.configure(name, influxDB);
@@ -41,6 +39,8 @@ public class Exec implements Runnable {
         } else {
             runReplay();
         }
+
+        influxDB.close();
     }
 
     private void runRealtime() {
@@ -61,7 +61,7 @@ public class Exec implements Runnable {
     private void runReplay() {
         applyOffset(conf.getStart());
 
-        influxDB.enableBatch(100, 2, TimeUnit.SECONDS);
+        influxDB.enableBatch(200, 2, TimeUnit.SECONDS);
 
         LocalDateTime start = LocalDateTime.parse(conf.getStart(), DTF);
         LocalDateTime end = LocalDateTime.parse(conf.getEnd(), DTF);
@@ -70,6 +70,7 @@ public class Exec implements Runnable {
         long endTs = end.atZone(ZoneId.systemDefault()).toEpochSecond();
 
         for (AreaInstance ai : areaInstances) {
+            System.out.println("Generating data for area instance: " + ai.getName() + " (" + ai.getAreaType().getName() + ")");
             ai.process(startTs, endTs);
         }
     }
@@ -78,7 +79,7 @@ public class Exec implements Runnable {
         if (offsetStr != null) {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime offDate = LocalDateTime.parse(offsetStr, DTF);
-            long offset = ChronoUnit.MILLIS.between(now, offDate);
+            long offset = ChronoUnit.MILLIS.between(now, offDate) / 1000;
             for (AreaInstance ai : areaInstances) {
                 ai.applyOffset(offset);
             }

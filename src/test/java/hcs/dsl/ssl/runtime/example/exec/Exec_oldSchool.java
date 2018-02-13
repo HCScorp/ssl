@@ -11,7 +11,7 @@ public class Exec_oldSchool extends Exec {
 
     public Exec_oldSchool() {
         super("oldSchoold",
-                new Config(false, null, "09/12/2017 00:00", "10/12/2017 00:00"),
+                new Config(false, null, "13/02/2018 12:00", "13/02/2018 14:00"),
 
                 new AreaInstance(new Area_parking(), "P1"),
                 new AreaInstance(new Area_parking(), "P2"),

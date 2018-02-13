@@ -61,14 +61,16 @@ public class SensorGroup implements Runnable {
 
 
     public void process(long start, long end) {
-        start *= 1000;
-        end *= 1000;
+        start = TimeUnit.MILLISECONDS.convert(start, TimeUnit.SECONDS);
+        end   = TimeUnit.MILLISECONDS.convert(end, TimeUnit.SECONDS);
 
         long period = sensors.get(0).getPeriodMs();
 
+        System.out.println("Start feeding InfluxDB for sensors " + sensors.get(0).getName() + " (period: " + period + "ms)");
+
         for (long i = start; i < end; i += period) {
             for (Sensor s : sensors) {
-                s.process(i / 1000);
+                s.process(TimeUnit.SECONDS.convert(i, TimeUnit.MILLISECONDS));
             }
         }
     }

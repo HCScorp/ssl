@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class ExecTest {
 
-    @Test
+    @Ignore
     public void execOldSchoolTest() {
         Exec_oldSchool e = new Exec_oldSchool();
         e.run();

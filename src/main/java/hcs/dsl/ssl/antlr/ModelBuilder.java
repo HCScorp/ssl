@@ -65,6 +65,7 @@ public class ModelBuilder extends SSLBaseListener {
         // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
         // TODO check math expression !!
         // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // TODO check noise type
     }
 
     private static RandomLaw buildRandomLaw(RandomContext ctx) {

@@ -45,7 +45,7 @@ public class Period {
         }
     }
 
-    public long getPeriod() {
+    public long getPeriodMs() {
         return (value.getSeconds() * 1000) + (value.getNano() / 1000000);
     }
 }

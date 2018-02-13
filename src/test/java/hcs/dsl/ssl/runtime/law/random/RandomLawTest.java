@@ -24,7 +24,7 @@ public class RandomLawTest {
     public void temperatureEnsembleTest() {
         Law_temperatureEnsemble l = new Law_temperatureEnsemble();
 
-        List<Integer> possibleValues = Arrays.asList(18, 12, 42, 24);
+        List<Integer> possibleValues = Arrays.asList(16, 18, 19, 20, 22);
 
         for (int i = 0; i < 100; i++) {
             Integer val = l.produceValue(0);

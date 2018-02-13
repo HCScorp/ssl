@@ -1,21 +1,18 @@
 package hcs.dsl.ssl.runtime.sensor;
 
-import hcs.dsl.ssl.runtime.exec.Exec;
 import hcs.dsl.ssl.runtime.source.Source;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 public class Sensor<T extends Serializable> implements Runnable {
 
     private final String name;
     private final Source<T> source; // a well defined law OR a complete CSV,
-    private final long period;
+    private final long periodMs;
 
 //    private long internalOffset;
 
@@ -27,10 +24,10 @@ public class Sensor<T extends Serializable> implements Runnable {
 
     private InfluxDB influxDB;
 
-    public Sensor(String name, Source<T> source, long period) { //  String internalOffset,
+    public Sensor(String name, Source<T> source, long periodMs) { //  String internalOffset,
         this.name = name;
         this.source = source;
-        this.period = period;
+        this.periodMs = periodMs;
 //        this.internalOffset = timestampOf(internalOffset);
     }
 //
@@ -60,12 +57,12 @@ public class Sensor<T extends Serializable> implements Runnable {
     }
 
     public long getPeriodMs() {
-        return period / 1000000;
+        return periodMs;
     }
 
     @Override
     public void run() {
-        process(System.currentTimeMillis() / 1000);
+        process(TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
     }
 
     public void process(long timestamp) {
@@ -87,6 +84,7 @@ public class Sensor<T extends Serializable> implements Runnable {
             // TODO error ? impossibru
         }
 
-        influxDB.write("ssl", "autogen", builder.build());
+
+        influxDB.write(builder.build());
     }
 }

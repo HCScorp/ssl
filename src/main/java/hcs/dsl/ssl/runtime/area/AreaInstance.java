@@ -24,6 +24,14 @@ public class AreaInstance implements Runnable {
         areaType.process(start, end);
     }
 
+    public AreaType getAreaType() {
+        return areaType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public void run() {
         areaType.run();

@@ -13,6 +13,10 @@ public class AreaType implements Runnable {
         this.sensorGroups = sensorGroups;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void applyOffset(long offset) {
         for (SensorGroup sg : sensorGroups) {
             sg.applyOffset(offset);
