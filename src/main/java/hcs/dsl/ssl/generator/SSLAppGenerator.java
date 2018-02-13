@@ -173,7 +173,7 @@ public class SSLAppGenerator implements Runnable {
         // GLOBAL
         Global global = new Global();
         global.setRealtime();
-        global.setReaply("09/12/2018 00:00", "09/12/2018 12:00");
+        global.setReplay("09/12/2018 00:00", "09/12/2018 12:00");
 
         Model model = new Model(laws, sensors, areas, execs, global);
         SSLAppGenerator sslAppGenerator = new SSLAppGenerator(model);
