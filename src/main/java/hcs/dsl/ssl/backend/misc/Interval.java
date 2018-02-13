@@ -7,6 +7,10 @@ public class Interval<T extends Number> {
         Integer
     }
 
+    public Type getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return min +","+max;

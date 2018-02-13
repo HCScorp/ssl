@@ -1,5 +1,7 @@
 package hcs.dsl.ssl.backend.global;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import static hcs.dsl.ssl.backend.check.Checker.checkDate;
 
 public class Global {
@@ -31,5 +33,10 @@ public class Global {
 
     public boolean isRealtime() {
         return realtime;
+    }
+
+    @Override
+    public String toString() {
+        return ",new Config("+ Boolean.toString(realtime) +",\""+start+"\"," +"\"" + end + "\")";
     }
 }
