@@ -35,6 +35,7 @@ public class SSLAppGenerator implements Runnable {
 
     private File dockerfile = new File("src/main/resources/extern/Dockerfile");
     private File pom = new File("src/main/resources/extern/pom.xml");
+    private File build = new File("src/main/resources/extern/build.sh");
 
     public SSLAppGenerator(Model model) {
         engine = new VelocityEngine();
@@ -65,20 +66,22 @@ public class SSLAppGenerator implements Runnable {
     private void writeTemplate(){
         model.execs.forEach((key, value) -> {
 
-            String outPutPath = "generated/" +  key + "/";
-            File simulation = new File(outPutPath + OUT_NAME_FILE);
-            File main = new File(outPutPath + OUT_MAIN_FILE);
+            String outputpath = "generated/" +  key + "/";
+            File simulation = new File(outputpath + OUT_NAME_FILE);
+            File main = new File(outputpath + OUT_MAIN_FILE);
 
             context.put("executor", key);
             createTree(simulation);
 
-            File dockerOut = new File(outPutPath + "Dockerfile");
-            File pomOut = new File(outPutPath + "pom.xml");
-
+            File dockerOut = new File(outputpath + "Dockerfile");
+            File pomOut = new File(outputpath + "pom.xml");
+            File buildOut = new File(outputpath + "build.sh");
 
             try {
                 Files.copy(dockerfile.toPath(), dockerOut.toPath(),REPLACE_EXISTING );
                 Files.copy(pom.toPath(), pomOut.toPath(), REPLACE_EXISTING);
+                Files.copy(build.toPath(), buildOut.toPath(), REPLACE_EXISTING);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
