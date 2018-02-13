@@ -36,8 +36,9 @@ public class SSLAppGenerator implements Runnable {
     private final Model model;
 
 
-    private static final List<String> TEMPLATES = Arrays.asList(
-            "src/main/resources/template/sensor.vm");
+    private static final String TEMPLATE_SENSOR = "src/main/resources/template/sensor.vm";
+    private static final String TEMPLATE_MAIN = "src/main/resources/template/main.vm";
+    private static final String OUT_NAME_FILE = "src/main/Simulation.java";
 
     public SSLAppGenerator(Model model) {
         engine = new VelocityEngine();
@@ -51,6 +52,7 @@ public class SSLAppGenerator implements Runnable {
         context.put("areas", model.areas);
         context.put("laws", model.laws);
         context.put("sensors", model.sensors);
+        context.put("execs", model.execs);
         context.put("global", model.global);
 
         context.put("RandomLaw", RandomLaw.class);
@@ -59,23 +61,16 @@ public class SSLAppGenerator implements Runnable {
         context.put("SourceLaw", SourceLaw.class);
     }
 
-    public void createExecs(){
-        model.execs.forEach((key, value) -> {
-            context.put("execs", value);
-
-        });
-    }
 
     public void createTree(File newExec){
-
         newExec.getParentFile().mkdirs();
-
     }
 
     public void writeTemplate(){
-        model.sensors.forEach((key, value) -> {
-            File f = new File("sensor.java");
-            Template template = engine.getTemplate(TEMPLATES.get(0));
+        model.execs.forEach((key, value) -> {
+            File f = new File(key + "/" + OUT_NAME_FILE);
+            createTree(f);
+            Template template = engine.getTemplate(TEMPLATE_SENSOR);
             mergeTemplate(template, f);
         });
 
@@ -91,98 +86,10 @@ public class SSLAppGenerator implements Runnable {
 
     }
 
-    public static void main(String[] args) {
-
-        Map<String, Law> laws = new HashMap<>();
-        Map<String, Sensor> sensors = new HashMap<>();
-        Map<String, Area> areas = new HashMap<>();
-        Map<String, Exec> execs = new HashMap<>();
-
-
-        // MARKOV
-        MarkovLaw markovLaw = new MarkovLaw("MarkovString");
-        List<Edge> edges = Arrays.asList(
-                new Edge<>("lol", 0.1, "lolilol"),
-                new Edge<>("lolilol", 0.2, "lol"));
-        markovLaw.setList(edges);
-        markovLaw.setValType(Var.Type.String);
-
-        MarkovLaw markovLawInteger = new MarkovLaw("MarkovInteger");
-        List<Edge> ed = Arrays.asList(
-                new Edge<>(1, 0.1, 2),
-                new Edge<>(2, 0.2, 1));
-        markovLawInteger.setList(ed);
-        markovLawInteger.setValType(Var.Type.Integer);
-
-        laws.put("markoov", markovLaw);
-        laws.put("markovInteger", markovLawInteger);
-
-        // FUNCTION :: juste Double from now.
-        FunctionLaw functionLaw = new FunctionLaw("myFunction");
-        functionLaw.setCases(Arrays.asList(new CaseFunc("ici", "la"),
-                new CaseFunc("labas", "where")));
-
-        laws.put("myFunction", functionLaw);
-
-        // RANDOM
-        RandomLaw randomLaw = new RandomLaw("myRandom");
-        randomLaw.setInterval(new Interval<>(Interval.Type.Integer, 1, 2));
-
-        RandomLaw randomLawDouble = new RandomLaw("myRandomDouble");
-        randomLawDouble.setInterval(new Interval<>(Interval.Type.Double, 1.0, 2.0));
-
-
-        RandomLaw randomLawList = new RandomLaw("myRandomList");
-        randomLawList.setList(new ListWrapper(Var.Type.Integer, Arrays.asList(1, 2, 3, 4)));
-
-        RandomLaw randomLawListString = new RandomLaw("myRandomListString");
-        randomLawListString.setList(new ListWrapper(Var.Type.String, Arrays.asList("a", "b", "c", "d")));
-
-
-        laws.put("randomLawListString", randomLawListString);
-        laws.put("myRandomList", randomLawList);
-        laws.put("random", randomLaw);
-        laws.put("myRandomDouble", randomLawDouble);
-
-        // SENSOR
-        Sensor sensor = new Sensor("lumi");
-        SourceLaw sourceLaw = new SourceLaw("myRandomList");
-        sensor.setSource(sourceLaw);
-        sensor.setNoise(new Interval<>(Interval.Type.Integer, 1, 2));
-        sensor.setOffset("10/10/1010 10:11");
-        sensor.setPeriod("10ms");
-
-        Sensor sensorOther = new Sensor("lumiOther");
-        SourceLaw sourceLawOther = new SourceLaw("myRandomDouble");
-        sensorOther.setSource(sourceLawOther);
-        sensorOther.setPeriod("20ms");
-
-        sensors.put("lumi", sensor);
-        sensors.put("lumiOther", sensorOther);
-
-        // AREAS
-        SensorGroup sensorGroup = new SensorGroup("myRandomList", 3);
-        SensorGroup sensorGroup1 = new SensorGroup("myRandomDouble", 4);
-        Area area = new Area("parking",Arrays.asList(sensorGroup, sensorGroup1 ));
-        areas.put("parking", area);
-
-        // EXEC
-        AreaGroup areaGroup = new AreaGroup("parking", Arrays.asList("parking1", "parking2" ));
-        Exec exec = new Exec("execParking",Arrays.asList(areaGroup) );
-        execs.put("execcces", exec);
-        // GLOBAL
-        Global global = new Global();
-        global.setRealtime();
-        global.setReaply("09/12/2018 00:00", "09/12/2018 12:00");
-
-        Model model = new Model(laws, sensors, areas, execs, global);
-        SSLAppGenerator sslAppGenerator = new SSLAppGenerator(model);
-        sslAppGenerator.createContext();
-        sslAppGenerator.writeTemplate();
-    }
-
     @Override
     public void run() {
-        // TODO
+        this.createContext();
+        this.writeTemplate();
+
     }
 }

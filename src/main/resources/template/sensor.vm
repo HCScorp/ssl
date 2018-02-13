@@ -1,11 +1,11 @@
 
 #foreach($sensor in $sensors)
+    #if (${sensor.getSource().getClass().getSimpleName()} == "SourceLaw")
 
     #set($sensorSource = $SourceLaw.cast(${sensor.getSource()}))
-
     #set($law = $laws.get($sensorSource.getLawRef()) )
-
     #set ($lawType = $law.getValType().name() )
+
 
     #if ($lawType == "Double" || $lawType== "Integer" )
         class Sensor_${sensor.name} extends NoisableSensor<$lawType>{
@@ -16,10 +16,11 @@
     #end
     public Sensor_${sensor.name}() {
         super("${sensor.name}",
-                new Law_${law.name}()#if($sensor.period),${sensor.getPeriod().getPeriod()}#end
+                new Law_${law.name}()#if($sensor.period),${sensor.getPeriod().getPeriodMs()}#end
                 #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()} )
                 #end)
     }}
+    #end
 #end
 
 

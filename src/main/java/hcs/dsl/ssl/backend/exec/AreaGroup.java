@@ -9,7 +9,7 @@ public class AreaGroup {
         StringBuilder result = new StringBuilder();
         for (String instanceName : instanceNames){
             result.append(",new AreaInstance(" + "new Area_").append(areaRef)
-                    .append(",").append("\"")
+                    .append("(),").append("\"")
                     .append(instanceName).append("\"").append(")");
         }
         return result.toString();
