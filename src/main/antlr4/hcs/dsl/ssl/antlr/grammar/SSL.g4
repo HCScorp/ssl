@@ -62,8 +62,8 @@ area                        : 'area ' name=BASIC_STRING ' {\n' area_def '}'  ;
         sensor_group        : TOK_TAB 'has ' nb=INTEGER ' ' sensor_ref=BASIC_STRING noise_override? '\n';
             noise_override  : ' with noise ' interval;
 
-// Exec
-exec                : 'exec ' name=BASIC_STRING ' {\n' exec_def '}' ;
+// App
+exec                : 'app ' name=BASIC_STRING ' {\n' exec_def '}' ;
     exec_def        : area_group+ ;
         area_group  : TOK_TAB area_ref=BASIC_STRING ': ' list_basic_string '\n';
 
@@ -102,7 +102,7 @@ TOK_AS          : 'as';
 TOK_PERIOD      : 'period';
 
 TOK_AREA        : 'area';
-TOK_EXEC        : 'exec';
+TOK_EXEC        : 'app';
 TOK_GLOBAL      : 'global';
 TOK_REALTIME    : 'realtime';
 TOK_REPLAY      : 'replay';
