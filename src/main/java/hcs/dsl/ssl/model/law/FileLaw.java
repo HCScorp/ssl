@@ -115,7 +115,6 @@ public abstract class FileLaw extends Law {
             System.out.println("error boolean | String can't be interpolate.");
         }
 
-        PolynomialFunctionLagrangeForm polynomialFunctionLagrangeForm = new PolynomialFunctionLagrangeForm(x, y);
 
         // TODO build INTERPOLATION (use the interpolation object)
     }
