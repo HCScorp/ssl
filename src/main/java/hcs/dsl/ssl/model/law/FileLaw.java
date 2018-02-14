@@ -46,6 +46,7 @@ public abstract class FileLaw extends Law {
 
     protected FileLaw(String lawName, String fileUri, FileType fileType) {
         super(lawName, Type.FILE);
+        System.out.println("file URI ::" + fileUri);
         this.fileUri = fileUri;
         this.fileType = fileType;
 
@@ -54,9 +55,10 @@ public abstract class FileLaw extends Law {
     }
 
     private void fetchFile() {
-        if (FileLocation.DISTANT.equals(fileLocation)) {
+        System.out.println(fileLocation);
+        if (FileLocation.LOCAL.equals(fileLocation)) {
             fetchLocalFile();
-        } else if (FileLocation.LOCAL.equals(fileLocation)) {
+        } else if (FileLocation.DISTANT.equals(fileLocation)) {
             fetchDistantFile();
         } else {
             throw new RuntimeException("file location of law '" + getName() + "' must be defined");

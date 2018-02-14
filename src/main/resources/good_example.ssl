@@ -30,26 +30,24 @@ law function simpleCarre {
 }
 
 law file donneeVoiture {
-    from distant csv "dataCar.csv"
+from local csv "src/main/resource/source/dataCar.csv"
     using column 1 as time, column 3 as value and column 5 as name
-    with linear interpolation restricted to [-1,1]
-}
+    with linear interpolation restricted to [-1,1]}
 
 law file donneePersonneBU {
-    from local json "dataPersonneBU.json"
-    using field "t" as time, field "v" as value and field "n" as name
-}
+from local json "src/main/resource/source/dataPersonneBU.json"
+    using field "t" as time, field "v" as value and field "n" as name}
 
 # sensors
 
 sensor capteurNombreVoiture {
-    governed by donneeVoiture
+    governed by law donneeVoiture
     noise [0,2]
 }
 # offset 10/12/2017 12:00
 
 sensor capteurPersonneBU {
-    governed by donneePersonneBU
+    governed by law donneePersonneBU
 }
 
 sensor capteurLumiFenetre {

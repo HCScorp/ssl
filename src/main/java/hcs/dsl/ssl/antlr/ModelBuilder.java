@@ -211,7 +211,6 @@ public class ModelBuilder extends SSLBaseListener {
         FileLaw law;
         String name = toString(ctx.name);
         File_defContext def = ctx.file_def();
-
         if (def.type_csv() != null) {
             FileLawCsv src = new FileLawCsv(name, toStringTrim(ctx.name));
             Header_csvContext header = def.type_csv().header_csv();
