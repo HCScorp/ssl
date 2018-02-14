@@ -5,6 +5,7 @@ import hcs.dsl.ssl.model.misc.Interval;
 public class Interpolation {
 
     private Interval restriction;
+    private double[] coefPolynome;
 
     public void setRestriction(Interval restriction) {
         this.restriction = restriction;
@@ -13,4 +14,6 @@ public class Interpolation {
     public Interval getRestriction() {
         return restriction;
     }
+
+
 }

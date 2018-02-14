@@ -4,10 +4,12 @@ import hcs.dsl.ssl.model.misc.Var;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.validator.UrlValidator;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class FileLaw extends Law {
 
@@ -20,6 +22,12 @@ public abstract class FileLaw extends Law {
         JSON,
         CSV
     }
+
+    protected Pattern patternInteger = Pattern.compile("^-?\\\\d+$");
+    protected Pattern patternDouble = Pattern.compile("\\d+\\.\\d+");
+    protected Pattern patternBoolean = Pattern.compile("[true|false|True|False]");
+    protected Pattern patternLong = Pattern.compile("^-?\\d{1,19}$");
+
 
     private Var.Type valType;
 
@@ -69,7 +77,7 @@ public abstract class FileLaw extends Law {
         }
     }
 
-    protected abstract void fillData(); // TODO load data according to header (or default!!)
+    protected abstract void fillData() throws IOException; // TODO load data according to header (or default!!)
 
     public void setValType(Var.Type valType) { // TODO to use at the end of the computation
         this.valType = valType;
@@ -100,8 +108,25 @@ public abstract class FileLaw extends Law {
         return interpolation;
     }
 
-    public void setInterpolation(Interpolation interpolation) {
+    public void setInterpolation(Interpolation interpolation)  {
         this.interpolation = interpolation;
+        if (this.valType == Var.Type.Boolean || this.valType == Var.Type.String){
+            // TODO : throw exception
+            System.out.println("error boolean | String can't be interpolate.");
+        }
+
+        PolynomialFunctionLagrangeForm polynomialFunctionLagrangeForm = new PolynomialFunctionLagrangeForm(x, y);
+
         // TODO build INTERPOLATION (use the interpolation object)
     }
+
+    public Var.Type findTypeValueFileContent(String rawValue) {
+        Var.Type type = Var.Type.String;
+        if (patternBoolean.matcher(rawValue).find()) type = Var.Type.Boolean;
+        else if (patternDouble.matcher(rawValue).find()) type = Var.Type.Double;
+        else if (patternInteger.matcher(rawValue).find()) type = Var.Type.Integer;
+        return type;
+    }
+
 }
+
