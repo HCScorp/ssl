@@ -1,8 +1,10 @@
 package hcs.dsl.ssl.model.area;
 
+import hcs.dsl.ssl.model.Namable;
+
 import java.util.List;
 
-public class Area {
+public class Area implements Namable {
 
     private final String name;
     private final List<SensorGroup> sensorGroups;

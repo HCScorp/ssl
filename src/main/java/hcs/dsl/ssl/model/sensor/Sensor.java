@@ -1,10 +1,11 @@
 package hcs.dsl.ssl.model.sensor;
 
+import hcs.dsl.ssl.model.Namable;
 import hcs.dsl.ssl.model.misc.Interval;
 
 import static hcs.dsl.ssl.model.check.Checker.checkDate;
 
-public class Sensor {
+public class Sensor implements Namable {
 
     private final String name;
 

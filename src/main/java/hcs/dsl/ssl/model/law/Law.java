@@ -1,8 +1,9 @@
 package hcs.dsl.ssl.model.law;
 
+import hcs.dsl.ssl.model.Namable;
 import hcs.dsl.ssl.model.misc.Var;
 
-public abstract class Law {
+public abstract class Law implements Namable {
 
     public enum Type {
         RANDOM,

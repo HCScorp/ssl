@@ -1,8 +1,10 @@
 package hcs.dsl.ssl.model.exec;
 
+import hcs.dsl.ssl.model.Namable;
+
 import java.util.List;
 
-public class Exec {
+public class Exec implements Namable {
 
     private final String name;
     private final List<AreaGroup> areaGroups;
