@@ -1,5 +1,7 @@
 package hcs.dsl.ssl.model.law;
 
+import hcs.dsl.ssl.model.misc.Var;
+
 public class CsvHeader {
 
     private String f1Name;
@@ -91,6 +93,13 @@ public class CsvHeader {
         checkAlready(h);
         this.f3Type = h;
     }
+
+    public int indexValue(Header type){
+        return (f1Type == type)?f1Index:
+                (f2Type == type)?f2Index:
+                        f3Index;
+    }
+
 
     private void checkAlready(Header type) {
         if (type == f1Type || type == f2Type || type == f3Type) {

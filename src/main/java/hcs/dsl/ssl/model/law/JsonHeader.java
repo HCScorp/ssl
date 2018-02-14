@@ -1,5 +1,7 @@
 package hcs.dsl.ssl.model.law;
 
+import hcs.dsl.ssl.model.misc.Var;
+
 public class JsonHeader {
     private String f1Name;
     private Header f1Type;
@@ -12,6 +14,10 @@ public class JsonHeader {
 
     public String getF1Name() {
         return f1Name;
+    }
+
+    public String getProperKey(Header type){
+        return (f1Type == type)?f1Name:(f2Type == type)?f2Name:f3Name;
     }
 
     public void setF1Name(String f1Name) {
