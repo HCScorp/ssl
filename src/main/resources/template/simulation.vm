@@ -84,8 +84,6 @@ class Law_${law.name} extends FunctionLawDouble {
 
             public Law_${law.name} (){
             super( new TimeMetaData${fileLaw.getInterpolation().getRestriction()}
-
-
             }
         #end
 
