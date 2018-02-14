@@ -2,6 +2,7 @@ package hcs.dsl.ssl.antlr;
 
 import hcs.dsl.ssl.antlr.grammar.SSLBaseListener;
 import hcs.dsl.ssl.model.Model;
+import hcs.dsl.ssl.model.Namable;
 import hcs.dsl.ssl.model.area.Area;
 import hcs.dsl.ssl.model.area.SensorGroup;
 import hcs.dsl.ssl.model.exec.AreaGroup;
@@ -58,16 +59,42 @@ public class ModelBuilder extends SSLBaseListener {
 
         // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
         // TODO check math expression !!
-        // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO check noise type
+        // TODO check noise type // already done at runtime (init)
         // TODO assert minimum one value in CSV or JSON and SORTED
         // TODO check if possible to resolve period for file law?
+        // TODO add possibility for additional noise in addition to override noise
+    }
+
+    private void add(Law law) {
+        checkAlreadyDefined(law, laws, "law");
+        laws.put(law.getName(), law);
+    }
+
+    private void add(Sensor sensor) {
+        checkAlreadyDefined(sensor, sensors, "sensor");
+        sensors.put(sensor.getName(), sensor);
+    }
+
+    private void add(Area area) {
+        checkAlreadyDefined(area, areas, "area");
+        areas.put(area.getName(), area);
+    }
+
+    private void add(Exec exec) {
+        checkAlreadyDefined(exec, execs, "exec");
+        execs.put(exec.getName(), exec);
+    }
+
+    private void checkAlreadyDefined(Namable namable, Map map, String type) {
+        if (map.containsKey(namable.getName())) {
+            throw new IllegalArgumentException("trying to redefine already existing " + type + " " + namable.getName());
+        }
     }
 
     @Override
     public void enterRandom(RandomContext ctx) {
         RandomLaw law = buildRandomLaw(ctx);
-        laws.put(law.getName(), law);
+        add(law);
     }
 
     private static RandomLaw buildRandomLaw(RandomContext ctx) {
@@ -121,8 +148,8 @@ public class ModelBuilder extends SSLBaseListener {
 
     @Override
     public void enterMarkov(MarkovContext ctx) {
-        MarkovLaw l = buildMarkovLaw(ctx);
-        laws.put(l.getName(), l);
+        MarkovLaw law = buildMarkovLaw(ctx);
+        add(law);
     }
 
     private static MarkovLaw buildMarkovLaw(MarkovContext ctx) {
@@ -159,7 +186,7 @@ public class ModelBuilder extends SSLBaseListener {
     @Override
     public void enterFunction(FunctionContext ctx) {
         FunctionLaw law = buildFunctionLaw(ctx);
-        laws.put(law.getName(), law);
+        add(law);
     }
 
     private static FunctionLaw buildFunctionLaw(FunctionContext ctx) {
@@ -181,7 +208,7 @@ public class ModelBuilder extends SSLBaseListener {
     @Override
     public void enterFile(FileContext ctx) {
         FileLaw law = buildFileLaw(ctx);
-        laws.put(law.getName(), law);
+        add(law);
     }
 
     private FileLaw buildFileLaw(FileContext ctx) {
@@ -309,7 +336,7 @@ public class ModelBuilder extends SSLBaseListener {
             sensor.setPeriod("5m");
         }
 
-        sensors.put(sensor.getName(), sensor);
+        add(sensor);
     }
 
     private String buildLawRef(SourceContext ctx) {
@@ -336,7 +363,7 @@ public class ModelBuilder extends SSLBaseListener {
                         .map(this::buildSensorGroup)
                         .collect(Collectors.toList()));
 
-        areas.put(area.getName(), area);
+        add(area);
     }
 
     private SensorGroup buildSensorGroup(Sensor_groupContext ctx) {
@@ -361,7 +388,7 @@ public class ModelBuilder extends SSLBaseListener {
                         .map(this::buildAreaGroup)
                         .collect(Collectors.toList()));
 
-        execs.put(exec.getName(), exec);
+        add(exec);
     }
 
     private AreaGroup buildAreaGroup(Area_groupContext ctx) {

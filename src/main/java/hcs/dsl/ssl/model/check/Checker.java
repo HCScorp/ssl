@@ -8,11 +8,11 @@ public class Checker {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public static void checkDate(String offset) {
+    public static LocalDateTime checkDate(String offset) {
         try {
-            LocalDateTime.parse(offset, dtf);
+            return LocalDateTime.parse(offset, dtf);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("invalid offset date: ", e);
+            throw new IllegalArgumentException("invalid date: ", e);
         }
     }
 

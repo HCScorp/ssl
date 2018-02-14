@@ -55,18 +55,18 @@ sensor capteurPersonneBU {
 }
 
 sensor capteurLumiFenetre {
-    source from law lumiDehors
+    governed by lumiDehors
     period 5m
 }
 
 sensor capteurTempSalle {
-    source from law temperatureIntervalle
+    governed by temperatureIntervalle
     period 100s # [90s, 140s]
     noise [-0.05,+0.02]
 }
 
 sensor capteurTempBureau {
-    source from law temperatureEnsemble
+    governed by temperatureEnsemble
     period 10m
 }
 

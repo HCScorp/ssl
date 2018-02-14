@@ -22,8 +22,9 @@ public class Global {
     }
 
     public void setReplay(String start, String end) {
-        checkDate(start);
-        checkDate(end);
+        if (checkDate(start).isBefore(checkDate(end))) {
+            throw new IllegalArgumentException("invalid replay date definition: start date must be before the end date");
+        }
 
         this.start = start;
         this.end = end;
@@ -49,16 +50,18 @@ public class Global {
     public String toString() {
         Map<String, String> varStatus = new HashMap<>();
 
-        if (offset != null)
-            varStatus.put("offset", "\""+ offset + "\"");
-        if (start != null)
-            varStatus.put("start","\""+ start + "\"" );
-        if (end != null)
-            varStatus.put("end","\""+ end + "\"" );
+        if (offset != null) {
+            varStatus.put("offset", "\"" + offset + "\"");
+        }
+        if (start != null) {
+            varStatus.put("start", "\"" + start + "\"");
+        }
+        if (end != null) {
+            varStatus.put("end", "\"" + end + "\"");
+        }
 
-
-        return ",new Config("+ Boolean.toString(realtime) + ","
-                +varStatus.get("offset")+"," + varStatus.get("start") + ","
-        + varStatus.get("end") + ")";
+        return ",new Config(" + Boolean.toString(realtime) + ","
+                + varStatus.get("offset") + "," + varStatus.get("start") + ","
+                + varStatus.get("end") + ")";
     }
 }
