@@ -3,7 +3,7 @@ package hcs.dsl.ssl.model.sensor;
 import hcs.dsl.ssl.model.Namable;
 import hcs.dsl.ssl.model.misc.Interval;
 
-import static hcs.dsl.ssl.model.check.Checker.checkDate;
+import static hcs.dsl.ssl.model.check.CheckHelper.checkDate;
 
 public class Sensor implements Namable {
 

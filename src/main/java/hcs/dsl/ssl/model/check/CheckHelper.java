@@ -1,10 +1,11 @@
 package hcs.dsl.ssl.model.check;
 
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Checker {
+public class CheckHelper {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -15,5 +16,4 @@ public class Checker {
             throw new IllegalArgumentException("invalid date: ", e);
         }
     }
-
 }

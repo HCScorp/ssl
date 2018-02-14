@@ -4,7 +4,7 @@ package hcs.dsl.ssl.model.global;
 import java.util.HashMap;
 import java.util.Map;
 
-import static hcs.dsl.ssl.model.check.Checker.checkDate;
+import static hcs.dsl.ssl.model.check.CheckHelper.checkDate;
 
 public class Global {
 

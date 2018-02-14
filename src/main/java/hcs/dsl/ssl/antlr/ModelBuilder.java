@@ -57,11 +57,7 @@ public class ModelBuilder extends SSLBaseListener {
         this.model = new Model(laws, sensors, areas, execs, global);
         this.built = true;
 
-        // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
-        // TODO check math expression !!
-        // TODO check noise type // already done at runtime (init)
-        // TODO assert minimum one value in CSV or JSON and SORTED
-        // TODO check if possible to resolve period for file law?
+        // check noise override type --> already done at runtime (init)
         // TODO add possibility for additional noise in addition to override noise
     }
 
