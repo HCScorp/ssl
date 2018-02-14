@@ -12,7 +12,7 @@ law         :   'law ' (random|markov|function|file) ;
     random  :   'random '   name=BASIC_STRING ' {\n' random_def   '}' ;
     markov  :   'markov '   name=BASIC_STRING ' {\n' markov_def   '}' ;
     function:   'function ' name=BASIC_STRING ' {\n' function_def '}' ;
-    file    :   'file  '    name=BASIC_STRING ' {\n' file_def     '}' ;
+    file    :   'file '    name=BASIC_STRING ' {\n' file_def     '}' ;
 
 random_def          :   TOK_TAB 'values in ' (random_interval|random_list) '\n';
     random_interval :   'interval ' interval ;
