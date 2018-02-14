@@ -73,6 +73,23 @@ class Law_${law.name} extends FunctionLawDouble {
         #end
     }
 }
+
+        ## It's a file
+    #else
+        #set($fileLaw = $FileLaw.cast($law))
+
+        #if ($fileLaw.interpolation)
+            #set($linearType = ${fileLaw.valType})
+            public class Law_${law.name} extends LinearInterpolation$linearType {
+
+            public Law_${law.name} (){
+            super( new TimeMetaData${fileLaw.getInterpolation().getRestriction()}
+
+
+            }
+        #end
+
+
     #end
 #end
 

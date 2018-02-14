@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import hcs.dsl.ssl.model.law.FileLaw;
 import hcs.dsl.ssl.model.law.FunctionLaw;
 import hcs.dsl.ssl.model.law.MarkovLaw;
 import hcs.dsl.ssl.model.law.RandomLaw;
@@ -54,6 +55,8 @@ public class SSLAppGenerator implements Runnable {
         context.put("RandomLaw", RandomLaw.class);
         context.put("MarkovLaw", MarkovLaw.class);
         context.put("FunctionLaw", FunctionLaw.class);
+        context.put("FileLaw", FileLaw.class);
+
     }
 
 

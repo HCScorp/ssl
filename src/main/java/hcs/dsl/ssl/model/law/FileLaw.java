@@ -1,7 +1,10 @@
 package hcs.dsl.ssl.model.law;
 
+import com.google.common.primitives.Doubles;
+import hcs.dsl.ssl.model.misc.Interval;
 import hcs.dsl.ssl.model.misc.Var;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
 import org.apache.commons.validator.UrlValidator;
 
 
@@ -10,6 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class FileLaw extends Law {
 
@@ -115,8 +119,32 @@ public abstract class FileLaw extends Law {
             System.out.println("error boolean | String can't be interpolate.");
         }
 
+        if (interpolation.getRestriction() != null){
+            Interval interval = interpolation.getRestriction();
+            this.data.removeIf(sensorData ->
+                    sensorData.getTime() < interval.min.longValue()  || sensorData.getTime() > interval.max.longValue());
+        }
+        else {
+            if (this.valType == Var.Type.Integer){
+                interpolation.setRestriction(new Interval<>(Interval.Type.Integer,(int) this.data.get(0).getTime(),
+                        (int) this.data.get( this.data.size() -1).getTime()));
+            }
+            else {
+                interpolation.setRestriction(new Interval<>(Interval.Type.Double,(double) this.data.get(0).getTime(),
+                        (double) this.data.get( this.data.size() -1).getTime()));
+            }
+        }
+        double[] y;
+        double[] x = this.data.stream().mapToDouble(sensorData -> (double) sensorData.getTime()).toArray();
+        if (valType == Var.Type.Integer){
+            y = this.data.stream().mapToDouble(sensorData -> (double) sensorData.getValueInteger()).toArray();
+        }
+        else {
+            y = this.data.stream().mapToDouble(SensorData::getValueDouble).toArray();
+        }
 
-        // TODO build INTERPOLATION (use the interpolation object)
+        PolynomialFunctionLagrangeForm polynomialFunctionLagrangeForm = new PolynomialFunctionLagrangeForm(x, y);
+        this.interpolation.setCoefPolynome(Doubles.asList(polynomialFunctionLagrangeForm.getCoefficients()));
     }
 
     public Var.Type findTypeValueFileContent(String rawValue) {
