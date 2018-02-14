@@ -1,17 +1,17 @@
 package hcs.dsl.ssl.antlr;
 
 import hcs.dsl.ssl.antlr.grammar.SSLBaseListener;
-import hcs.dsl.ssl.backend.Model;
-import hcs.dsl.ssl.backend.area.Area;
-import hcs.dsl.ssl.backend.area.SensorGroup;
-import hcs.dsl.ssl.backend.exec.AreaGroup;
-import hcs.dsl.ssl.backend.exec.Exec;
-import hcs.dsl.ssl.backend.global.Global;
-import hcs.dsl.ssl.backend.law.*;
-import hcs.dsl.ssl.backend.misc.Interval;
-import hcs.dsl.ssl.backend.misc.ListWrapper;
-import hcs.dsl.ssl.backend.misc.Var.Type;
-import hcs.dsl.ssl.backend.sensor.*;
+import hcs.dsl.ssl.model.Model;
+import hcs.dsl.ssl.model.area.Area;
+import hcs.dsl.ssl.model.area.SensorGroup;
+import hcs.dsl.ssl.model.exec.AreaGroup;
+import hcs.dsl.ssl.model.exec.Exec;
+import hcs.dsl.ssl.model.global.Global;
+import hcs.dsl.ssl.model.law.*;
+import hcs.dsl.ssl.model.misc.Interval;
+import hcs.dsl.ssl.model.misc.ListWrapper;
+import hcs.dsl.ssl.model.misc.Var.Type;
+import hcs.dsl.ssl.model.sensor.*;
 import org.antlr.v4.runtime.Token;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class ModelBuilder extends SSLBaseListener {
         if (built) {
             return model;
         }
-        throw new RuntimeException("Cannot retrieve a model that was not created!");
+        throw new RuntimeException("cannot retrieve a model that was not created!");
     }
 
     private final Map<String, Law> laws = new HashMap<>();
@@ -55,17 +55,19 @@ public class ModelBuilder extends SSLBaseListener {
     public void exitRoot(RootContext ctx) {
         this.model = new Model(laws, sensors, areas, execs, global);
         this.built = true;
+
+        // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
+        // TODO check math expression !!
+        // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // TODO check noise type
+        // TODO assert minimum one value in CSV or JSON and SORTED
+        // TODO check if possible to resolve period for file law?
     }
 
     @Override
     public void enterRandom(RandomContext ctx) {
         RandomLaw law = buildRandomLaw(ctx);
         laws.put(law.getName(), law);
-
-        // TODO here or up, start the pre-code-generation phase (linear interpolation, type check ?)
-        // TODO check math expression !!
-        // TODO check already defined elements !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO check noise type
     }
 
     private static RandomLaw buildRandomLaw(RandomContext ctx) {
@@ -175,67 +177,46 @@ public class ModelBuilder extends SSLBaseListener {
         return new CaseFunc(toStringTrim(e.cond), toStringTrim(e.expr));
     }
 
+
     @Override
-    public void enterSensor(SensorContext ctx) {
-        Sensor sensor = new Sensor(toString(ctx.name));
-        Sensor_defContext def = ctx.sensor_def();
-
-        sensor.setSource(buildSource(def.source()));
-
-        if (def.noise() != null) {
-            sensor.setNoise(buildInterval(def.noise().interval()));
-        }
-
-//        if (def.offset() != null) {
-//            sensor.setOffset(toString(def.offset().date));
-//        }
-
-        if (def.period() != null) {
-            sensor.setPeriod(toString(def.period().period_value));
-        } else {
-            sensor.setPeriod("5m");
-        }
-
-        sensors.put(sensor.getName(), sensor);
+    public void enterFile(FileContext ctx) {
+        FileLaw law = buildFileLaw(ctx);
+        laws.put(law.getName(), law);
     }
 
-    private Source buildSource(SourceContext ctx) {
-        Source src;
+    private FileLaw buildFileLaw(FileContext ctx) {
+        FileLaw law;
+        String name = toString(ctx.name);
+        File_defContext def = ctx.file_def();
 
-        if (ctx.law_ref() != null) {
-            String lawRef = toString(ctx.law_ref().ref);
-            if (!laws.containsKey(lawRef)) {
-                throw new IllegalArgumentException("law '" + lawRef + "' is referenced before definition");
+        if (def.type_csv() != null) {
+            FileLawCsv src = new FileLawCsv(name, toStringTrim(ctx.name));
+            Header_csvContext header = def.type_csv().header_csv();
+            if (header != null) {
+                src.setCsvHeader(buildCsvHeader(header));
             }
-
-            src = new SourceLaw(lawRef);
-
-        } else if (ctx.file_input() != null) {
-            File_inputContext fCtx = ctx.file_input();
-
-            SourceFile srcFile;
-
-            if (fCtx.type_csv() != null) {
-                srcFile = buildCsvPartialSrc(fCtx.type_csv());
-            } else if (fCtx.type_json() != null) {
-                srcFile = buildJsonPartialSrc(fCtx.type_json());
-            } else {
-                throw new IllegalArgumentException("invalid source definition: " + ctx);
+            law = src;
+        } else if (def.type_json() != null) {
+            FileLawJson src = new FileLawJson(name, toStringTrim(ctx.name));
+            Header_jsonContext header = def.type_json().header_json();
+            if (header != null) {
+                src.setJsonHeader(buildJsonHeader(header));
             }
-
-            srcFile.setLocation(toString(fCtx.location));
-
-            if (fCtx.interpolation() != null) {
-                srcFile.setInterpolation(buildInterpolation(fCtx.interpolation()));
-            }
-
-            src = srcFile;
+            law = src;
         } else {
-            throw new IllegalArgumentException("invalid source definition: " + ctx);
+            throw new IllegalArgumentException("invalid file law definition: " + ctx);
         }
 
-        return src;
+        law.setLocation(toString(def.location));
+
+        if (def.interpolation() != null) {
+            law.setInterpolation(buildInterpolation(def.interpolation()));
+        }
+
+
+        return law;
     }
+
 
     private static Interpolation buildInterpolation(InterpolationContext ctx) {
         Interpolation interpolation = new Interpolation();
@@ -243,14 +224,6 @@ public class ModelBuilder extends SSLBaseListener {
             interpolation.setRestriction(buildInterval(ctx.restriction().interval()));
         }
         return interpolation;
-    }
-
-    private static SourceJson buildJsonPartialSrc(Type_jsonContext ctx) {
-        SourceJson src = new SourceJson(toStringTrim(ctx.name));
-        if (ctx.header_json() != null) {
-            src.setJsonHeader(buildJsonHeader(ctx.header_json()));
-        }
-        return src;
     }
 
     private static JsonHeader buildJsonHeader(Header_jsonContext ctx) {
@@ -275,14 +248,6 @@ public class ModelBuilder extends SSLBaseListener {
         }
 
         return header;
-    }
-
-    private static SourceCsv buildCsvPartialSrc(Type_csvContext ctx) {
-        SourceCsv src = new SourceCsv(toStringTrim(ctx.name));
-        if (ctx.header_csv() != null) {
-            src.setCsvHeader(buildCsvHeader(ctx.header_csv()));
-        }
-        return src;
     }
 
     private static CsvHeader buildCsvHeader(Header_csvContext ctx) {
@@ -321,6 +286,43 @@ public class ModelBuilder extends SSLBaseListener {
         }
 
         return header;
+    }
+
+    @Override
+    public void enterSensor(SensorContext ctx) {
+        Sensor sensor = new Sensor(toString(ctx.name));
+        Sensor_defContext def = ctx.sensor_def();
+
+        sensor.setLawRef(buildLawRef(def.source()));
+
+        if (def.noise() != null) {
+            sensor.setNoise(buildInterval(def.noise().interval()));
+        }
+
+//        if (def.offset() != null) {
+//            sensor.setOffset(toString(def.offset().date));
+//        }
+
+        if (def.period() != null) {
+            sensor.setPeriod(toString(def.period().period_value));
+        } else {
+            sensor.setPeriod("5m");
+        }
+
+        sensors.put(sensor.getName(), sensor);
+    }
+
+    private String buildLawRef(SourceContext ctx) {
+        if (ctx.law_ref() == null) {
+            throw new IllegalArgumentException("law reference must be defined");
+        }
+
+        String lawRef = toString(ctx.law_ref().ref);
+        if (!laws.containsKey(lawRef)) {
+            throw new IllegalArgumentException("law '" + lawRef + "' is referenced before definition");
+        }
+
+        return lawRef;
     }
 
     private static boolean isFromString(Token token) {
@@ -393,24 +395,23 @@ public class ModelBuilder extends SSLBaseListener {
         }
     }
 
-    public static Integer toInt(Token token) {
+    private static Integer toInt(Token token) {
         return Integer.parseInt(token.getText());
     }
 
-    public static Double toDouble(Token token) {
+    private static Double toDouble(Token token) {
         return Double.parseDouble(token.getText());
     }
 
-    public static Boolean toBoolean(Token token) {
+    private static Boolean toBoolean(Token token) {
         return Boolean.parseBoolean(token.getText());
     }
 
-
-    public static String toString(Token token) {
+    private static String toString(Token token) {
         return token.getText();
     }
 
-    public static String toStringTrim(Token token) {
+    private static String toStringTrim(Token token) {
         return token.getText().substring(1, token.getText().length() - 1);
     }
 }

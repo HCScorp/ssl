@@ -2,7 +2,7 @@ import hcs.dsl.ssl.antlr.ModelBuilder;
 import hcs.dsl.ssl.antlr.StopErrorListener;
 import hcs.dsl.ssl.antlr.grammar.SSLLexer;
 import hcs.dsl.ssl.antlr.grammar.SSLParser;
-import hcs.dsl.ssl.backend.Model;
+import hcs.dsl.ssl.model.Model;
 import hcs.dsl.ssl.generator.SSLAppGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;

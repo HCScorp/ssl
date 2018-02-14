@@ -87,13 +87,13 @@ area bureau {
     has 1 capteurFonctionBizarre
 }
 
-exec oldSchool {
+app oldSchool {
     parking: P1, P2
     salleDeClasse: C1, C2
     bureau: B1, B2, B3, B4
 }
 
-exec newSchool {
+app newSchool {
     parking: P3
     salleDeClasse: C3, C4, C5, C6
 }

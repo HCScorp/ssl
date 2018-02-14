@@ -29,35 +29,42 @@ law function simpleCarre {
     `x` => `x^2`
 }
 
+law file donneeVoiture {
+    from distant csv "dataCar.csv"
+    using column 1 as time, column 3 as value and column 5 as name
+    with linear interpolation restricted to [-1,1]
+}
+
+law file donneePersonneBU {
+    from local json "dataPersonneBU.json"
+    using field "t" as time, field "v" as value and field "n" as name
+}
 
 # sensors
 
 sensor capteurNombreVoiture {
-    source from distant csv "dataCar.csv"
-        using column 1 as time, column 3 as value and column 5 as name
-        with linear interpolation restricted to [-1,1]
+    governed by donneeVoiture
     noise [0,2]
 }
 # offset 10/12/2017 12:00
 
 sensor capteurPersonneBU {
-    source from local json "dataPersonneBU.json"
-        using field "t" as time, field "v" as value and field "n" as name
+    governed by donneePersonneBU
 }
 
 sensor capteurLumiFenetre {
-    source from law lumiDehors
+    governed by law lumiDehors
     period 5m
 }
 
 sensor capteurTempSalle {
-    source from law temperatureIntervalle
+    governed by law temperatureIntervalle
     period 100s # [90s, 140s]
     noise [-0.05,+0.02]
 }
 
 sensor capteurTempBureau {
-    source from law temperatureEnsemble
+    governed by law temperatureEnsemble
     period 1m
 }
 
@@ -77,13 +84,13 @@ area bureau {
     has 2 capteurTempBureau
 }
 
-exec oldSchool {
+app oldSchool {
     parking: P1, P2
     salleDeClasse: C1, C2
     bureau: B1, B2, B3, B4
 }
 
-exec newSchool {
+app newSchool {
     parking: P3
     salleDeClasse: C3, C4
 }

@@ -1,51 +1,50 @@
 package hcs.dsl.ssl.generator;
 
-import hcs.dsl.ssl.backend.Model;
+import hcs.dsl.ssl.model.Model;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import hcs.dsl.ssl.backend.law.FunctionLaw;
-import hcs.dsl.ssl.backend.law.MarkovLaw;
-import hcs.dsl.ssl.backend.law.RandomLaw;
-import hcs.dsl.ssl.backend.sensor.SourceLaw;
+import hcs.dsl.ssl.model.law.FunctionLaw;
+import hcs.dsl.ssl.model.law.MarkovLaw;
+import hcs.dsl.ssl.model.law.RandomLaw;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class SSLAppGenerator implements Runnable {
 
-    private VelocityEngine engine;
+    private static final String ROOT = "src/main/";
 
-    private VelocityContext context;
+    private static final String TEMPLATE_SIMU = ROOT + "resources/template/simulation.vm";
+    private static final String TEMPLATE_MAIN = ROOT + "resources/template/main.vm";
 
+    private static final String OUT_NAME_FILE = ROOT + "java/Simulation.java";
+    private static final String OUT_MAIN_FILE = ROOT + "java/Main.java";
+
+    private final VelocityEngine engine;
+    private final VelocityContext context;
     private final Model model;
 
-
-    private static final String TEMPLATE_SENSOR = "src/main/resources/template/sensor.vm";
-    private static final String TEMPLATE_MAIN = "src/main/resources/template/main.vm";
-
-    private static final String OUT_NAME_FILE = "src/main/java/Simulation.java";
-    private static final String OUT_MAIN_FILE = "src/main/java/Main.java";
-
-    private File dockerfile = new File("src/main/resources/extern/Dockerfile");
-    private File pom = new File("src/main/resources/extern/pom.xml");
-    private File build = new File("src/main/resources/extern/build.sh");
+    private final File dockerfile;
+    private final File pom;
+    private final File build;
 
     public SSLAppGenerator(Model model) {
-        engine = new VelocityEngine();
-        context = new VelocityContext();
+        this.engine = new VelocityEngine();
+        this.context = new VelocityContext();
         this.model = model;
+
+        this.dockerfile = new File("src/main/resources/extern/Dockerfile");
+        this.pom = new File("src/main/resources/extern/pom.xml");
+        this.build = new File("src/main/resources/extern/build.sh");
     }
 
-
-
-    public void createContext(){
+    private void createContext(){
         context.put("areas", model.areas);
         context.put("laws", model.laws);
         context.put("sensors", model.sensors);
@@ -55,7 +54,6 @@ public class SSLAppGenerator implements Runnable {
         context.put("RandomLaw", RandomLaw.class);
         context.put("MarkovLaw", MarkovLaw.class);
         context.put("FunctionLaw", FunctionLaw.class);
-        context.put("SourceLaw", SourceLaw.class);
     }
 
 
@@ -65,7 +63,6 @@ public class SSLAppGenerator implements Runnable {
 
     private void writeTemplate(){
         model.execs.forEach((key, value) -> {
-
             String outputpath = "generated/" +  key + "/";
             File simulation = new File(outputpath + OUT_NAME_FILE);
             File main = new File(outputpath + OUT_MAIN_FILE);
@@ -81,11 +78,11 @@ public class SSLAppGenerator implements Runnable {
                 Files.copy(dockerfile.toPath(), dockerOut.toPath(),REPLACE_EXISTING );
                 Files.copy(pom.toPath(), pomOut.toPath(), REPLACE_EXISTING);
                 Files.copy(build.toPath(), buildOut.toPath(), REPLACE_EXISTING);
-
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalStateException(e);
             }
-            Template templateSimulation = engine.getTemplate(TEMPLATE_SENSOR);
+
+            Template templateSimulation = engine.getTemplate(TEMPLATE_SIMU);
             Template templateMain = engine.getTemplate(TEMPLATE_MAIN);
 
             mergeTemplate(templateMain, main);
@@ -99,15 +96,13 @@ public class SSLAppGenerator implements Runnable {
         try (FileWriter fw = new FileWriter(templateFile)) {
             templateSensor.merge(context, fw);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-
     }
 
     @Override
     public void run() {
         this.createContext();
         this.writeTemplate();
-
     }
 }

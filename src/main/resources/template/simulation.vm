@@ -1,0 +1,99 @@
+import com.udojava.evalex.Expression;
+
+import hcs.dsl.ssl.runtime.area.*;
+import hcs.dsl.ssl.runtime.exec.*;
+import hcs.dsl.ssl.runtime.law.markov.*;
+import hcs.dsl.ssl.runtime.law.function.*;
+import hcs.dsl.ssl.runtime.law.random.*;
+import hcs.dsl.ssl.runtime.law.file.*;
+import hcs.dsl.ssl.runtime.noise.*;
+import hcs.dsl.ssl.runtime.sensor.*;
+import hcs.dsl.ssl.runtime.source.*;
+
+
+#foreach($sensor in $sensors)
+    #set($law = $laws.get(${sensor.getLawRef()}) )
+    #set ($lawType = $law.getValType().name() )
+
+    #if ($lawType == "Double" || $lawType== "Integer" )
+class Sensor_${sensor.name} extends NoisableSensor<$lawType>{
+    #else
+class Sensor_${sensor.name} extends Sensor<$lawType>{
+    #end
+    public Sensor_${sensor.name}() {
+        super("${sensor.name}",
+                new Law_${law.name}()#if($sensor.period),${sensor.getPeriod().getPeriodMs()}#end
+                #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()})                #end);
+    }
+}
+#end
+
+
+#foreach($law in $laws)
+    #if (${law.type.name()} == "MARKOV")
+    #set($markovLaw = $MarkovLaw.cast($law))
+class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType()}> {
+    public Law_${law.name} (){
+        super();
+    #foreach($edge in ${markovLaw.getList()})
+        #if(${markovLaw.getValType()} == "String")
+        addEdge( "$edge.from", $edge.proba, "$edge.to" );
+        #else
+        addEdge( $edge.from, $edge.proba, $edge.to );
+        #end
+        #end
+    }
+}
+    #elseif(${law.type.name()} == "RANDOM")
+        #set($randomLaw = $RandomLaw.cast($law))
+        #if ($randomLaw.getList())
+class Law_${law.name} extends RandomLawArray<$randomLaw.list.type> {
+    public Law_${law.name} (){ super(${randomLaw.getList().toString()}); }
+}
+
+        ## It's an interval
+        #else
+            #if ($randomLaw.interval.getType().name() == "Double")
+class Law_${law.name} extends RandomLawIntervalDouble {
+            #else
+class Law_${law.name} extends RandomLawIntervalInteger {
+            #end
+    public Law_${law.name}() { super(${randomLaw.interval}); }
+}
+        #end
+
+        #elseif(${law.type.name()} == "FUNCTION")
+        #set($functionLaw = $FunctionLaw.cast($law))
+### TODO: Just fonctionLawDouble :: To be modified.
+class Law_${law.name} extends FunctionLawDouble {
+    public Law_${law.name}() {
+        super();
+        #foreach($case in ${functionLaw.getCases()})
+        addCase("${case.condition}", "${case.expresion}");
+        #end
+    }
+}
+    #end
+#end
+
+#foreach($area in $areas)
+class Area_$area.name extends AreaType {
+    public Area_${area.name}() {
+        super("$area.name"
+    #foreach($sensorGroup in ${area.getSensorGroups()})
+        , $sensorGroup
+    #end);
+}}
+
+#end
+#foreach($exec in $execs)
+class Exec_${exec.name} extends Exec {
+    public Exec_${exec.name} () {
+        super("${exec.name}"
+    $global
+    #foreach($areaGroup in $exec.getAreaGroups())
+        $areaGroup
+    #end);
+    }
+}
+#end

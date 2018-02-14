@@ -8,10 +8,11 @@ grammar SSL;
 root            :   (law|sensor|area|exec|'\n')+ global? EOF ;
 
 // Law
-law         :   'law ' (random|markov|function) ;
-    random  :   'random '   name=BASIC_STRING ' {\n' random_def '}' ;
-    markov  :   'markov '   name=BASIC_STRING ' {\n' markov_def '}' ;
+law         :   'law ' (random|markov|function|file) ;
+    random  :   'random '   name=BASIC_STRING ' {\n' random_def   '}' ;
+    markov  :   'markov '   name=BASIC_STRING ' {\n' markov_def   '}' ;
     function:   'function ' name=BASIC_STRING ' {\n' function_def '}' ;
+    file    :   'file  '    name=BASIC_STRING ' {\n' file_def     '}' ;
 
 random_def          :   TOK_TAB 'values in ' (random_interval|random_list) '\n';
     random_interval :   'interval ' interval ;
@@ -38,21 +39,21 @@ list      :   '(' (list_integer|list_double|list_boolean|list_string) ')' ;
 
 list_basic_string  : elem+=BASIC_STRING  (', ' elem+=BASIC_STRING)* ;
 
+file_def            : 'from ' location=FILE_LOCATION ' ' (type_json|type_csv) interpolation? ;
+    type_json       : 'json ' name=STRING header_json?;
+        header_json : '\n' TOK_TAB 'using ' 'field ' f1_name=STRING ' as ' f1_type=HEADER_TYPE (', field ' f2_name=STRING ' as ' f2_type=HEADER_TYPE (' and field ' f3_name=STRING ' as ' f3_type=HEADER_TYPE)?)?;
+    type_csv        : 'csv ' name=STRING header_csv?;
+        header_csv  : '\n' TOK_TAB 'using ' 'column ' f1_name=(STRING|INTEGER) ' as ' f1_type=HEADER_TYPE (', column ' f2_name=(STRING|INTEGER) ' as ' f2_type=HEADER_TYPE (' and column ' f3_name=(STRING|INTEGER) ' as ' f3_type=HEADER_TYPE)?)?;
+    interpolation   : '\n' TOK_TAB 'with linear interpolation' restriction?;
+        restriction : ' restricted to ' interval;
+
 // Sensor
 sensor                      : 'sensor ' name=BASIC_STRING ' {\n' sensor_def '}';
     sensor_def              : source period? noise? ; // offset?;
-        source              : TOK_TAB 'source from ' (law_ref|file_input) '\n';
+        source              : TOK_TAB 'governed by ' law_ref '\n';
         noise               : TOK_TAB 'noise ' interval '\n';
 //        offset              : TOK_TAB 'offset ' date=DATE '\n';
         period              : TOK_TAB 'period ' period_value=PERIOD '\n';
-
-file_input  : location=FILE_LOCATION ' ' (type_json|type_csv) interpolation? ;
-    type_json       : 'json ' name=STRING header_json?;
-        header_json : '\n' TOK_TAB TOK_TAB 'using ' 'field ' f1_name=STRING ' as ' f1_type=HEADER_TYPE (', field ' f2_name=STRING ' as ' f2_type=HEADER_TYPE (' and field ' f3_name=STRING ' as ' f3_type=HEADER_TYPE)?)?;
-    type_csv        : 'csv ' name=STRING header_csv?;
-        header_csv  : '\n' TOK_TAB TOK_TAB 'using ' 'column ' f1_name=(STRING|INTEGER) ' as ' f1_type=HEADER_TYPE (', column ' f2_name=(STRING|INTEGER) ' as ' f2_type=HEADER_TYPE (' and column ' f3_name=(STRING|INTEGER) ' as ' f3_type=HEADER_TYPE)?)?;
-    interpolation   : '\n' TOK_TAB TOK_TAB 'with linear interpolation' restriction?;
-        restriction : ' restricted to ' interval;
 
 law_ref : 'law ' ref=BASIC_STRING;
 
@@ -90,6 +91,9 @@ TOK_LIST        : 'list';
 
 TOK_SENSOR      : 'sensor';
 TOK_FROM        : 'from';
+TOK_BY          : 'by';
+TOK_FILE        : 'file';
+TOK_GOVERNED    : 'governed';
 TOK_USING       : 'using';
 TOK_WITH        : 'with';
 TOK_COLUMN      : 'column';
