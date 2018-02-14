@@ -212,19 +212,19 @@ public class ModelBuilder extends SSLBaseListener {
         String name = toString(ctx.name);
         File_defContext def = ctx.file_def();
         if (def.type_csv() != null) {
-            FileLawCsv src = new FileLawCsv(name, toStringTrim(ctx.name));
+            FileLawCsv lawCsv = new FileLawCsv(name, toStringTrim(def.type_csv().uri));
             Header_csvContext header = def.type_csv().header_csv();
             if (header != null) {
-                src.setCsvHeader(buildCsvHeader(header));
+                lawCsv.setCsvHeader(buildCsvHeader(header));
             }
-            law = src;
+            law = lawCsv;
         } else if (def.type_json() != null) {
-            FileLawJson src = new FileLawJson(name, toStringTrim(ctx.name));
+            FileLawJson lawJson = new FileLawJson(name, toStringTrim(def.type_json().uri));
             Header_jsonContext header = def.type_json().header_json();
             if (header != null) {
-                src.setJsonHeader(buildJsonHeader(header));
+                lawJson.setJsonHeader(buildJsonHeader(header));
             }
-            law = src;
+            law = lawJson;
         } else {
             throw new IllegalArgumentException("invalid file law definition: " + ctx);
         }
@@ -234,7 +234,6 @@ public class ModelBuilder extends SSLBaseListener {
         if (def.interpolation() != null) {
             law.setInterpolation(buildInterpolation(def.interpolation()));
         }
-
 
         return law;
     }
@@ -335,11 +334,11 @@ public class ModelBuilder extends SSLBaseListener {
     }
 
     private String buildLawRef(SourceContext ctx) {
-        if (ctx.law_ref() == null) {
+        if (ctx.ref == null) {
             throw new IllegalArgumentException("law reference must be defined");
         }
 
-        String lawRef = toString(ctx.law_ref().ref);
+        String lawRef = toString(ctx.ref);
         if (!laws.containsKey(lawRef)) {
             throw new IllegalArgumentException("law '" + lawRef + "' is referenced before definition");
         }

@@ -49,13 +49,9 @@ public abstract class FileLaw extends Law {
         System.out.println("file URI ::" + fileUri);
         this.fileUri = fileUri;
         this.fileType = fileType;
-
-        // TODO fetch data, then when you check if there is an interpolation or not to determine what to generate
-        fetchFile();
     }
 
     private void fetchFile() {
-        System.out.println(fileLocation);
         if (FileLocation.LOCAL.equals(fileLocation)) {
             fetchLocalFile();
         } else if (FileLocation.DISTANT.equals(fileLocation)) {
@@ -63,6 +59,8 @@ public abstract class FileLaw extends Law {
         } else {
             throw new RuntimeException("file location of law '" + getName() + "' must be defined");
         }
+
+        fillData();
     }
 
     private void fetchLocalFile() {
@@ -79,11 +77,11 @@ public abstract class FileLaw extends Law {
                 throw new RuntimeException("law '" + getName() + "' must have a valid URL");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("erro when fetching file" + fileUri + " for law: " + getName(),e);
         }
     }
 
-    protected abstract void fillData() throws IOException; // TODO load data according to header (or default!!)
+    protected abstract void fillData(); // TODO load data according to header (or default!!)
 
     public void setValType(Var.Type valType) { // TODO to use at the end of the computation
         this.valType = valType;
@@ -108,40 +106,38 @@ public abstract class FileLaw extends Law {
 
     public void setFileLocation(String fileLocation) {
         this.fileLocation = FileLocation.valueOf(fileLocation.toUpperCase());
+
+        fetchFile();
     }
 
     public Interpolation getInterpolation() {
         return interpolation;
     }
 
-    public void setInterpolation(Interpolation interpolation)  {
+    public void setInterpolation(Interpolation interpolation) {
         this.interpolation = interpolation;
-        if (this.valType == Var.Type.Boolean || this.valType == Var.Type.String){
-            // TODO : throw exception
-            System.out.println("error boolean | String can't be interpolate.");
+        if (valType == Var.Type.Boolean || valType == Var.Type.String) {
+            throw new IllegalArgumentException("invalid type " + valType + " for linear interpolation");
         }
 
-        if (interpolation.getRestriction() != null){
+        if (interpolation.getRestriction() != null) {
             Interval interval = interpolation.getRestriction();
-            this.data.removeIf(sensorData ->
-                    sensorData.getTime() < interval.min.longValue()  || sensorData.getTime() > interval.max.longValue());
-        }
-        else {
-            if (this.valType == Var.Type.Integer){
-                interpolation.setRestriction(new Interval<>(Interval.Type.Integer,(int) this.data.get(0).getTime(),
-                        (int) this.data.get( this.data.size() -1).getTime()));
-            }
-            else {
-                interpolation.setRestriction(new Interval<>(Interval.Type.Double,(double) this.data.get(0).getTime(),
-                        (double) this.data.get( this.data.size() -1).getTime()));
+            data.removeIf(sensorData ->
+                    sensorData.getTime() < interval.min.longValue() || sensorData.getTime() > interval.max.longValue());
+        } else {
+            if (valType == Var.Type.Integer) {
+                interpolation.setRestriction(new Interval<>(Interval.Type.Integer, (int) this.data.get(0).getTime(),
+                        (int) this.data.get(this.data.size() - 1).getTime()));
+            } else {
+                interpolation.setRestriction(new Interval<>(Interval.Type.Double, (double) this.data.get(0).getTime(),
+                        (double) this.data.get(this.data.size() - 1).getTime()));
             }
         }
         double[] y;
         double[] x = this.data.stream().mapToDouble(sensorData -> (double) sensorData.getTime()).toArray();
-        if (valType == Var.Type.Integer){
+        if (valType == Var.Type.Integer) {
             y = this.data.stream().mapToDouble(sensorData -> (double) sensorData.getValueInteger()).toArray();
-        }
-        else {
+        } else {
             y = this.data.stream().mapToDouble(SensorData::getValueDouble).toArray();
         }
 
@@ -149,7 +145,7 @@ public abstract class FileLaw extends Law {
         this.interpolation.setCoefPolynome(Doubles.asList(polynomialFunctionLagrangeForm.getCoefficients()));
     }
 
-    public Var.Type findTypeValueFileContent(String rawValue) {
+    Var.Type findTypeValueFileContent(String rawValue) {
         Var.Type type = Var.Type.String;
         if (patternBoolean.matcher(rawValue).find()) type = Var.Type.Boolean;
         else if (patternDouble.matcher(rawValue).find()) type = Var.Type.Double;

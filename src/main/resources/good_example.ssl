@@ -30,39 +30,41 @@ law function simpleCarre {
 }
 
 law file donneeVoiture {
-from local csv "src/main/resource/source/dataCar.csv"
+    from local csv "src/main/resource/source/dataCar.csv"
     using column 1 as time, column 3 as value and column 5 as name
-    with linear interpolation restricted to [-1,1]}
+    with linear interpolation restricted to [-1,1]
+}
 
 law file donneePersonneBU {
-from local json "src/main/resource/source/dataPersonneBU.json"
-    using field "t" as time, field "v" as value and field "n" as name}
+    from local json "src/main/resource/source/dataPersonneBU.json"
+    using field "t" as time, field "v" as value and field "n" as name
+}
 
 # sensors
 
 sensor capteurNombreVoiture {
-    governed by law donneeVoiture
+    governed by donneeVoiture
     noise [0,2]
 }
 # offset 10/12/2017 12:00
 
 sensor capteurPersonneBU {
-    governed by law donneePersonneBU
+    governed by donneePersonneBU
 }
 
 sensor capteurLumiFenetre {
-    governed by law lumiDehors
+    governed by lumiDehors
     period 5m
 }
 
 sensor capteurTempSalle {
-    governed by law temperatureIntervalle
+    governed by temperatureIntervalle
     period 100s # [90s, 140s]
     noise [-0.05,+0.02]
 }
 
 sensor capteurTempBureau {
-    governed by law temperatureEnsemble
+    governed by temperatureEnsemble
     period 1m
 }
 
