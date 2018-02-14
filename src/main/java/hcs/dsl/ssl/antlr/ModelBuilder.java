@@ -207,7 +207,7 @@ public class ModelBuilder extends SSLBaseListener {
             throw new IllegalArgumentException("invalid file law definition: " + ctx);
         }
 
-        law.setLocation(toString(def.location));
+        law.setFileLocation(toString(def.location));
 
         if (def.interpolation() != null) {
             law.setInterpolation(buildInterpolation(def.interpolation()));

@@ -15,4 +15,9 @@ public class FileLawJson extends FileLaw {
     public void setJsonHeader(JsonHeader jsonHeader) {
         this.jsonHeader = jsonHeader;
     }
+
+    @Override
+    protected void fillData() {
+        // TODO
+    }
 }

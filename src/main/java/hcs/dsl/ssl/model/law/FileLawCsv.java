@@ -15,4 +15,9 @@ public class FileLawCsv extends FileLaw {
     public void setCsvHeader(CsvHeader csvHeader) {
         this.csvHeader = csvHeader;
     }
+
+    @Override
+    protected void fillData() {
+        // TODO
+    }
 }
