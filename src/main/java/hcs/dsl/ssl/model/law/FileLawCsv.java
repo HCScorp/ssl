@@ -7,18 +7,18 @@ import hcs.dsl.ssl.model.misc.Var;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FileLawCsv extends FileLaw {
 
     private CsvHeader csvHeader;
-    private CsvMapper objectMapper = new CsvMapper();
+    private CsvMapper mapper = new CsvMapper();
 
-
-    public FileLawCsv(String lawName, String fileUri) {
-        super(lawName, fileUri, FileType.CSV);
-        objectMapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+    public FileLawCsv(String lawName, String fileUri, String sensorName) {
+        super(lawName, fileUri, sensorName, FileType.CSV);
+        mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
     }
 
     public CsvHeader getCsvHeader() {
@@ -31,33 +31,86 @@ public class FileLawCsv extends FileLaw {
 
     @Override
     protected void fillData() throws IOException {
+        MappingIterator<String[]> it = mapper.readerFor(String[].class).readValues(file);
+        List<String[]> entries = it.readAll();
 
-        MappingIterator<String[]> it = objectMapper.readerFor(String[].class).readValues(this.file);
-        List<String[]> input = it.readAll();
-
-        Var.Type typeData;
-        int indexValue = csvHeader.indexValue(Header.VALUE);
-        int indexTime = csvHeader.indexValue(Header.TIME);
-        int indexName = csvHeader.indexValue(Header.NAME);
-
-        if (!data.isEmpty()) {
-            // remove header
-            if (!patternLong.matcher(input.get(0)[indexTime]).find()) {
-                data.remove(0);
-            }
-            typeData = this.findTypeValueFileContent(input.get(0)[csvHeader.indexValue(Header.VALUE)]);
-        } else {
-            throw new NoSuchFieldError("No Value field detected");
+        if (entries.isEmpty()) {
+            return;
         }
 
-        this.setValType(typeData);
-        input.forEach(raw -> {
-            SensorData sensorData = new SensorData();
-            sensorData.setTime(Long.parseLong(raw[indexTime]));
-            sensorData.setName(raw[indexName]);
-            sensorData.setProperValue(typeData, raw[indexValue]);
-            data.add(sensorData);
-        });
-        data.sort((sensorData, t1) -> (int) (sensorData.getTime() - t1.getTime()));
+        String[] firstEntry = entries.get(0);
+        boolean headerPresent = headerPresent(firstEntry);
+
+        if (headerNameSet() && !headerPresent) {
+            throw new IllegalArgumentException("the script set specific headers for file '" + getFileUri() +
+                    "' but the CSV header appears to be missing");
+        }
+
+        if (headerPresent) {
+            entries.remove(0);
+        }
+
+        // Resolve indexes for each sensor data to be gathered
+        int indexTime = fetchIndexOf(HeaderType.TIME, headerPresent, firstEntry);
+        int indexName = fetchIndexOf(HeaderType.NAME, headerPresent, firstEntry);
+        int indexValue = fetchIndexOf(HeaderType.VALUE, headerPresent, firstEntry);
+
+        // Resolve value type
+        String firstValue = firstEntry[indexValue];
+        Var.Type typeData = resolveValueType(firstValue);
+        setValType(typeData);
+
+        // Parse CSV
+        data = entries.stream()
+                .filter(raw -> sensorName.equals(raw[indexName]))
+                .map(raw -> new SensorData(parseTimestamp(raw[indexTime]), sensorName, typeData, raw[indexValue]))
+                .collect(Collectors.toList());
+    }
+
+    private int fetchIndexOf(HeaderType type, boolean headerPresent, String[] firstEntry) {
+        int index = fetchIndexOfInsecure(type, headerPresent, firstEntry);
+        if (index < 0 || index > firstEntry.length) {
+            throw new IllegalArgumentException("column of index " + index + " can't be found in th CSV file '" + getFileUri() + "'");
+        }
+
+        return index;
+    }
+
+    private int fetchIndexOfInsecure(HeaderType type, boolean headerPresent, String[] firstEntry) {
+        if (headerPresent) {
+            Optional<String> hNameOpt = csvHeader.nameOf(type);
+            if (hNameOpt.isPresent()) {
+                String hName = hNameOpt.get();
+                for (int i = 0; i < firstEntry.length; i++) {
+                    if (hName.equals(firstEntry[i])) {
+                        return i;
+                    }
+                }
+                throw new IllegalArgumentException("column '" + hName + "' can't be found in th CSV file '" + getFileUri() + "'");
+            }
+        }
+
+        return csvHeader.indexOf(type);
+    }
+
+    /**
+     * We consider that a header is present if the first line does not contains any timestamp
+     *
+     * @param firstEntry
+     * @return
+     */
+    private boolean headerPresent(String[] firstEntry) {
+        for (String s : firstEntry) {
+            if (PATTERN_TIMESTAMP.matcher(s).matches()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean headerNameSet() {
+        return csvHeader.getF1Name() != null
+                || csvHeader.getF2Name() != null
+                || csvHeader.getF3Name() != null;
     }
 }

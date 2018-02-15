@@ -30,13 +30,15 @@ law function simpleCarre {
 }
 
 law file donneeVoiture {
-    from local csv "src/main/resource/source/dataCar.csv"
-    using column 1 as time, column 3 as value and column 5 as name
+    sensor "sensorCar"
+    from local csv "src/main/resources/source/dataCar.csv"
+    using column 1 as time, column 2 as value and column 4 as name
     with linear interpolation restricted to [-1,1]
 }
 
 law file donneePersonneBU {
-    from local json "src/main/resource/source/dataPersonneBU.json"
+    sensor "sensorBU"
+    from local json "src/main/resources/source/dataPeopleBU.json"
     using field "t" as time, field "v" as value and field "n" as name
 }
 

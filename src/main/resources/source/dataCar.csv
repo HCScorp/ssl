@@ -1,5 +1,6 @@
-100001,bla,10.0,bebe,"dataCar"
-100002,bla,10.0,bebe,"dataCar"
-100003,bla,10.0,bebe,"dataCar"
-100005,bla,10.0,bebe,"dataCar"
-100006,bla,10.0,bebe,"dataCar"
+bla,1518691780,11.0,bli,sensorCar
+bla,1518691781,10.5,bli,sensorCar
+bla,1518691782,10.9,bli,sensorCar
+bla,1518691783,10.2,bli,sensorCar
+bla,1518691784,10.9,bli,sensorCar
+bla,1518691782,10.7,bli,otherSensor

@@ -22,8 +22,8 @@ public class Global {
     }
 
     public void setReplay(String start, String end) {
-        if (checkDate(start).isBefore(checkDate(end))) {
-            throw new IllegalArgumentException("invalid replay date definition: start date must be before the end date");
+        if (!checkDate(start).isBefore(checkDate(end))) {
+            throw new IllegalArgumentException("invalid replay date definition: start '" + start + "' date must be before the end date '" + end + "'");
         }
 
         this.start = start;

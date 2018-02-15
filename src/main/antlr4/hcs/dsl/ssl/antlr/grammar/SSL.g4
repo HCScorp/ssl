@@ -39,13 +39,15 @@ list      :   '(' (list_integer|list_double|list_boolean|list_string) ')' ;
 
 list_basic_string  : elem+=BASIC_STRING  (', ' elem+=BASIC_STRING)* ;
 
-file_def            : TOK_TAB 'from ' location=FILE_LOCATION ' ' (type_json|type_csv) interpolation? '\n';
-    type_json       : 'json ' uri=STRING header_json?;
+file_def            : sensor_name location_def interpolation? '\n' ;
+    sensor_name     : TOK_TAB 'sensor ' name=STRING '\n' ;
+    location_def    : TOK_TAB 'from ' location=FILE_LOCATION ' ' (type_json|type_csv) ;
+    type_json       : 'json ' uri=STRING header_json? ;
         header_json : '\n' TOK_TAB 'using ' 'field ' f1_name=STRING ' as ' f1_type=HEADER_TYPE (', field ' f2_name=STRING ' as ' f2_type=HEADER_TYPE (' and field ' f3_name=STRING ' as ' f3_type=HEADER_TYPE)?)?;
-    type_csv        : 'csv ' uri=STRING header_csv?;
+    type_csv        : 'csv ' uri=STRING header_csv? ;
         header_csv  : '\n' TOK_TAB 'using ' 'column ' f1_name=(STRING|INTEGER) ' as ' f1_type=HEADER_TYPE (', column ' f2_name=(STRING|INTEGER) ' as ' f2_type=HEADER_TYPE (' and column ' f3_name=(STRING|INTEGER) ' as ' f3_type=HEADER_TYPE)?)?;
-    interpolation   : '\n' TOK_TAB 'with linear interpolation' restriction?;
-        restriction : ' restricted to ' interval;
+    interpolation   : '\n' TOK_TAB 'with linear interpolation' restriction? ;
+        restriction : ' restricted to ' interval ;
 
 // Sensor
 sensor                      : 'sensor ' name=BASIC_STRING ' {\n' sensor_def '}';

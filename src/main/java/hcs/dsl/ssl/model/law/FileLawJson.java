@@ -1,13 +1,14 @@
 package hcs.dsl.ssl.model.law;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hcs.dsl.ssl.model.misc.Var;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FileLawJson extends FileLaw {
 
@@ -15,8 +16,8 @@ public class FileLawJson extends FileLaw {
     private ObjectMapper jsonMapper = new ObjectMapper();
 
 
-    public FileLawJson(String lawName, String fileUri) {
-        super(lawName, fileUri, FileType.JSON);
+    public FileLawJson(String lawName, String fileUri, String sensorName) {
+        super(lawName, fileUri, sensorName, FileType.JSON);
     }
 
     public JsonHeader getJsonHeader() {
@@ -29,29 +30,27 @@ public class FileLawJson extends FileLaw {
 
     @Override
     protected void fillData() throws IOException {
-        List<Map<String, String>> input = jsonMapper.readValue(this.file, new TypeReference<List<Map<String, String>>>() {
-        });
+        List<Map<String, String>> entries = jsonMapper.readValue(file, new TypeReference<List<Map<String, String>>>() {});
 
-        Var.Type typeData;
-        String keyValue = jsonHeader.getProperKey(Header.VALUE);
-        String keyTime = jsonHeader.getProperKey(Header.TIME);
-        String keyName = jsonHeader.getProperKey(Header.NAME);
-
-        if (!data.isEmpty()) {
-            // remove header
-            typeData = this.findTypeValueFileContent(input.get(0).get(keyValue));
-        } else {
-            throw new NoSuchFieldError("No Value field detected");
+        if (entries.isEmpty()) {
+            return;
         }
-        this.setValType(typeData);
 
-        input.forEach(mapRaw -> {
-            SensorData sensorData = new SensorData();
-            sensorData.setProperValue(typeData, mapRaw.get(keyValue));
-            sensorData.setName(mapRaw.get(keyName));
-            sensorData.setTime(Long.parseLong(mapRaw.get(keyTime)));
-            this.data.add(sensorData);
-        });
-        data.sort((sensorData, t1) -> (int) (sensorData.getTime() - t1.getTime()));
+        // Resolve keys for each sensor data to be gathered
+        String keyTime = jsonHeader.nameOrDefaultOf(HeaderType.TIME);
+        String keyName = jsonHeader.nameOrDefaultOf(HeaderType.NAME);
+        String keyValue = jsonHeader.nameOrDefaultOf(HeaderType.VALUE);
+
+        // Resolve value type
+        Map<String, String> firstEntry = entries.get(0);
+        String firstValue = firstEntry.get(keyValue);
+        Var.Type typeData = resolveValueType(firstValue);
+        setValType(typeData);
+
+        // Parse JSON
+        data = entries.stream()
+                .filter(raw -> sensorName.equals(raw.get(keyName)))
+                .map(raw -> new SensorData(parseTimestamp(raw.get(keyTime)), sensorName, typeData, raw.get(keyValue)))
+                .collect(Collectors.toList());
     }
 }

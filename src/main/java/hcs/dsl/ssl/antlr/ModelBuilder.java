@@ -208,19 +208,23 @@ public class ModelBuilder extends SSLBaseListener {
     }
 
     private FileLaw buildFileLaw(FileContext ctx) {
-        FileLaw law;
-        String name = toString(ctx.name);
         File_defContext def = ctx.file_def();
-        if (def.type_csv() != null) {
-            FileLawCsv lawCsv = new FileLawCsv(name, toStringTrim(def.type_csv().uri));
-            Header_csvContext header = def.type_csv().header_csv();
+        Location_defContext locDef = def.location_def();
+
+        FileLaw law;
+        String lawName = toString(ctx.name);
+        String sensorName = toStringTrim(def.sensor_name().name);
+
+        if (locDef.type_csv() != null) {
+            FileLawCsv lawCsv = new FileLawCsv(lawName, toStringTrim(locDef.type_csv().uri), sensorName);
+            Header_csvContext header = locDef.type_csv().header_csv();
             if (header != null) {
                 lawCsv.setCsvHeader(buildCsvHeader(header));
             }
             law = lawCsv;
-        } else if (def.type_json() != null) {
-            FileLawJson lawJson = new FileLawJson(name, toStringTrim(def.type_json().uri));
-            Header_jsonContext header = def.type_json().header_json();
+        } else if (locDef.type_json() != null) {
+            FileLawJson lawJson = new FileLawJson(lawName, toStringTrim(locDef.type_json().uri), sensorName);
+            Header_jsonContext header = locDef.type_json().header_json();
             if (header != null) {
                 lawJson.setJsonHeader(buildJsonHeader(header));
             }
@@ -229,7 +233,7 @@ public class ModelBuilder extends SSLBaseListener {
             throw new IllegalArgumentException("invalid file law definition: " + ctx);
         }
 
-        law.setFileLocation(toString(def.location));
+        law.setFileLocation(toString(locDef.location));
 
         if (def.interpolation() != null) {
             law.setInterpolation(buildInterpolation(def.interpolation()));
