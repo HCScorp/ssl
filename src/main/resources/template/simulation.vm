@@ -10,30 +10,12 @@ import hcs.dsl.ssl.runtime.noise.*;
 import hcs.dsl.ssl.runtime.sensor.*;
 import hcs.dsl.ssl.runtime.source.*;
 
-
-#foreach($sensor in $sensors)
-    #set($law = $laws.get(${sensor.getLawRef()}) )
-    #set ($lawType = $law.getValType().name() )
-
-    #if ($lawType == "Double" || $lawType== "Integer" )
-class Sensor_${sensor.name} extends NoisableSensor<$lawType>{
-    #else
-class Sensor_${sensor.name} extends Sensor<$lawType>{
-    #end
-    public Sensor_${sensor.name}() {
-        super("${sensor.name}",
-                new Law_${law.name}()#if($sensor.period),${sensor.getPeriod().getPeriodMs()}#end
-                #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()})                #end);
-    }
-}
-#end
-
-
 #foreach($law in $laws)
     #if (${law.type.name()} == "MARKOV")
-    #set($markovLaw = $MarkovLaw.cast($law))
+        #set($markovLaw = $MarkovLaw.cast($law))
+
 class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType()}> {
-    public Law_${law.name} (){
+    public Law_${law.name}() {
         super();
     #foreach($edge in ${markovLaw.getList()})
         #if(${markovLaw.getValType()} == "String")
@@ -41,18 +23,17 @@ class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType()}> {
         #else
         addEdge( $edge.from, $edge.proba, $edge.to );
         #end
-        #end
+    #end
     }
 }
     #elseif(${law.type.name()} == "RANDOM")
         #set($randomLaw = $RandomLaw.cast($law))
+
         #if ($randomLaw.getList())
 class Law_${law.name} extends RandomLawArray<$randomLaw.list.type> {
-    public Law_${law.name} (){ super(${randomLaw.getList().toString()}); }
+    public Law_${law.name}() { super(${randomLaw.getList().toString()}); }
 }
-
-        ## It's an interval
-        #else
+        #else ## It's an interval
             #if ($randomLaw.interval.getType().name() == "Double")
 class Law_${law.name} extends RandomLawIntervalDouble {
             #else
@@ -64,6 +45,7 @@ class Law_${law.name} extends RandomLawIntervalInteger {
 
     #elseif(${law.type.name()} == "FUNCTION")
         #set($functionLaw = $FunctionLaw.cast($law))
+
 ### TODO: Just fonctionLawDouble :: To be modified.
 class Law_${law.name} extends FunctionLawDouble {
     public Law_${law.name}() {
@@ -78,9 +60,10 @@ class Law_${law.name} extends FunctionLawDouble {
 
         #if ($fileLaw.interpolation)
             #set($linearType = ${fileLaw.valType})
-class Law_${law.name} extends LinearInterpolation$linearType {
+
+class Law_${law.name} extends LinearInterpolationLaw$linearType {
     public Law_${law.name}() {
-        super(new TimeMetaData(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()}),
+        super(new TimeMetadata(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()}),
             new Expression("${fileLaw.interpolation}")
             ${fileLaw.interpolation.codeRestriction()}
         );
@@ -90,6 +73,7 @@ class Law_${law.name} extends LinearInterpolation$linearType {
 class Law_${law.name} extends RawFileLaw<$linearType> {
     public Law_${law.name}() {
         #set($dataIterator = ${law.getData().iterator()})
+
         super(
             new Pt<>${dataIterator.next().toCode()}
             #foreach($data in $dataIterator)
@@ -102,6 +86,25 @@ class Law_${law.name} extends RawFileLaw<$linearType> {
     #end
 #end
 
+#foreach($sensor in $sensors)
+    #set($law = $laws.get(${sensor.getLawRef()}) )
+    #set ($lawType = $law.getValType().name() )
+
+    #if ($lawType == "Double" || $lawType== "Integer" )
+class Sensor_${sensor.name} extends NoisableSensor<$lawType> {
+    #else
+class Sensor_${sensor.name} extends Sensor<$lawType> {
+    #end
+public Sensor_${sensor.name}() {
+    super("${sensor.name}",
+        new Law_${law.name}()
+        #if($sensor.period), ${sensor.getPeriod().getPeriodMs()}#end
+        #if(${sensor.getNoise()}), new Noise${lawType}(${sensor.getNoise()})
+    #end);
+    }
+}
+#end
+
 #foreach($area in $areas)
 class Area_$area.name extends AreaType {
     public Area_${area.name}() {
@@ -109,7 +112,8 @@ class Area_$area.name extends AreaType {
     #foreach($sensorGroup in ${area.getSensorGroups()})
         , $sensorGroup
     #end);
-}}
+    }
+}
 
 #end
 #foreach($exec in $execs)

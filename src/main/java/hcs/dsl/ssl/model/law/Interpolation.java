@@ -38,7 +38,7 @@ public class Interpolation {
         StringBuilder result = new StringBuilder();
         result.append(coefPolynome.get(0));
         for (int i = 1; i < coefPolynome.size(); i++) {
-            result.append("+").append(coefPolynome.get(i)).append("x^").append(i);
+            result.append("+").append(coefPolynome.get(i)).append("*x^").append(i);
         }
 
 
