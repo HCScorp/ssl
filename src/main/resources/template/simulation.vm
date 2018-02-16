@@ -79,12 +79,20 @@ class Law_${law.name} extends FunctionLawDouble {
         #if ($fileLaw.interpolation)
             #set($linearType = ${fileLaw.valType})
 class Law_${law.name} extends LinearInterpolation$linearType {
-    public Law_${law.name} (){
+    public Law_${law.name}() {
         super(new TimeMetaData(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()}),
-                ### TODO math expression
-            }
+            ### TODO math expression
+        );
+    }
+}
         #else
-            ### TODO file without interpolation
+class Law_${law.name} extends RawFileLaw<$linearType> {
+    public Law_${law.name}() {
+        super(
+            ### TODO values + maybe time metadata?
+        );
+    }
+}
         #end
     #end
 #end
