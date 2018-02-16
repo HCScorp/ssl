@@ -2,7 +2,6 @@
 
 cd $(dirname $0)
 
-
 FILE=$1
 DOCKER_USER=$2
 
