@@ -413,9 +413,9 @@ public class ModelBuilder extends SSLBaseListener {
         } else {
             global.setRealtime();
 
-            if (def.realtime().globalOffset() != null) {
+            if (def.realtime().g_offset() != null) {
                 global.setOffset(
-                        toString(def.realtime().globalOffset().date));
+                        toString(def.realtime().g_offset().date));
             }
         }
     }

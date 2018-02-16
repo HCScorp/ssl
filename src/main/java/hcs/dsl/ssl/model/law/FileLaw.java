@@ -173,6 +173,8 @@ public abstract class FileLaw extends Law {
     }
 
     private void computeInterpolation() {
+        // TODO resolve period?
+
         if (valType == Var.Type.Boolean || valType == Var.Type.String) {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");
         }

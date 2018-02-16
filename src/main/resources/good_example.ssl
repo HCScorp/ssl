@@ -1,15 +1,26 @@
 # laws
 
 law random temperatureIntervalle {
-    values in interval [18.0,24.5]
+    values in interval [20.4, 24.8]
 }
 
 law random temperatureEnsemble {
-    values in list (18, 12, 42, 24)
+    values in list (18, 20, 22, 24)
 }
 
-law random presenceCoca {
-    values in list ("yep", "nop")
+law random typeCoca {
+    values in list ("coca-normal", "coca-zero", "coca-green")
+}
+
+law markov presenceVoiture {
+    0 -> 0.6 -> 1
+    0 -> 0.4 -> 0
+    1 -> 0.3 -> 0
+    1 -> 0.6 -> 1
+    1 -> 0.1 -> 2
+    2 -> 0.8 -> 0
+    2 -> 0.15 -> 1
+    2 -> 0.05 -> 2
 }
 
 law markov lumiDehors {
@@ -26,18 +37,18 @@ law function polyMilieuJournee {
 }
 
 law function simpleCarre {
-    `x` => `x^2`
+    `x` => `(x/100000000)^2`
 }
 
-law file donneeVoiture {
-    sensor "sensorCar"
+law file presenceVoitureReel {
+    named "sensorCar"
     from local csv "src/main/resources/source/dataCar.csv"
     using column 1 as time, column 2 as value and column 4 as name
     with linear interpolation restricted to [-1,1]
 }
 
-law file donneePersonneBU {
-    sensor "sensorBU"
+law file donneePersonneBUReel {
+    named "sensorBU"
     from local json "src/main/resources/source/dataPeopleBU.json"
     using field "t" as time, field "v" as value and field "n" as name
 }
@@ -45,13 +56,28 @@ law file donneePersonneBU {
 # sensors
 
 sensor capteurNombreVoiture {
-    governed by donneeVoiture
-    noise [0,2]
+    governed by presenceVoiture
+    period 1h
 }
-# offset 10/12/2017 12:00
+
+sensor capteurNombreVoitureReel {
+    governed by presenceVoitureReel
+    period 1h
+}
+
+sensor capteurFonctionBizarre {
+    governed by polyMilieuJournee
+    period 30m
+}
 
 sensor capteurPersonneBU {
-    governed by donneePersonneBU
+    governed by simpleCarre
+    period 1m
+}
+
+sensor capteurPersonneBUReel {
+    governed by donneePersonneBUReel
+    period 1m
 }
 
 sensor capteurLumiFenetre {
@@ -67,23 +93,30 @@ sensor capteurTempSalle {
 
 sensor capteurTempBureau {
     governed by temperatureEnsemble
-    period 1m
+    period 10m
 }
 
 
 # areas
 
 area parking {
-    has 2 capteurNombreVoiture with noise [1,6]
+    has 10 capteurNombreVoiture
+    has 10 capteurNombreVoitureReel
 }
 
 area salleDeClasse {
     has 3 capteurLumiFenetre
-    has 1 capteurTempSalle with noise [1.0,4.0]
+    has 1 capteurTempSalle with noise [1.0,3.0]
 }
 
 area bureau {
     has 2 capteurTempBureau
+    has 1 capteurFonctionBizarre
+}
+
+area bu {
+    has 1 capteurPersonneBU
+    has 1 capteurPersonneBUReel
 }
 
 app oldSchool {
@@ -94,11 +127,12 @@ app oldSchool {
 
 app newSchool {
     parking: P3
-    salleDeClasse: C3, C4
+    salleDeClasse: C3, C4, C5, C6
+    bu: BU
 }
 
 global {
     replay
-        start 09/12/2017 00:00
-        end 10/12/2017 00:00
+        start 07/02/2018 00:00
+        end 14/02/2018 00:00
 }

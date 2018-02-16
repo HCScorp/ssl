@@ -28,5 +28,6 @@ public class MarkovLaw extends Law {
 
     public void setList(List<Edge> list) {
         this.list = list;
+        // TODO check proba sum
     }
 }

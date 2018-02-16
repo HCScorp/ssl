@@ -1,0 +1,18 @@
+law random aLaw {
+    values in interval [0,10]
+}
+
+sensor aSensor {
+    governed by dummyLaw
+    period 1m
+}
+
+area anArea {
+    has 2 aSensor
+}
+
+global {
+    replay
+        start 01/01/2018 00:00
+        end 31/01/2018 00:00
+}
