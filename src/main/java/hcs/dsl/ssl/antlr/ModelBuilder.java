@@ -56,8 +56,6 @@ public class ModelBuilder extends SSLBaseListener {
     public void exitRoot(RootContext ctx) {
         this.model = new Model(laws, sensors, areas, execs, global);
         this.built = true;
-
-        // check noise override type --> already done at runtime (init)
         // TODO add possibility for additional noise in addition to override noise
     }
 

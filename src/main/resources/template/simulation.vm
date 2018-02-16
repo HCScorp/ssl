@@ -46,7 +46,6 @@ class Law_${law.name} extends RandomLawIntervalInteger {
     #elseif(${law.type.name()} == "FUNCTION")
         #set($functionLaw = $FunctionLaw.cast($law))
 
-### TODO: Just fonctionLawDouble :: To be modified.
 class Law_${law.name} extends FunctionLawDouble {
     public Law_${law.name}() {
         super();
@@ -72,12 +71,10 @@ class Law_${law.name} extends LinearInterpolationLaw$linearType {
         #else
 class Law_${law.name} extends RawFileLaw<$linearType> {
     public Law_${law.name}() {
-        #set($dataIterator = ${law.getData().iterator()})
-
-        super(
-            new Pt<>${dataIterator.next().toCode()}
+        #set($dataIterator = ${fileLaw.getData().iterator()})
+        super(new TimeMetadata(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()})
             #foreach($data in $dataIterator)
-                ,new Pt<>${data.toCode()}
+                , new Pt<>${data.toCode()}
             #end
         );
     }
@@ -116,6 +113,7 @@ class Area_$area.name extends AreaType {
 }
 
 #end
+
 #foreach($exec in $execs)
 class Exec_${exec.name} extends Exec {
     public Exec_${exec.name} () {

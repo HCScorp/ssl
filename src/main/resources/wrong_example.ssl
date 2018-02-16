@@ -1,1 +1,18 @@
-TODO
+law random aLaw {
+    values in interval [0.0,10]
+}
+
+sensor aSensor {
+    governed by dummyLawThatDoesNotExists
+period 1h
+}
+
+area anArea {
+    has -1 aSensor
+}
+
+global {
+    replay
+        start "01/01/2018 00:00"
+        end "31/01/2018 00:00""
+}

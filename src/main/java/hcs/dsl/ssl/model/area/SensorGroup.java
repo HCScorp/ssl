@@ -10,11 +10,9 @@ public class SensorGroup {
 
     @Override
     public String toString() {
-
         String base = "new SensorGroup(" + number + "," + "Sensor_" + sensorRef + ".class";
         String noiseConstruct = "";
         if (noise != null) {
-
             if (noise.type == Interval.Type.Double) {
                 noiseConstruct = ", new NoiseDouble(" + noise + ")";
             } else {
