@@ -62,4 +62,20 @@ public class SensorData implements Comparable<SensorData> {
     public int compareTo(SensorData other) {
         return Comparator.comparingLong(SensorData::getTimestamp).compare(this, other);
     }
+
+    public String toCode(){
+        String result = "(" + timestamp + ",";
+        if (vBoolean != null){
+            result += vBoolean;
+        }
+        else if(vDouble != null){
+            result += vDouble;
+        }
+        else if (vInteger != null){
+            result += vInteger;
+        }
+        else
+            result += vString;
+        return result + ")";
+    }
 }

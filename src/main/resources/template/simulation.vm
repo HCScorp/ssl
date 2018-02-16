@@ -81,15 +81,20 @@ class Law_${law.name} extends FunctionLawDouble {
 class Law_${law.name} extends LinearInterpolation$linearType {
     public Law_${law.name}() {
         super(new TimeMetaData(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()}),
-            ### TODO math expression
+            new Expression("${fileLaw.interpolation}")
+            ${fileLaw.interpolation.codeRestriction()}
         );
     }
 }
         #else
 class Law_${law.name} extends RawFileLaw<$linearType> {
     public Law_${law.name}() {
+        #set($dataIterator = ${law.getData().iterator()})
         super(
-            ### TODO values + maybe time metadata?
+            new Pt<>${dataIterator.next().toCode()}
+            #foreach($data in $dataIterator)
+                ,new Pt<>${data.toCode()}
+            #end
         );
     }
 }

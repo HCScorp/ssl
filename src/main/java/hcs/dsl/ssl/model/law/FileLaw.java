@@ -43,6 +43,8 @@ public abstract class FileLaw extends Law {
     private Interpolation interpolation;
 
     protected File file;
+
+
     protected List<SensorData> data;
 
     private long minTimestamp;
@@ -67,6 +69,11 @@ public abstract class FileLaw extends Law {
     public String getFileUri() {
         return fileUri;
     }
+
+    public List<SensorData> getData() {
+        return data;
+    }
+
 
     public String getSensorName() {
         return sensorName;
