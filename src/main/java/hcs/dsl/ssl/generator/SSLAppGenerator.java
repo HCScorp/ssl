@@ -7,10 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import hcs.dsl.ssl.model.law.FileLaw;
-import hcs.dsl.ssl.model.law.FunctionLaw;
-import hcs.dsl.ssl.model.law.MarkovLaw;
-import hcs.dsl.ssl.model.law.RandomLaw;
+import hcs.dsl.ssl.model.law.file.FileLaw;
+import hcs.dsl.ssl.model.law.function.FunctionLaw;
+import hcs.dsl.ssl.model.law.markov.MarkovLaw;
+import hcs.dsl.ssl.model.law.random.RandomLaw;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

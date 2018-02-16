@@ -1,5 +1,6 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.function;
 
+import hcs.dsl.ssl.model.law.Law;
 import hcs.dsl.ssl.model.misc.Var;
 
 import java.util.List;

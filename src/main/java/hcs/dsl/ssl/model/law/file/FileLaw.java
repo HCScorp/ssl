@@ -1,7 +1,7 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.file;
 
 import com.google.common.primitives.Doubles;
-import hcs.dsl.ssl.model.misc.Interval;
+import hcs.dsl.ssl.model.law.Law;
 import hcs.dsl.ssl.model.misc.Var;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 

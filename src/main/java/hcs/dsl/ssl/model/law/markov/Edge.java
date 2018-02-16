@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.markov;
 
 import java.io.Serializable;
 

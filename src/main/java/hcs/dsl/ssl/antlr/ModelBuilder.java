@@ -9,6 +9,14 @@ import hcs.dsl.ssl.model.exec.AreaGroup;
 import hcs.dsl.ssl.model.exec.Exec;
 import hcs.dsl.ssl.model.global.Global;
 import hcs.dsl.ssl.model.law.*;
+import hcs.dsl.ssl.model.law.file.*;
+import hcs.dsl.ssl.model.law.file.header.CsvHeader;
+import hcs.dsl.ssl.model.law.file.header.JsonHeader;
+import hcs.dsl.ssl.model.law.function.CaseFunc;
+import hcs.dsl.ssl.model.law.function.FunctionLaw;
+import hcs.dsl.ssl.model.law.markov.Edge;
+import hcs.dsl.ssl.model.law.markov.MarkovLaw;
+import hcs.dsl.ssl.model.law.random.RandomLaw;
 import hcs.dsl.ssl.model.misc.Interval;
 import hcs.dsl.ssl.model.misc.ListWrapper;
 import hcs.dsl.ssl.model.misc.Var.Type;
@@ -280,7 +288,7 @@ public class ModelBuilder extends SSLBaseListener {
             if (isFromString(ctx.f1_name)) {
                 header.setF1Name(toStringTrim(ctx.f1_name));
             } else {
-                header.setF1Index(toInt(ctx.f1_name));
+                header.setF1Index(toPositiveInt(ctx.f1_name));
             }
 
             header.setF1Type(toString(ctx.f1_type));
@@ -289,7 +297,7 @@ public class ModelBuilder extends SSLBaseListener {
                 if (isFromString(ctx.f2_name)) {
                     header.setF2Name(toStringTrim(ctx.f2_name));
                 } else {
-                    header.setF2Index(toInt(ctx.f2_name));
+                    header.setF2Index(toPositiveInt(ctx.f2_name));
                 }
 
                 header.setF2Type(toString(ctx.f2_type));
@@ -298,7 +306,7 @@ public class ModelBuilder extends SSLBaseListener {
                     if (isFromString(ctx.f3_name)) {
                         header.setF3Name(toStringTrim(ctx.f3_name));
                     } else {
-                        header.setF3Index(toInt(ctx.f3_name));
+                        header.setF3Index(toPositiveInt(ctx.f3_name));
                     }
 
                     header.setF3Type(toString(ctx.f3_type));
@@ -368,7 +376,7 @@ public class ModelBuilder extends SSLBaseListener {
             throw new IllegalArgumentException("sensor '" + sensorRef + "' is referenced before definition");
         }
 
-        SensorGroup sg = new SensorGroup(sensorRef, toInt(ctx.nb));
+        SensorGroup sg = new SensorGroup(sensorRef, toPositiveInt(ctx.nb));
 
         if (ctx.noise_override() != null) {
             sg.setNoise(buildInterval(ctx.noise_override().interval()));
@@ -420,6 +428,16 @@ public class ModelBuilder extends SSLBaseListener {
 
     private static Integer toInt(Token token) {
         return Integer.parseInt(token.getText());
+    }
+
+    private static Integer toPositiveInt(Token token) {
+        Integer result = Integer.parseInt(token.getText());
+
+        if (result < 0) {
+            throw new IllegalArgumentException("expected positive or null integer, got: " + result + " (are you trying to have a negative number of sensors, or a negative CSV column?)");
+        }
+
+        return result;
     }
 
     private static Double toDouble(Token token) {

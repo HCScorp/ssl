@@ -1,8 +1,9 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.file;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hcs.dsl.ssl.model.law.file.header.HeaderType;
+import hcs.dsl.ssl.model.law.file.header.JsonHeader;
 import hcs.dsl.ssl.model.misc.Var;
 
 import java.io.IOException;

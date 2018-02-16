@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.function;
 
 import com.udojava.evalex.Expression;
 

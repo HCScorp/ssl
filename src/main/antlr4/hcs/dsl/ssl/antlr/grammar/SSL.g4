@@ -58,7 +58,7 @@ sensor          : 'sensor ' name=BASIC_STRING ' {' NL sensor_def '}' ;
 // Area
 area                        : 'area ' name=BASIC_STRING ' {' NL area_def '}' ;
     area_def                : sensor_group+ ;
-        sensor_group        : TAB 'has ' nb=UINTEGER ' ' sensor_ref=BASIC_STRING noise_override? NL ;
+        sensor_group        : TAB 'has ' nb=INTEGER ' ' sensor_ref=BASIC_STRING noise_override? NL ;
             noise_override  : ' with noise ' interval ;
 
 // App
@@ -90,8 +90,7 @@ HEADER_TYPE         :   'time'|'value'|'name';
 PERIOD              :   '1'..'9''0'..'9'*('ms'|'s'|'m'|'h'|'d');
 DATE                :   DIGIT DIGIT '/' DIGIT DIGIT '/' DIGIT DIGIT DIGIT DIGIT ' ' DIGIT DIGIT ':' DIGIT DIGIT;
 BOOLEAN             :   ('true'|'TRUE'|'false'|'FALSE');
-INTEGER             :   ('-'|'+')?UINT;
-UINTEGER            :   UINT;
+INTEGER             :   ('-'|'+')?DIGIT+;
 DOUBLE              :   ('-'|'+')?'0'..'9'*'.'?'0'..'9'+;
 BASIC_STRING        :   (LETTERS)(LETTERS|'0'..'9'|'_'|'-')*;
 EXPRESSION          :   '`' (LETTERS|DIGIT|SYMBOLS)+ '`';
@@ -100,7 +99,6 @@ COMMA               :   ',' ' '?;
 TAB                 :   '    ';
 NL                  :   '\n';
 
-fragment UINT       :   '0'..'9'+;
 fragment LETTERS    :   'a'..'z'|'A'..'Z';
 fragment DIGIT      :   '0'..'9';
 fragment SYMBOLS    :   '('|')'|'/'|'*'|'-'|'+'|'^'|'%'|'='|'!'|'<'|'>'|'&'|'|'|'.'|' ';

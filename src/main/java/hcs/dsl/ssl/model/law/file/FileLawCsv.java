@@ -1,12 +1,13 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.file;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import hcs.dsl.ssl.model.law.file.header.CsvHeader;
+import hcs.dsl.ssl.model.law.file.header.HeaderType;
 import hcs.dsl.ssl.model.misc.Var;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

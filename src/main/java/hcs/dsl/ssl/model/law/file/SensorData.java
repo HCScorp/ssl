@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.file;
 
 import hcs.dsl.ssl.model.misc.Var;
 

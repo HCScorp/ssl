@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.law;
+package hcs.dsl.ssl.model.law.file.header;
 
 import java.util.Optional;
 
