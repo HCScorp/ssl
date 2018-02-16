@@ -288,7 +288,7 @@ public class ModelBuilder extends SSLBaseListener {
             if (isFromString(ctx.f1_name)) {
                 header.setF1Name(toStringTrim(ctx.f1_name));
             } else {
-                header.setF1Index(toPositiveInt(ctx.f1_name));
+                header.setF1Index(toPositiveOrNullInt(ctx.f1_name));
             }
 
             header.setF1Type(toString(ctx.f1_type));
@@ -297,7 +297,7 @@ public class ModelBuilder extends SSLBaseListener {
                 if (isFromString(ctx.f2_name)) {
                     header.setF2Name(toStringTrim(ctx.f2_name));
                 } else {
-                    header.setF2Index(toPositiveInt(ctx.f2_name));
+                    header.setF2Index(toPositiveOrNullInt(ctx.f2_name));
                 }
 
                 header.setF2Type(toString(ctx.f2_type));
@@ -306,7 +306,7 @@ public class ModelBuilder extends SSLBaseListener {
                     if (isFromString(ctx.f3_name)) {
                         header.setF3Name(toStringTrim(ctx.f3_name));
                     } else {
-                        header.setF3Index(toPositiveInt(ctx.f3_name));
+                        header.setF3Index(toPositiveOrNullInt(ctx.f3_name));
                     }
 
                     header.setF3Type(toString(ctx.f3_type));
@@ -430,11 +430,21 @@ public class ModelBuilder extends SSLBaseListener {
         return Integer.parseInt(token.getText());
     }
 
+    private static Integer toPositiveOrNullInt(Token token) {
+        Integer result = Integer.parseInt(token.getText());
+
+        if (result <= 0) {
+            throw new IllegalArgumentException("expected positive or null integer, got: " + result + " (are you trying to set a negative CSV column?)");
+        }
+
+        return result;
+    }
+
     private static Integer toPositiveInt(Token token) {
         Integer result = Integer.parseInt(token.getText());
 
         if (result < 0) {
-            throw new IllegalArgumentException("expected positive or null integer, got: " + result + " (are you trying to have a negative number of sensors, or a negative CSV column?)");
+            throw new IllegalArgumentException("expected strictly positive integer, got: " + result + " (are you trying to have a negative number of sensors?)");
         }
 
         return result;
