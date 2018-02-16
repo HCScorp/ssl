@@ -11,9 +11,9 @@ if [ ! -f ./target/ssl-antlr-1.0-SNAPSHOT.jar ]; then
 fi
 
 if [ ! -f $FILE ]; then
-    echo "src/main/resources/$FILE.ssl"
-    if [ -f "src/main/resources/$FILE.ssl" ]; then
-        mvn exec:java -Dexec.args="src/main/resources/$FILE.ssl"
+    echo "src/main/resources/examples/$FILE.ssl"
+    if [ -f "src/main/resources/examples/$FILE.ssl" ]; then
+        mvn exec:java -Dexec.args="src/main/resources/examples/$FILE.ssl"
     else
         echo "file '$FILE' not found"
         exit 1
