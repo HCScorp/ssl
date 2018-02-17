@@ -9,7 +9,7 @@ The replay mode feeds the database as fast as possible whereas the realtime mode
 
 ## Quick start
 
-Assuming the following example:
+Assuming the following example, located in '~/aScript.ssl' :
 ```
 law random aLaw {
     values in interval [0.0, 1.0]
@@ -72,10 +72,12 @@ docker run DOCKER_USER/appName
 
 This manipulation are for Intellij IDEA users only (tested on Linux). They will enable custom color scheme for .ssl scripts and add a partial code completion (dumb keyword completion)
 
-To do so, follow this three steps:
-* Copy the file 'conf_intellij/SSL.xml' in '~/.IntelliJIdea2017.3/config/filetypes/' (for older version of Intellij, the directory name might vary)
-* Import the color scheme in Intellij: `File -> Settings -> Editor -> Color Scheme -> Custom -> click the top right gear -> Import Scheme -> Intelij IDEA color scheme (.icls) -> select the file 'conf_intellij/SSL_Darcula.icls' and then select the newly added color scheme in the dropdown list`
-* Restart Intellij IDEA
+To do so, first import the Intellij IDEA settings:
+```
+FIle -> Import Settings -> select 'intellij_settings/settings.jar' -> press OK
+```
+
+Then restart Intellij. You should now see every .ssl scripts with the right colors!
 
 ## Troubleshooting
 // TODO

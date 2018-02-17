@@ -63,9 +63,10 @@ public class ModelBuilder extends SSLBaseListener {
 
     @Override
     public void exitRoot(RootContext ctx) {
+        checkMinimalConfig();
+
         this.model = new Model(laws, sensors, areas, execs, global);
         this.built = true;
-        // TODO add possibility for additional noise in addition to override noise
     }
 
     private void add(Law law) {
@@ -86,12 +87,6 @@ public class ModelBuilder extends SSLBaseListener {
     private void add(Exec exec) {
         checkAlreadyDefined(exec, execs, "exec");
         execs.put(exec.getName(), exec);
-    }
-
-    private void checkAlreadyDefined(Namable namable, Map map, String type) {
-        if (map.containsKey(namable.getName())) {
-            throw new IllegalArgumentException("trying to redefine already existing " + type + " " + namable.getName());
-        }
     }
 
     @Override
@@ -363,10 +358,6 @@ public class ModelBuilder extends SSLBaseListener {
         return lawRef;
     }
 
-    private static boolean isFromString(Token token) {
-        return token.getText().startsWith("\"") && token.getText().endsWith("\"");
-    }
-
     @Override
     public void enterArea(AreaContext ctx) {
         Area area = new Area(toString(ctx.name),
@@ -394,6 +385,8 @@ public class ModelBuilder extends SSLBaseListener {
                 throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + ctx.noise_override().getText() + " does not match law value type " + tLaw + " for sensor " + sensorRef);
             }
         }
+
+        // TODO add possibility for additional noise in addition to override noise
 
         return sg;
     }
@@ -439,6 +432,33 @@ public class ModelBuilder extends SSLBaseListener {
         }
     }
 
+    ///////////////////
+    ////  Checker  ////
+    ///////////////////
+
+    private void checkAlreadyDefined(Namable namable, Map map, String type) {
+        if (map.containsKey(namable.getName())) {
+            throw new IllegalArgumentException("trying to redefine already existing " + type + " " + namable.getName());
+        }
+    }
+
+    private void checkMinimalConfig() {
+        if (global == null) {
+            System.out.println("Script has not global configuration, using default: realtime with no offset");
+            global = new Global();
+            global.setRealtime();
+        }
+
+        if (laws.isEmpty() || sensors.isEmpty() || areas.isEmpty() || execs.isEmpty()) {
+            throw new IllegalArgumentException("you must define at least one law, one sensor, one area and one app");
+        }
+    }
+
+
+    ///////////////////
+    ////  Helper   ////
+    ///////////////////
+
     private static Integer toInt(Token token) {
         return Integer.parseInt(token.getText());
     }
@@ -478,5 +498,10 @@ public class ModelBuilder extends SSLBaseListener {
     private static String toStringTrim(Token token) {
         return token.getText().substring(1, token.getText().length() - 1);
     }
+
+    private static boolean isFromString(Token token) {
+        return token.getText().startsWith("\"") && token.getText().endsWith("\"");
+    }
+
 }
 
