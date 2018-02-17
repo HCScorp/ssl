@@ -24,24 +24,24 @@ area anArea {
     has 1 aSensor
 }
 
-global {
-    realtime
-}
+# no global definition, default: realtime
 ```
 
-To generate Docker images that contains defined apps in the script, you can execute the following command:
+To generate Docker images that contains defined apps in the script, simply execute:
 
 ```
-./run.sh DOCKER_USER PATH_TO_SSL_SCRIPT
+./run.sh DOCKER_USER ~/aScript.ssl
 ```
 
-Where DOCKER_USER is the first part of the built image tag (pattern "DOCKER_USER/appName") and PATH_TO_SSL_SCRIPT is the path to the SSL script that defines the simulation.
+Where DOCKER_USER will be the first part of the built image tag (of the form "DOCKER_USER/anApp").
 
-## Build the project
+## Old fashioned way
+
+### Build the project
 
 To build SSL, you need to perform a `mvn clean package` at the root of the project.
 
-## Generate code from SSL script
+### Generate code from SSL script
 
 To generate the simulation code, simply run this command after building SSL:
 
@@ -51,7 +51,7 @@ mvn exec:java -Dexec.args="PATH_TO_SSL_SCRIPT"
 
 This will create a 'generated' directory where each subfolder is an app that contains the proper simulation code, ready to be executed.
 
-## Compile generated code and build Docker image
+### Compile generated code and build Docker image
 
 Go into the 'generated' directory, then go into the app you want to build, then execute:
 
@@ -59,13 +59,13 @@ Go into the 'generated' directory, then go into the app you want to build, then 
 ./build.sh DOCKER_USER
 ```
 
-This will compile the code and build a Docker image named "DOCKER_USER/appName".
+This will compile the code and build a Docker image named "DOCKER_USER/anApp".
 
-## Run Docker image
+### Run Docker image
 
 Run the following:
 ```
-docker run DOCKER_USER/appName
+docker run DOCKER_USER/anApp
 ```
 
 ## Import color scheme and partial completion in Intellij IDEA
@@ -80,4 +80,4 @@ FIle -> Import Settings -> select 'intellij_settings/settings.jar' -> press OK
 Then restart Intellij. You should now see every .ssl scripts with the right colors!
 
 ## Troubleshooting
-// TODO
+TODO
