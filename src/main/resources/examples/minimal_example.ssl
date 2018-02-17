@@ -1,18 +1,16 @@
 law random aLaw {
-    values in interval [0,10]
+    values in interval [0.0, 1.0]
 }
 
 sensor aSensor {
-    governed by dummyLaw
-    period 1m
+    governed by aLaw
+    period 1s
 }
 
 area anArea {
-    has 2 aSensor
+    has 1 aSensor
 }
 
 global {
-    replay
-        start 01/01/2018 00:00
-        end 31/01/2018 00:00
+    realtime
 }

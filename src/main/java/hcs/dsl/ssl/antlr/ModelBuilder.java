@@ -19,6 +19,7 @@ import hcs.dsl.ssl.model.law.markov.MarkovLaw;
 import hcs.dsl.ssl.model.law.random.RandomLaw;
 import hcs.dsl.ssl.model.misc.Interval;
 import hcs.dsl.ssl.model.misc.ListWrapper;
+import hcs.dsl.ssl.model.misc.Var;
 import hcs.dsl.ssl.model.misc.Var.Type;
 import hcs.dsl.ssl.model.sensor.*;
 import org.antlr.v4.runtime.Token;
@@ -328,6 +329,12 @@ public class ModelBuilder extends SSLBaseListener {
 
         if (def.noise() != null) {
             sensor.setNoise(buildInterval(def.noise().interval()));
+
+            Var.Type tLaw = laws.get(sensor.getLawRef()).getValType();
+            Var.Type tNoise = sensor.getNoise().getValType();
+            if (tLaw != tNoise) {
+                throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + def.noise().getText() + " does not match law value type " + tLaw + " for sensor " + sensor.getName());
+            }
         }
 
 //        if (def.offset() != null) {
@@ -380,6 +387,12 @@ public class ModelBuilder extends SSLBaseListener {
 
         if (ctx.noise_override() != null) {
             sg.setNoise(buildInterval(ctx.noise_override().interval()));
+
+            Var.Type tLaw = laws.get(sensors.get(sensorRef).getLawRef()).getValType();
+            Var.Type tNoise = sg.getNoise().getValType();
+            if (tLaw != tNoise) {
+                throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + ctx.noise_override().getText() + " does not match law value type " + tLaw + " for sensor " + sensorRef);
+            }
         }
 
         return sg;
