@@ -88,7 +88,7 @@ sensor capteurLumiFenetre {
 sensor capteurTempSalle {
     governed by temperatureIntervalle
     period 100s # [90s, 140s]
-    noise [-0.05,+0.02]
+    noise [-0.05, +0.02]
 }
 
 sensor capteurTempBureau {
@@ -106,7 +106,7 @@ area parking {
 
 area salleDeClasse {
     has 3 capteurLumiFenetre
-    has 1 capteurTempSalle with noise [1.0,3.0]
+    has 1 capteurTempSalle with noise [1.0, 3.0]
 }
 
 area bureau {
