@@ -34,7 +34,7 @@ app anApp {
 To generate Docker images that contains defined apps in the script, simply execute:
 
 ```
-./run.sh DOCKER_USER ~/aScript.ssl
+./generate.sh DOCKER_USER ~/aScript.ssl
 ```
 
 Where DOCKER_USER will be the first part of the built image tag (of the form "DOCKER_USER/anApp").
