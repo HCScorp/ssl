@@ -17,7 +17,7 @@ public class Interval<T extends Number> {
 
     @Override
     public String toString() {
-        return min +","+max;
+        return min + "," + max;
     }
 
     public T min;

@@ -31,7 +31,8 @@ public class FileLawJson extends FileLaw {
 
     @Override
     protected void fillData() throws IOException {
-        List<Map<String, String>> entries = jsonMapper.readValue(file, new TypeReference<List<Map<String, String>>>() {});
+        List<Map<String, String>> entries = jsonMapper.readValue(file, new TypeReference<List<Map<String, String>>>() {
+        });
 
         if (entries.isEmpty()) {
             return;

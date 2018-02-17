@@ -23,10 +23,10 @@ public class ListWrapper {
 
     @Override
     public String toString() {
-        if (type == Var.Type.String){
+        if (type == Var.Type.String) {
             return list.stream().map(content -> "\"" + content + "\"")
                     .map(Object::toString).collect(Collectors.joining(",")).toString();
         }
-        return list.toString().replace("[", "").replace("]", "") ;
+        return list.toString().replace("[", "").replace("]", "");
     }
 }

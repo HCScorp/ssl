@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.exec;
+package hcs.dsl.ssl.model.app;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ public class AreaGroup {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (String instanceName : instanceNames){
+        for (String instanceName : instanceNames) {
             result.append(",new AreaInstance(" + "new Area_").append(areaRef)
                     .append("(),").append("\"")
                     .append(instanceName).append("\"").append(")");

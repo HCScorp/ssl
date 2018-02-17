@@ -5,8 +5,8 @@ import hcs.dsl.ssl.model.Model;
 import hcs.dsl.ssl.model.Namable;
 import hcs.dsl.ssl.model.area.Area;
 import hcs.dsl.ssl.model.area.SensorGroup;
-import hcs.dsl.ssl.model.exec.AreaGroup;
-import hcs.dsl.ssl.model.exec.Exec;
+import hcs.dsl.ssl.model.app.App;
+import hcs.dsl.ssl.model.app.AreaGroup;
 import hcs.dsl.ssl.model.global.Global;
 import hcs.dsl.ssl.model.law.*;
 import hcs.dsl.ssl.model.law.file.*;
@@ -49,7 +49,7 @@ public class ModelBuilder extends SSLBaseListener {
     private final Map<String, Law> laws = new HashMap<>();
     private final Map<String, Sensor> sensors = new HashMap<>();
     private final Map<String, Area> areas = new HashMap<>();
-    private final Map<String, Exec> execs = new HashMap<>();
+    private final Map<String, App> apps = new HashMap<>();
     private Global global;
 
     /**************************
@@ -65,7 +65,7 @@ public class ModelBuilder extends SSLBaseListener {
     public void exitRoot(RootContext ctx) {
         checkMinimalConfig();
 
-        this.model = new Model(laws, sensors, areas, execs, global);
+        this.model = new Model(laws, sensors, areas, apps, global);
         this.built = true;
     }
 
@@ -84,9 +84,9 @@ public class ModelBuilder extends SSLBaseListener {
         areas.put(area.getName(), area);
     }
 
-    private void add(Exec exec) {
-        checkAlreadyDefined(exec, execs, "exec");
-        execs.put(exec.getName(), exec);
+    private void add(App app) {
+        checkAlreadyDefined(app, apps, "app");
+        apps.put(app.getName(), app);
     }
 
     @Override
@@ -393,12 +393,12 @@ public class ModelBuilder extends SSLBaseListener {
 
     @Override
     public void enterExec(ExecContext ctx) {
-        Exec exec = new Exec(toString(ctx.name),
+        App app = new App(toString(ctx.name),
                 ctx.exec_def().area_group().stream()
                         .map(this::buildAreaGroup)
                         .collect(Collectors.toList()));
 
-        add(exec);
+        add(app);
     }
 
     private AreaGroup buildAreaGroup(Area_groupContext ctx) {
@@ -449,7 +449,7 @@ public class ModelBuilder extends SSLBaseListener {
             global.setRealtime();
         }
 
-        if (laws.isEmpty() || sensors.isEmpty() || areas.isEmpty() || execs.isEmpty()) {
+        if (laws.isEmpty() || sensors.isEmpty() || areas.isEmpty() || apps.isEmpty()) {
             throw new IllegalArgumentException("you must define at least one law, one sensor, one area and one app");
         }
     }

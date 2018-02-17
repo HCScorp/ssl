@@ -9,7 +9,7 @@ public class Period {
     private final Duration value;
 
     public Period(String f) {
-            Pattern pattern = Pattern.compile("(\\d+)(ms|s|m|h|d)");
+        Pattern pattern = Pattern.compile("(\\d+)(ms|s|m|h|d)");
         Matcher matcher = pattern.matcher(f);
         if (!matcher.matches() || matcher.groupCount() != 2) {
             throw new IllegalArgumentException("'" + f + "' is not a valid frequency (only units ms, s, h, m, d are supported)");
