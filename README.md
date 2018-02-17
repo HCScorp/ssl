@@ -24,6 +24,10 @@ area anArea {
     has 1 aSensor
 }
 
+app anApp {
+    anArea: A1
+}
+
 # no global definition, default: realtime
 ```
 
