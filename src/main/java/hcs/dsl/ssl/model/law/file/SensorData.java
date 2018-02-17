@@ -1,6 +1,6 @@
 package hcs.dsl.ssl.model.law.file;
 
-import hcs.dsl.ssl.model.misc.Var;
+import hcs.dsl.ssl.model.misc.VarType;
 
 import java.util.Comparator;
 
@@ -14,17 +14,17 @@ public class SensorData implements Comparable<SensorData> {
     private final Integer vInteger;
     private final Boolean vBoolean;
 
-    public SensorData(long timestamp, String name, Var.Type type, String raw) {
+    public SensorData(long timestamp, String name, VarType type, String raw) {
         this.timestamp = timestamp;
         this.name = name;
 
-        if (type == Var.Type.Integer) {
+        if (type == VarType.Integer) {
             vInteger = Integer.parseInt(raw);
             vDouble = null; vBoolean = null; vString = null;
-        } else if (type == Var.Type.Double) {
+        } else if (type == VarType.Double) {
             vDouble = Double.parseDouble(raw);
             vInteger = null; vBoolean = null; vString = null;
-        } else if (type == Var.Type.Boolean) {
+        } else if (type == VarType.Boolean) {
             vBoolean = Boolean.parseBoolean(raw);
             vDouble = null; vInteger = null; vString = null;
         } else {

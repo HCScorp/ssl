@@ -1,4 +1,4 @@
-package hcs.dsl.ssl.model.check;
+package hcs.dsl.ssl.model.misc;
 
 
 import java.time.LocalDateTime;
