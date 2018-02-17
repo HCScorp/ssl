@@ -5,7 +5,7 @@
 
 Sensor Simulation Language (SSL) is a domain specific language that allows one to define and run multiple sensor simulation.
 It's goal is to feed an InfluxDB with simulated sensor's data. The execution supports two modes, replay and realtime.
-The replay mode feeds the database as fast as possible whereas the realtime mode simulate sensors over time.
+The replay mode feeds the database as fast as possible whereas the realtime mode simulates sensors over time.
 
 ## Quick start
 
@@ -38,6 +38,11 @@ To generate Docker images that contains defined apps in the script, simply execu
 ```
 
 Where DOCKER_USER will be the first part of the built image tag (of the form "DOCKER_USER/anApp").
+
+Then run the simulation by executing:
+```
+docker run DOCKER_USER/anApp
+```
 
 ## Old fashioned way
 
