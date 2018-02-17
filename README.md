@@ -44,7 +44,7 @@ Then run the simulation by executing:
 docker run DOCKER_USER/anApp
 ```
 
-For more example scripts, navigate to the [examples directory](src/resources/examples/)
+For more example scripts, navigate to the [examples directory](src/main/resources/examples/)
 
 ## Old fashioned way
 
