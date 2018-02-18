@@ -1,7 +1,7 @@
 package hcs.dsl.ssl.model.law.function;
 
 import hcs.dsl.ssl.model.law.Law;
-import hcs.dsl.ssl.model.misc.Var;
+import hcs.dsl.ssl.model.misc.VarType;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class FunctionLaw extends Law {
     }
 
     @Override
-    public Var.Type getValType() {
-        return Var.Type.Double;
+    public VarType getValType() {
+        return VarType.Double;
     }
 }

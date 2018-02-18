@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 public class Main {
 
-    public static void main (String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         System.out.println("Running the ANTLR compiler for SSL");
 
         CharStream stream = getCharStream(args);
@@ -33,16 +33,16 @@ public class Main {
     }
 
     private static Model buildModel(CharStream stream) {
-        SSLLexer    lexer   = new SSLLexer(stream);
+        SSLLexer lexer = new SSLLexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(new StopErrorListener());
 
-        SSLParser   parser  = new SSLParser(new CommonTokenStream(lexer));
+        SSLParser parser = new SSLParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(new StopErrorListener());
 
-        ParseTreeWalker   walker  = new ParseTreeWalker();
-        ModelBuilder      builder = new ModelBuilder();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        ModelBuilder builder = new ModelBuilder();
 
         walker.walk(builder, parser.root()); // parser.root() is the entry point of the grammar
 

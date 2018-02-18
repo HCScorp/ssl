@@ -45,11 +45,11 @@ public class SSLAppGenerator implements Runnable {
         this.build = new File("src/main/resources/extern/build.sh");
     }
 
-    private void createContext(){
+    private void createContext() {
         context.put("areas", model.areas);
         context.put("laws", model.laws);
         context.put("sensors", model.sensors);
-        context.put("execs", model.execs);
+        context.put("apps", model.apps);
         context.put("global", model.global);
 
         context.put("RandomLaw", RandomLaw.class);
@@ -60,13 +60,13 @@ public class SSLAppGenerator implements Runnable {
     }
 
 
-    private void createTree(File newExec){
+    private void createTree(File newExec) {
         newExec.getParentFile().mkdirs();
     }
 
-    private void writeTemplate(){
-        model.execs.forEach((key, value) -> {
-            String outputpath = "generated/" +  key + "/";
+    private void writeTemplate() {
+        model.apps.forEach((key, value) -> {
+            String outputpath = "generated/" + key + "/";
             File simulation = new File(outputpath + OUT_NAME_FILE);
             File main = new File(outputpath + OUT_MAIN_FILE);
 
@@ -78,7 +78,7 @@ public class SSLAppGenerator implements Runnable {
             File buildOut = new File(outputpath + "build.sh");
 
             try {
-                Files.copy(dockerfile.toPath(), dockerOut.toPath(),REPLACE_EXISTING );
+                Files.copy(dockerfile.toPath(), dockerOut.toPath(), REPLACE_EXISTING);
                 Files.copy(pom.toPath(), pomOut.toPath(), REPLACE_EXISTING);
                 Files.copy(build.toPath(), buildOut.toPath(), REPLACE_EXISTING);
             } catch (IOException e) {
@@ -95,7 +95,7 @@ public class SSLAppGenerator implements Runnable {
     }
 
 
-    private void mergeTemplate(Template templateSensor, File templateFile){
+    private void mergeTemplate(Template templateSensor, File templateFile) {
         try (FileWriter fw = new FileWriter(templateFile)) {
             templateSensor.merge(context, fw);
         } catch (IOException e) {

@@ -26,9 +26,9 @@ public class Interpolation {
         return restriction;
     }
 
-    public String codeRestriction(){
+    public String codeRestriction() {
         if (restriction != null) {
-             return ",new Restriction<>" + "(" + restriction +")";
+            return ",new Restriction<>" + "(" + restriction + ")";
         }
         return "";
     }

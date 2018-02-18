@@ -11,13 +11,13 @@ public class Interval<T extends Number> {
         return type;
     }
 
-    public Var.Type getValType() {
-        return Var.Type.valueOf(type.name());
+    public VarType getValType() {
+        return VarType.valueOf(type.name());
     }
 
     @Override
     public String toString() {
-        return min +","+max;
+        return min + "," + max;
     }
 
     public T min;

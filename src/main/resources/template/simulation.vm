@@ -114,12 +114,12 @@ class Area_$area.name extends AreaType {
 
 #end
 
-#foreach($exec in $execs)
-class Exec_${exec.name} extends Exec {
-    public Exec_${exec.name} () {
-        super("${exec.name}"
+#foreach($app in $apps)
+class App_${app.name} extends App {
+    public App_${app.name} () {
+        super("${app.name}"
     $global
-    #foreach($areaGroup in $exec.getAreaGroups())
+    #foreach($areaGroup in $app.getAreaGroups())
         $areaGroup
     #end);
     }
