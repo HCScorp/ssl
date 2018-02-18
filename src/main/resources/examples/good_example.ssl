@@ -77,7 +77,7 @@ sensor capteurPersonneBU {
 
 sensor capteurPersonneBUReel {
     governed by donneePersonneBUReel
-    period 1m
+    period 1m # [1m, 2m]
 }
 
 sensor capteurLumiFenetre {
@@ -87,8 +87,8 @@ sensor capteurLumiFenetre {
 
 sensor capteurTempSalle {
     governed by temperatureIntervalle
-    period 100s # [90s, 140s]
-    noise [-0.05,+0.02]
+    period 100s
+    noise [-0.30,+0.20]
 }
 
 sensor capteurTempBureau {

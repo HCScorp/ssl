@@ -1,0 +1,113 @@
+# laws
+
+law random lawRandInterval {
+    values in interval [3.14, 12.9]
+}
+
+law random lawRandList {
+    values in list (18, 20, 22, 24)
+}
+
+law markov lawMarkov {
+    "sunny" -> 0.1 -> "rainy"
+    "sunny" -> 0.9 -> "sunny"
+    "rainy" -> 0.5 -> "sunny"
+    "rainy" -> 0.5 -> "rainy"
+}
+
+law function lawFunctionMulti {
+    `x%86400 < 32200` => `4`
+    `x%86400 > 32200` => `abs(-(2*x^2) + 5*x - 1)`
+    `x%86400 = 32200` => `0`
+}
+
+law function lawFunctionSimple {
+    `x` => `(x/100000000)^2`
+}
+
+law file lawFileCsv {
+    named "sensorName1"
+    from local csv "path/to/script/sensorData2.json"
+    using column 1 as time, column 2 as value and column 4 as name
+    with linear interpolation restricted to [-1,1]
+}
+
+law file lawFileJson {
+    named "sensorName2"
+    from local json "path/to/script/sensorData2.json"
+    using field "t" as time, field "v" as value and field "n" as name
+}
+
+# sensors
+
+sensor sensorRandInterval {
+    governed by lawRandInterval
+    period 30m
+}
+
+sensor sensorRandList {
+    governed by lawRandList
+    period 1h
+    noise [1, 4]
+}
+
+sensor sensorMarkov {
+    governed by lawMarkov
+    period 1d
+}
+
+sensor sensorFunctionMulti {
+    governed by lawFunctionMulti
+    period 10m
+}
+
+sensor sensorFunctionSimple {
+    governed by lawFunctionSimple
+    period 45s
+}
+
+sensor sensorFileCsv {
+    governed by lawFileCsv
+    period 500ms
+}
+
+sensor sensorFileJson {
+    governed by lawFileJson
+    period 90s
+    noise [-0.30, 0.20]
+}
+
+
+# areas
+
+area area1 {
+    has 8 sensorRandList
+    has 4 sensorFunctionMulti
+}
+
+area area2 {
+    has 1 sensorMarkov
+    has 1 sensorFileJson
+    has 2 sensorRandInterval with noise [0.5, 3.5]
+}
+
+area area3 {
+    has 12 sensorFileCsv
+    has 4 sensorMarkov
+    has 1 sensorFunctionSimple
+}
+
+app app1 {
+    area1: A1, A2
+    area2: B1
+}
+
+app app2 {
+    area3: C1, C2, C3, C4
+}
+
+global {
+    replay
+        start 01/01/2018 00:00
+        end 31/01/2018 00:00
+}
