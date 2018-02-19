@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 
 public class CaseFunc {
 
-    private static final String TIMESTAMP_VAR = "x";
+    private static final String TS_VAR = "x";
 
     private final String condition;
     private final String expresion;
 
     public CaseFunc(String condition, String expresion) {
-        if (TIMESTAMP_VAR.equals(condition)) {
+        if (TS_VAR.equals(condition)) {
             condition = "TRUE";
         }
 
@@ -45,12 +45,12 @@ public class CaseFunc {
             throw new IllegalArgumentException("condition \"" + condition + "\" must be a boolean expression (e.g. TRUE) or 'x'");
         }
 
-        if (cond.getUsedVariables().size() > 0 && !cond.getUsedVariables().contains(TIMESTAMP_VAR)) {
-            throw new IllegalArgumentException("condition \"" + condition + "\" must only use the variable " + TIMESTAMP_VAR + " that represent the timestamp");
+        if (cond.getUsedVariables().size() > 0 && !cond.getUsedVariables().contains(TS_VAR)) {
+            throw new IllegalArgumentException("condition \"" + condition + "\" must only use the variable " + TS_VAR + " that represent the timestamp");
         }
 
         try {
-            cond.with(TIMESTAMP_VAR, BigDecimal.ZERO).eval();
+            cond.with(TS_VAR, BigDecimal.ZERO).eval();
         } catch (Expression.ExpressionException e) {
             throw new IllegalArgumentException("condition \"" + condition + "\" is not evaluable: ", e);
         }
@@ -61,7 +61,7 @@ public class CaseFunc {
             Expression expr = new Expression(expression);
 
             try {
-                expr.with(TIMESTAMP_VAR, BigDecimal.ZERO).eval();
+                expr.with(TS_VAR, BigDecimal.ZERO).eval();
             } catch (Expression.ExpressionException e) {
                 throw new IllegalArgumentException("expression \"" + expression + "\" is not evaluable: ", e);
             }

@@ -46,6 +46,10 @@ public class Global {
         return realtime;
     }
 
+    public String getOffset() {
+        return offset;
+    }
+
     @Override
     public String toString() {
         Map<String, String> varStatus = new HashMap<>();
