@@ -5,7 +5,7 @@ grammar SSL;
  ** Parser rules **
  ******************/
 
-root         :   (law|sensor|area|exec|NL)+ global? EOF ;
+root         :   (law|sensor|area|app|NL)+ global? EOF ;
 
 // Law
 law          :   'law ' (random|markov|function|file) ;
@@ -62,9 +62,9 @@ area                        : 'area ' name=BASIC_STRING ' {' NL area_def '}' ;
             noise_override  : ' with noise ' interval ;
 
 // App
-exec                : 'app ' name=BASIC_STRING ' {' NL exec_def '}' ;
-    exec_def        : area_group+ ;
-        area_group  : TAB area_ref=BASIC_STRING ': ' list_basic_string NL ;
+app                : 'app ' name=BASIC_STRING ' {' NL app_def '}' ;
+    app_def        : area_group+ ;
+        area_group : TAB area_ref=BASIC_STRING ': ' list_basic_string NL ;
 
 list_basic_string   : elem+=BASIC_STRING  (COMMA elem+=BASIC_STRING)* ;
 

@@ -1,14 +1,13 @@
 import com.udojava.evalex.Expression;
 
 import hcs.dsl.ssl.runtime.area.*;
-import hcs.dsl.ssl.runtime.exec.*;
+import hcs.dsl.ssl.runtime.app.*;
 import hcs.dsl.ssl.runtime.law.markov.*;
 import hcs.dsl.ssl.runtime.law.function.*;
 import hcs.dsl.ssl.runtime.law.random.*;
 import hcs.dsl.ssl.runtime.law.file.*;
 import hcs.dsl.ssl.runtime.noise.*;
 import hcs.dsl.ssl.runtime.sensor.*;
-import hcs.dsl.ssl.runtime.source.*;
 
 #foreach($law in $laws)
     #if (${law.type.name()} == "MARKOV")
@@ -69,7 +68,9 @@ class Law_${law.name} extends LinearInterpolationLaw$linearType {
     }
 }
         #else
-class Law_${law.name} extends RawFileLaw<$linearType> {
+            #set ($varType = $law.getValType().name() )
+
+        class Law_${law.name} extends RawFileLaw<$varType> {
     public Law_${law.name}() {
         #set($dataIterator = ${fileLaw.getData().iterator()})
         super(new TimeMetadata(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()})

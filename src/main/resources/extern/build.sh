@@ -2,7 +2,17 @@
 
 cd $(dirname $0)
 
-LC=${2,,}
-NAME=`echo ${LC//_/-}`
 mvn clean formatter:format package
-docker build -t $1/$NAME .
+if [ $? -eq 0 ]; then
+    echo "Application build succeed!"
+
+    docker build -t $1/${2,,} .
+    if [ $? -eq 0 ]; then
+        echo "Docker image build succeed!"
+    else
+        echo "Docker image build failed /!\\"
+    fi
+else
+    echo "Application build failed, skipping Docker image build /!\\"
+fi
+

@@ -44,7 +44,7 @@ law file presenceVoitureReel {
     named "sensorCar"
     from local csv "src/main/resources/source/dataCar.csv"
     using column 1 as time, column 2 as value and column 4 as name
-    with linear interpolation restricted to [-1,1]
+    with linear interpolation restricted to [0, 20]
 }
 
 law file donneePersonneBUReel {

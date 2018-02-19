@@ -391,9 +391,9 @@ public class ModelBuilder extends SSLBaseListener {
     }
 
     @Override
-    public void enterExec(ExecContext ctx) {
+    public void enterApp(AppContext ctx) {
         App app = new App(toString(ctx.name),
-                ctx.exec_def().area_group().stream()
+                ctx.app_def().area_group().stream()
                         .map(this::buildAreaGroup)
                         .collect(Collectors.toList()));
 
