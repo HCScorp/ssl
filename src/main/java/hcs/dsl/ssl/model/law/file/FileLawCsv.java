@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static hcs.dsl.ssl.model.misc.CheckHelper.PATTERN_TIMESTAMP;
+
 public class FileLawCsv extends FileLaw {
 
     private CsvHeader csvHeader;

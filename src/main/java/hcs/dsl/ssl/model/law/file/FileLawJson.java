@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class FileLawJson extends FileLaw {
 
     private JsonHeader jsonHeader;
-    private ObjectMapper jsonMapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
 
     public FileLawJson(String lawName, String fileUri, String sensorName) {
@@ -31,7 +31,7 @@ public class FileLawJson extends FileLaw {
 
     @Override
     protected void fillData() throws IOException {
-        List<Map<String, String>> entries = jsonMapper.readValue(file, new TypeReference<List<Map<String, String>>>() {});
+        List<Map<String, String>> entries = mapper.readValue(file, new TypeReference<List<Map<String, String>>>() {});
 
         if (entries.isEmpty()) {
             return;

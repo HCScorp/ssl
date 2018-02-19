@@ -46,11 +46,11 @@ public class SSLAppGenerator implements Runnable {
     }
 
     private void createContext() {
-        context.put("areas", model.areas);
-        context.put("laws", model.laws);
-        context.put("sensors", model.sensors);
-        context.put("apps", model.apps);
-        context.put("global", model.global);
+        context.put("areas", model.getAreas());
+        context.put("laws", model.getLaws());
+        context.put("sensors", model.getSensors());
+        context.put("apps", model.getApps());
+        context.put("global", model.getGlobal());
 
         context.put("RandomLaw", RandomLaw.class);
         context.put("MarkovLaw", MarkovLaw.class);
@@ -65,7 +65,7 @@ public class SSLAppGenerator implements Runnable {
     }
 
     private void writeTemplate() {
-        model.apps.forEach((key, value) -> {
+        model.getApps().forEach((key, value) -> {
             String outputpath = "generated/" + key + "/";
             File simulation = new File(outputpath + OUT_NAME_FILE);
             File main = new File(outputpath + OUT_MAIN_FILE);

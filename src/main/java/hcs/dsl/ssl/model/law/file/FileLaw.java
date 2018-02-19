@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import static hcs.dsl.ssl.model.misc.CheckHelper.*;
 
 public abstract class FileLaw extends Law {
 
@@ -27,11 +28,6 @@ public abstract class FileLaw extends Law {
         CSV
     }
 
-    private static final Pattern PATTERN_INTEGER = Pattern.compile("[-+]?\\d+");
-    private static final Pattern PATTERN_DOUBLE = Pattern.compile("\\d+\\.\\d*");
-    private static final Pattern PATTERN_BOOLEAN = Pattern.compile("(?:true|TRUE|false|FALSE)");
-    protected static final Pattern PATTERN_TIMESTAMP = Pattern.compile("\\d{10}");
-
     private VarType valType;
 
     protected final String fileUri;
@@ -42,8 +38,6 @@ public abstract class FileLaw extends Law {
     private Interpolation interpolation;
 
     protected File file;
-
-
     protected List<SensorData> data;
 
     private long minTimestamp;
@@ -88,6 +82,10 @@ public abstract class FileLaw extends Law {
 
     public long getMaxTimestamp() {
         return maxTimestamp;
+    }
+
+    public File getFile() {
+        return file;
     }
 
     //////////////////
