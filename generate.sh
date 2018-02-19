@@ -2,8 +2,8 @@
 
 cd $(dirname $0)
 
-FILE=$1
-DOCKER_USER=$2
+DOCKER_USER=$1
+FILE=$2
 
 if [ ! -f ./target/ssl-antlr-1.0-SNAPSHOT.jar ]; then
     mvn clean package
