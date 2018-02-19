@@ -1,0 +1,136 @@
+# laws
+
+law random temperatureIntervalle {
+    values in interval [20.4, 24.8]
+}
+
+law random temperatureEnsemble {
+    values in list (18, 20, 22, 24)
+}
+
+law random typeCoca {
+    values in list ("coca-normal", "coca-zero", "coca-green")
+}
+
+law markov presenceVoiture {
+    0 -> 0.6 -> 1
+    0 -> 0.4 -> 0
+    1 -> 0.3 -> 0
+    1 -> 0.6 -> 1
+    1 -> 0.1 -> 2
+    2 -> 0.8 -> 0
+    2 -> 0.15 -> 1
+    2 -> 0.05 -> 2
+}
+
+law markov lumiDehors {
+    "sunny" -> 0.1 -> "rainy"
+    "sunny" -> 0.9 -> "sunny"
+    "rainy" -> 0.5 -> "sunny"
+    "rainy" -> 0.5 -> "rainy"
+}
+
+law function polyMilieuJournee {
+    `x%(3600*24) < 32200` => `4`
+    `x%(3600*24) > 32200` => `abs(-(2*x^2) + 5*x - 1)`
+    `x%(3600*24) = 32200` => `0`
+}
+
+law function simpleCarre {
+    `x` => `(x/100000000)^2`
+}
+
+law file presenceVoitureReel {
+    named "sensorCar"
+    from local csv "src/main/resources/source/dataCar.csv"
+    using column 1 as time, column 2 as value and column 4 as name
+    with linear interpolation restricted to [0, 20]
+}
+
+law file donneePersonneBUReel {
+    named "sensorBU"
+    from local json "src/main/resources/source/dataPeopleBU.json"
+    using field "t" as time, field "v" as value and field "n" as name
+}
+
+# sensors
+
+sensor capteurNombreVoiture {
+    governed by presenceVoiture
+    period 1s
+}
+
+sensor capteurNombreVoitureReel {
+    governed by presenceVoitureReel
+    period 1s
+}
+
+sensor capteurFonctionBizarre {
+    governed by polyMilieuJournee
+    period 3s
+}
+
+sensor capteurPersonneBU {
+    governed by simpleCarre
+    period 1s
+}
+
+sensor capteurPersonneBUReel {
+    governed by donneePersonneBUReel
+    period 1s
+}
+
+sensor capteurLumiFenetre {
+    governed by lumiDehors
+    period 5s
+}
+
+sensor capteurTempSalle {
+    governed by temperatureIntervalle
+    period 500ms
+    noise [-0.30,+0.20]
+}
+
+sensor capteurTempBureau {
+    governed by temperatureEnsemble
+    period 1s
+}
+
+
+# areas
+
+area parking {
+    has 10 capteurNombreVoiture
+    has 10 capteurNombreVoitureReel
+}
+
+area salleDeClasse {
+    has 3 capteurLumiFenetre
+    has 1 capteurTempSalle with noise [1.0, 3.0]
+}
+
+area bureau {
+    has 2 capteurTempBureau
+    has 1 capteurFonctionBizarre
+}
+
+area bu {
+    has 1 capteurPersonneBU
+    has 1 capteurPersonneBUReel
+}
+
+app oldSchool {
+    parking: P1, P2
+    salleDeClasse: C1, C2
+    bureau: B1, B2, B3, B4
+}
+
+app newSchool {
+    parking: P3
+    salleDeClasse: C3, C4, C5, C6
+    bu: BU
+}
+
+global {
+    realtime
+}

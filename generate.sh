@@ -24,5 +24,5 @@ fi
 for i in $(find ./generated -mindepth 1 -maxdepth 1 -type d)
 do
     chmod +x $i/build.sh
-    $i/build.sh $2 $(basename $i)
+    $i/build.sh $DOCKER_USER $(basename $i)
 done
