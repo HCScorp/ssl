@@ -386,7 +386,14 @@ public class ModelBuilder extends SSLBaseListener {
         sensor.setLawRef(buildLawRef(def.source()));
 
         if (def.noise() != null) {
-            sensor.setNoise(buildInterval(def.noise().interval()));
+            Interval interval = buildInterval(def.noise().interval());
+
+            ValType lawType = laws.get(sensor.getLawRef()).getValType();
+            if (interval.getValType() != lawType) {
+                throw new IllegalArgumentException("noise of type " + interval.getValType()
+                        + " cannot be applied to sensor " + sensor.getName() + " of law type " + lawType);
+            }
+            sensor.setNoise(interval);
 
             ValType tLaw = laws.get(sensor.getLawRef()).getValType();
             ValType tNoise = sensor.getNoise().getValType();
@@ -440,7 +447,14 @@ public class ModelBuilder extends SSLBaseListener {
         SensorGroup sg = new SensorGroup(sensorRef, toPositiveInt(ctx.nb));
 
         if (ctx.noise_override() != null) {
-            sg.setNoise(buildInterval(ctx.noise_override().interval()));
+            Interval interval = buildInterval(ctx.noise_override().interval());
+
+            ValType lawType = laws.get(sensors.get(sensorRef).getLawRef()).getValType();
+            if (interval.getValType() != lawType) {
+                throw new IllegalArgumentException("noise of type " + interval.getValType()
+                        + " cannot be applied to sensor group of sensor " + sensorRef + " of law type " + lawType);
+            }
+            sg.setNoise(interval);
 
             ValType tLaw = laws.get(sensors.get(sensorRef).getLawRef()).getValType();
             ValType tNoise = sg.getNoise().getValType();
@@ -448,8 +462,6 @@ public class ModelBuilder extends SSLBaseListener {
                 throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + ctx.noise_override().getText() + " does not match law value type " + tLaw + " for sensor " + sensorRef);
             }
         }
-
-        // TODO add possibility for additional noise in addition to override noise
 
         return sg;
     }

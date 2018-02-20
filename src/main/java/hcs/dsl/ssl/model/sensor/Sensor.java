@@ -35,7 +35,7 @@ public class Sensor implements Namable {
     }
 
     public void setNoise(Interval noise) {
-        this.noise = noise; // todo check noise applicable ?
+        this.noise = noise;
     }
 
     public String getOffset() {

@@ -41,6 +41,7 @@ public class SensorGroup {
     }
 
     public void setNoise(Interval noise) {
+        // TODO type check
         this.noise = noise;
     }
 

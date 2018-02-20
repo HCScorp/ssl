@@ -6,6 +6,7 @@ public class Interval<T extends Number> {
         Double,
         Integer
     }
+
     private T min;
     private T max;
 
