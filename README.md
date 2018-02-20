@@ -82,9 +82,9 @@ docker run DOCKER_USER/anApp
 Otherwise, you can override default InfluxDB configuration by running the following:
 ```
 docker run -e "SSL_INFLUX_ADDRESS=http://influxdb.address.com" \
-                  -e "SSL_INFLUX_USER=user" \
-                  -e "SSL_INFLUX_PWD=password" \
-                  DOCKER_USER/anApp
+           -e "SSL_INFLUX_USER=user" \
+           -e "SSL_INFLUX_PWD=password" \
+           DOCKER_USER/anApp
 ```
 
 ## Import color scheme and partial completion in Intellij IDEA
