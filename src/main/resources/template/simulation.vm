@@ -45,11 +45,11 @@ class Law_${law.name} extends RandomLawIntervalInteger {
     #elseif(${law.type.name()} == "FUNCTION")
         #set($functionLaw = $FunctionLaw.cast($law))
 
-class Law_${law.name} extends FunctionLawDouble {
+class Law_${law.name} extends FunctionLaw${functionLaw.getFcType()} {
     public Law_${law.name}() {
         super();
         #foreach($case in ${functionLaw.getCases()})
-        addCase("${case.condition}", "${case.expression}");
+        addCase(${case.toCode()});
         #end
     }
 }

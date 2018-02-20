@@ -109,4 +109,21 @@ public class CaseFunc {
             throw new IllegalArgumentException("expression \"" + expression + "\" is not valid: ", e);
         }
     }
+
+    public String toCode() {
+        String base = "\"" + condition + "\", ";
+        if (expression != null) {
+            return base + "\"" + expression + "\"";
+        } else if (strVal != null) {
+            return base + "\"" + strVal + "\"";
+        } else if (intVal != null) {
+            return base + intVal;
+        } else if (doubleVal != null) {
+            return base + doubleVal;
+        } else if (boolVal != null) {
+            return base + boolVal;
+        }
+
+        return null;
+    }
 }

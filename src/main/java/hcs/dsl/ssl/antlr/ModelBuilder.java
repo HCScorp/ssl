@@ -207,7 +207,12 @@ public class ModelBuilder extends SSLBaseListener {
         FunctionLaw law = new FunctionLaw(toString(ctx.name));
         Function_defContext def = ctx.function_def();
 
-        setCasesIfPresent(law, ValType.Double, def.caseFcExpr(), ModelBuilder::toCaseFuncExpr);
+        if (!def.caseFcExpr().isEmpty()) {
+            law.setValType(ValType.Double);
+            law.setCases(def.caseFcExpr().stream().map(ModelBuilder::toCaseFuncExpr).collect(Collectors.toList()));
+            law.setExpr();
+        }
+
         setCasesIfPresent(law, ValType.String, def.caseFcString(), ModelBuilder::toCaseFuncString);
         setCasesIfPresent(law, ValType.Integer, def.caseFcInteger(), ModelBuilder::toCaseFuncInteger);
         setCasesIfPresent(law, ValType.Double, def.caseFcDouble(), ModelBuilder::toCaseFuncDouble);
