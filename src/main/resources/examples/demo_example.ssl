@@ -40,17 +40,17 @@ law function simpleCarre {
 # sensors
 
 sensor capteurNombreVoiture {
-    source from law presenceVoiture
+    governed by presenceVoiture
     period 1h
 }
 
 sensor capteurFonctionBizarre {
-    source from law polyMilieuJournee
+    governed by polyMilieuJournee
     period 30m
 }
 
 sensor capteurPersonneBU {
-    source from law simpleCarre
+    governed by simpleCarre
     period 1m
 }
 
