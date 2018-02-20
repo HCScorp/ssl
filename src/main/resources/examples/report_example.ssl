@@ -35,15 +35,15 @@ law function lawFcSimpleDouble {
 
 law file lawFileCsv {
     named "sensorName1"
-    from local csv "path/to/script/sensorData2.json"
+    from local csv "path/to/script/sensorData1.csv"
     using column 1 as time, column 2 as value and column 4 as name
     with linear interpolation restricted to [-1,1]
 }
 
 law file lawFileJson {
     named "sensorName2"
-    from local json "path/to/script/sensorData2.json"
-    using field "t" as time, field "v" as value and field "n" as name
+    from distant json "http://url.to.script/sensorData2.json"
+    using field "x" as time, field "v" as value and field "n" as name
 }
 
 # sensors
