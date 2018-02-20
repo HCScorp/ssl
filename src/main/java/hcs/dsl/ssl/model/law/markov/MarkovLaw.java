@@ -1,13 +1,13 @@
 package hcs.dsl.ssl.model.law.markov;
 
 import hcs.dsl.ssl.model.law.Law;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 
 import java.util.List;
 
 public class MarkovLaw extends Law {
 
-    private VarType type;
+    private ValType type;
     private List<Edge> list;
 
     public MarkovLaw(String name) {
@@ -15,11 +15,11 @@ public class MarkovLaw extends Law {
     }
 
     @Override
-    public VarType getValType() {
+    public ValType getValType() {
         return type;
     }
 
-    public void setValType(VarType type) {
+    public void setValType(ValType type) {
         this.type = type;
     }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import hcs.dsl.ssl.model.law.file.header.CsvHeader;
 import hcs.dsl.ssl.model.law.file.header.HeaderType;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,7 +60,7 @@ public class FileLawCsv extends FileLaw {
 
         // Resolve value type
         String firstValue = firstEntry[indexValue];
-        VarType typeData = resolveValueType(firstValue);
+        ValType typeData = resolveValueType(firstValue);
         setValType(typeData);
 
         // Parse CSV

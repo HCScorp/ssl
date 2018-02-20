@@ -13,11 +13,11 @@ import hcs.dsl.ssl.runtime.sensor.*;
     #if (${law.type.name()} == "MARKOV")
         #set($markovLaw = $MarkovLaw.cast($law))
 
-class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType()}> {
+class Law_${markovLaw.name} extends MarkovLaw<${markovLaw.getValType().name()}> {
     public Law_${law.name}() {
         super();
     #foreach($edge in ${markovLaw.getList()})
-        #if(${markovLaw.getValType()} == "String")
+        #if(${markovLaw.getValType().name()} == "String")
         addEdge( "$edge.from", $edge.proba, "$edge.to" );
         #else
         addEdge( $edge.from, $edge.proba, $edge.to );
@@ -49,7 +49,7 @@ class Law_${law.name} extends FunctionLawDouble {
     public Law_${law.name}() {
         super();
         #foreach($case in ${functionLaw.getCases()})
-        addCase("${case.condition}", "${case.expresion}");
+        addCase("${case.condition}", "${case.expression}");
         #end
     }
 }
@@ -57,7 +57,7 @@ class Law_${law.name} extends FunctionLawDouble {
         #set($fileLaw = $FileLaw.cast($law))
 
         #if ($fileLaw.interpolation)
-            #set($linearType = ${fileLaw.valType})
+            #set($linearType = ${fileLaw.getValType().name()})
 
 class Law_${law.name} extends LinearInterpolationLaw$linearType {
     public Law_${law.name}() {
@@ -68,9 +68,9 @@ class Law_${law.name} extends LinearInterpolationLaw$linearType {
     }
 }
         #else
-            #set ($varType = $law.getValType().name() )
+            #set ($valType = $law.getValType().name() )
 
-        class Law_${law.name} extends RawFileLaw<$varType> {
+        class Law_${law.name} extends RawFileLaw<$valType> {
     public Law_${law.name}() {
         #set($dataIterator = ${fileLaw.getData().iterator()})
         super(new TimeMetadata(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()})

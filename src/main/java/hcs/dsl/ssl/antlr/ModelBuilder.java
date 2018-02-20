@@ -19,13 +19,18 @@ import hcs.dsl.ssl.model.law.markov.MarkovLaw;
 import hcs.dsl.ssl.model.law.random.RandomLaw;
 import hcs.dsl.ssl.model.misc.Interval;
 import hcs.dsl.ssl.model.misc.ListWrapper;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 import hcs.dsl.ssl.model.sensor.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static hcs.dsl.ssl.antlr.grammar.SSLParser.*;
 
@@ -123,19 +128,19 @@ public class ModelBuilder extends SSLBaseListener {
 
     private static ListWrapper buildList(ListContext list) {
         if (list.list_double() != null) {
-            return new ListWrapper(VarType.Double, list.list_double().elem.stream()
+            return new ListWrapper(ValType.Double, list.list_double().elem.stream()
                     .map(ModelBuilder::toDouble)
                     .collect(Collectors.toList()));
         } else if (list.list_integer() != null) {
-            return new ListWrapper(VarType.Integer, list.list_integer().elem.stream()
+            return new ListWrapper(ValType.Integer, list.list_integer().elem.stream()
                     .map(ModelBuilder::toInt)
                     .collect(Collectors.toList()));
         } else if (list.list_boolean() != null) {
-            return new ListWrapper(VarType.Boolean, list.list_boolean().elem.stream()
+            return new ListWrapper(ValType.Boolean, list.list_boolean().elem.stream()
                     .map(ModelBuilder::toBoolean)
                     .collect(Collectors.toList()));
         } else if (list.list_string() != null) {
-            return new ListWrapper(VarType.String, list.list_string().elem.stream()
+            return new ListWrapper(ValType.String, list.list_string().elem.stream()
                     .map(ModelBuilder::toStringTrim)
                     .collect(Collectors.toList()));
         }
@@ -153,31 +158,43 @@ public class ModelBuilder extends SSLBaseListener {
         MarkovLaw law = new MarkovLaw(toString(ctx.name));
         Markov_defContext def = ctx.markov_def();
 
-        if (!def.edge_double().isEmpty()) {
-            law.setValType(VarType.Double);
-            law.setList(def.edge_double().stream()
-                    .map(e -> new Edge<>(toDouble(e.from), toDouble(e.proba), toDouble(e.to)))
-                    .collect(Collectors.toList()));
-        } else if (!def.edge_integer().isEmpty()) {
-            law.setValType(VarType.Integer);
-            law.setList(def.edge_integer().stream()
-                    .map(e -> new Edge<>(toInt(e.from), toDouble(e.proba), toInt(e.to)))
-                    .collect(Collectors.toList()));
-        } else if (!def.edge_boolean().isEmpty()) {
-            law.setValType(VarType.Boolean);
-            law.setList(def.edge_boolean().stream()
-                    .map(e -> new Edge<>(toBoolean(e.from), toDouble(e.proba), toBoolean(e.to)))
-                    .collect(Collectors.toList()));
-        } else if (!def.edge_string().isEmpty()) {
-            law.setValType(VarType.String);
-            law.setList(def.edge_string().stream()
-                    .map(e -> new Edge<>(toStringTrim(e.from), toDouble(e.proba), toStringTrim(e.to)))
-                    .collect(Collectors.toList()));
-        } else {
+        setEdgesIfPresent(law, ValType.Double, def.edge_double(), ModelBuilder::toEdgeDouble);
+        setEdgesIfPresent(law, ValType.Integer, def.edge_integer(), ModelBuilder::toEdgeInteger);
+        setEdgesIfPresent(law, ValType.Boolean, def.edge_boolean(), ModelBuilder::toEdgeBoolean);
+        setEdgesIfPresent(law, ValType.String, def.edge_string(), ModelBuilder::toEdgeString);
+
+        if (law.getValType() == null) {
             throw new IllegalArgumentException("invalid markov law definition: " + def);
         }
 
         return law;
+    }
+
+    private static <T extends ParserRuleContext, V extends Serializable>
+    void setEdgesIfPresent(MarkovLaw law,
+                           ValType type,
+                           List<T> elems,
+                           Function<T, Edge<V>> mapper) {
+        if (!elems.isEmpty()) {
+            law.setValType(type);
+            law.setList(elems.stream().map(mapper).collect(Collectors.toList()));
+        }
+    }
+
+    private static Edge<Double> toEdgeDouble(Edge_doubleContext e) {
+        return new Edge<>(toDouble(e.from), toDouble(e.proba), toDouble(e.to));
+    }
+
+    private static Edge<Integer> toEdgeInteger(Edge_integerContext e) {
+        return new Edge<>(toInt(e.from), toDouble(e.proba), toInt(e.to));
+    }
+
+    private static Edge<Boolean> toEdgeBoolean(Edge_booleanContext e) {
+        return new Edge<>(toBoolean(e.from), toDouble(e.proba), toBoolean(e.to));
+    }
+
+    private static Edge<String> toEdgeString(Edge_stringContext e) {
+        return new Edge<>(toStringTrim(e.from), toDouble(e.proba), toStringTrim(e.to));
     }
 
     @Override
@@ -190,15 +207,57 @@ public class ModelBuilder extends SSLBaseListener {
         FunctionLaw law = new FunctionLaw(toString(ctx.name));
         Function_defContext def = ctx.function_def();
 
-        law.setCases(def.caseFunc().stream()
-                .map(ModelBuilder::toCaseFunc)
-                .collect(Collectors.toList()));
+        setCasesIfPresent(law, ValType.Double, def.caseFcExpr(), ModelBuilder::toCaseFuncExpr);
+        setCasesIfPresent(law, ValType.String, def.caseFcString(), ModelBuilder::toCaseFuncString);
+        setCasesIfPresent(law, ValType.Integer, def.caseFcInteger(), ModelBuilder::toCaseFuncInteger);
+        setCasesIfPresent(law, ValType.Double, def.caseFcDouble(), ModelBuilder::toCaseFuncDouble);
+        setCasesIfPresent(law, ValType.Boolean, def.caseFcBoolean(), ModelBuilder::toCaseFuncBoolean);
+
+        if (law.getValType() == null) {
+            throw new IllegalArgumentException("invalid function law definition: " + def);
+        }
 
         return law;
     }
 
-    private static CaseFunc toCaseFunc(CaseFuncContext e) {
-        return new CaseFunc(toStringTrim(e.cond), toStringTrim(e.expr));
+    private static <T extends ParserRuleContext> void setCasesIfPresent(FunctionLaw law,
+                                                                        ValType type,
+                                                                        List<T> elems,
+                                                                        Function<T, CaseFunc> mapper) {
+        if (!elems.isEmpty()) {
+            law.setValType(type);
+            law.setCases(elems.stream().map(mapper).collect(Collectors.toList()));
+        }
+    }
+
+    private static CaseFunc toCaseFuncExpr(CaseFcExprContext e) {
+        CaseFunc cf = new CaseFunc(toStringTrim(e.cond));
+        cf.setExpression(toStringTrim(e.expr));
+        return cf;
+    }
+
+    private static CaseFunc toCaseFuncString(CaseFcStringContext e) {
+        CaseFunc cf = new CaseFunc(toStringTrim(e.cond));
+        cf.setStrVal(toStringTrim(e.expr));
+        return cf;
+    }
+
+    private static CaseFunc toCaseFuncInteger(CaseFcIntegerContext e) {
+        CaseFunc cf = new CaseFunc(toStringTrim(e.cond));
+        cf.setIntVal(toInt(e.expr));
+        return cf;
+    }
+
+    private static CaseFunc toCaseFuncDouble(CaseFcDoubleContext e) {
+        CaseFunc cf = new CaseFunc(toStringTrim(e.cond));
+        cf.setDoubleVal(toDouble(e.expr));
+        return cf;
+    }
+
+    private static CaseFunc toCaseFuncBoolean(CaseFcBooleanContext e) {
+        CaseFunc cf = new CaseFunc(toStringTrim(e.cond));
+        cf.setBoolVal(toBoolean(e.expr));
+        return cf;
     }
 
 
@@ -324,8 +383,8 @@ public class ModelBuilder extends SSLBaseListener {
         if (def.noise() != null) {
             sensor.setNoise(buildInterval(def.noise().interval()));
 
-            VarType tLaw = laws.get(sensor.getLawRef()).getValType();
-            VarType tNoise = sensor.getNoise().getValType();
+            ValType tLaw = laws.get(sensor.getLawRef()).getValType();
+            ValType tNoise = sensor.getNoise().getValType();
             if (tLaw != tNoise) {
                 throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + def.noise().getText() + " does not match law value type " + tLaw + " for sensor " + sensor.getName());
             }
@@ -378,8 +437,8 @@ public class ModelBuilder extends SSLBaseListener {
         if (ctx.noise_override() != null) {
             sg.setNoise(buildInterval(ctx.noise_override().interval()));
 
-            VarType tLaw = laws.get(sensors.get(sensorRef).getLawRef()).getValType();
-            VarType tNoise = sg.getNoise().getValType();
+            ValType tLaw = laws.get(sensors.get(sensorRef).getLawRef()).getValType();
+            ValType tNoise = sg.getNoise().getValType();
             if (tLaw != tNoise) {
                 throw new IllegalArgumentException("noise of type " + tNoise + " from interval " + ctx.noise_override().getText() + " does not match law value type " + tLaw + " for sensor " + sensorRef);
             }

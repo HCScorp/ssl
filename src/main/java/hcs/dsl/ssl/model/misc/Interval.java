@@ -21,8 +21,8 @@ public class Interval<T extends Number> {
         return type;
     }
 
-    public VarType getValType() {
-        return VarType.valueOf(type.name());
+    public ValType getValType() {
+        return ValType.valueOf(type.name());
     }
 
     public T getMin() {

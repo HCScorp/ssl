@@ -1,7 +1,7 @@
 package hcs.dsl.ssl.model.law;
 
 import hcs.dsl.ssl.model.Namable;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 
 public abstract class Law implements Namable {
 
@@ -28,5 +28,5 @@ public abstract class Law implements Namable {
         return type;
     }
 
-    public abstract VarType getValType();
+    public abstract ValType getValType();
 }

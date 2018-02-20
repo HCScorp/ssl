@@ -1,6 +1,6 @@
 package hcs.dsl.ssl.model.misc;
 
-public enum VarType {
+public enum ValType {
     Double,
     Integer,
     Boolean,

@@ -2,7 +2,7 @@ package hcs.dsl.ssl.model.law.file;
 
 import com.google.common.primitives.Doubles;
 import hcs.dsl.ssl.model.law.Law;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
 import org.apache.commons.validator.UrlValidator;
@@ -28,7 +28,7 @@ public abstract class FileLaw extends Law {
         CSV
     }
 
-    private VarType valType;
+    private ValType valType;
 
     protected final String fileUri;
     protected final String sensorName;
@@ -50,12 +50,12 @@ public abstract class FileLaw extends Law {
         this.fileType = fileType;
     }
 
-    public void setValType(VarType valType) { // TODO to use at the end of the computation
+    public void setValType(ValType valType) { // TODO to use at the end of the computation
         this.valType = valType;
     }
 
     @Override
-    public VarType getValType() {
+    public ValType getValType() {
         return valType;
     }
 
@@ -169,25 +169,25 @@ public abstract class FileLaw extends Law {
         computeInterpolation();
     }
 
-    protected VarType resolveValueType(String raw) {
-        return PATTERN_INTEGER.matcher(raw).matches() ? VarType.Integer
-                : PATTERN_DOUBLE.matcher(raw).matches() ? VarType.Double
-                : PATTERN_BOOLEAN.matcher(raw).matches() ? VarType.Boolean
-                : VarType.String;
+    protected ValType resolveValueType(String raw) {
+        return PATTERN_INTEGER.matcher(raw).matches() ? ValType.Integer
+                : PATTERN_DOUBLE.matcher(raw).matches() ? ValType.Double
+                : PATTERN_BOOLEAN.matcher(raw).matches() ? ValType.Boolean
+                : ValType.String;
     }
 
     private void computeInterpolation() {
         // TODO resolve period?
 
-        if (valType == VarType.Boolean || valType == VarType.String) {
+        if (valType == ValType.Boolean || valType == ValType.String) {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");
         }
 
         double[] y;
         double[] x = data.stream().mapToDouble(sensorData -> (double) sensorData.getTimestamp()).toArray();
-        if (valType == VarType.Integer) {
+        if (valType == ValType.Integer) {
             y = data.stream().mapToDouble(sensorData -> (double) sensorData.getInteger()).toArray();
-        } else if (valType == VarType.Double) {
+        } else if (valType == ValType.Double) {
             y = data.stream().mapToDouble(SensorData::getDouble).toArray();
         } else {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");

@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 public class ListWrapper {
 
     private final List list;
-    private final VarType type;
+    private final ValType type;
 
-    public ListWrapper(VarType type, List list) {
+    public ListWrapper(ValType type, List list) {
         this.list = list;
         this.type = type;
     }
@@ -17,13 +17,13 @@ public class ListWrapper {
         return list;
     }
 
-    public VarType getType() {
+    public ValType getType() {
         return type;
     }
 
     @Override
     public String toString() {
-        if (type == VarType.String) {
+        if (type == ValType.String) {
             return list.stream().map(content -> "\"" + content + "\"")
                     .map(Object::toString).collect(Collectors.joining(",")).toString();
         }

@@ -15,13 +15,21 @@ law markov lawMarkov {
     "rainy" -> 0.5 -> "rainy"
 }
 
-law function lawFunctionMulti {
-    `x%86400 < 32200` => `4`
+law function lawFunctionMultiDouble {
+    `x%86400 < 32200` => `floor(x/25000000)`
     `x%86400 > 32200` => `abs(-(2*x^2) + 5*x - 1)`
     `x%86400 = 32200` => `0`
 }
 
-law function lawFunctionSimple {
+law function lawFcSimpleString {
+    `x` => "fromage"
+}
+
+law function lawFcSimpleInteger {
+    `x` => 42
+}
+
+law function lawFcSimpleDouble {
     `x` => `(x/100000000)^2`
 }
 

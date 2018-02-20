@@ -28,8 +28,12 @@ markov_def       :   (edge_integer+|edge_double+|edge_boolean+|edge_string+) ;
     edge_boolean :   TAB from=BOOLEAN ' -> ' proba=DOUBLE ' -> ' to=BOOLEAN NL;
     edge_string  :   TAB from=STRING  ' -> ' proba=DOUBLE ' -> ' to=STRING  NL;
 
-function_def     :   caseFunc+ ;
-    caseFunc     :   TAB cond=EXPRESSION ' => ' expr=EXPRESSION NL;
+function_def     :   (caseFcExpr+|caseFcInteger+|caseFcDouble+|caseFcString+|caseFcBoolean+) ;
+    caseFcExpr   :   TAB cond=EXPRESSION ' => ' expr=EXPRESSION NL;
+    caseFcInteger:   TAB cond=EXPRESSION ' => ' expr=INTEGER    NL;
+    caseFcDouble :   TAB cond=EXPRESSION ' => ' expr=DOUBLE     NL;
+    caseFcString :   TAB cond=EXPRESSION ' => ' expr=STRING     NL;
+    caseFcBoolean:   TAB cond=EXPRESSION ' => ' expr=BOOLEAN    NL;
 
 list             :   '(' (list_integer|list_double|list_boolean|list_string) ')' ;
     list_integer : elem+=INTEGER (COMMA elem+=INTEGER)* ;

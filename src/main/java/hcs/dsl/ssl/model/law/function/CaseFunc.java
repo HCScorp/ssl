@@ -9,26 +9,65 @@ public class CaseFunc {
     private static final String TS_VAR = "x";
 
     private final String condition;
-    private final String expresion;
+    private String expression;
+    private String strVal;
+    private Integer intVal;
+    private Double doubleVal;
+    private Boolean boolVal;
 
-    public CaseFunc(String condition, String expresion) {
+    public CaseFunc(String condition) {
         if (TS_VAR.equals(condition)) {
             condition = "TRUE";
         }
 
         checkCondition(condition);
-        checkExpression(expresion);
-
         this.condition = condition;
-        this.expresion = expresion;
     }
 
     public String getCondition() {
         return condition;
     }
 
-    public String getExpresion() {
-        return expresion;
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        checkExpression(expression);
+
+        this.expression = expression;
+    }
+
+    public String getStrVal() {
+        return strVal;
+    }
+
+    public void setStrVal(String strVal) {
+        this.strVal = strVal;
+    }
+
+    public Integer getIntVal() {
+        return intVal;
+    }
+
+    public void setIntVal(Integer intVal) {
+        this.intVal = intVal;
+    }
+
+    public Double getDoubleVal() {
+        return doubleVal;
+    }
+
+    public void setDoubleVal(Double doubleVal) {
+        this.doubleVal = doubleVal;
+    }
+
+    public Boolean getBoolVal() {
+        return boolVal;
+    }
+
+    public void setBoolVal(Boolean boolVal) {
+        this.boolVal = boolVal;
     }
 
     private static void checkCondition(String condition) {

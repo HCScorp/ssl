@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hcs.dsl.ssl.model.law.file.header.HeaderType;
 import hcs.dsl.ssl.model.law.file.header.JsonHeader;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,7 +45,7 @@ public class FileLawJson extends FileLaw {
         // Resolve value type
         Map<String, String> firstEntry = entries.get(0);
         String firstValue = firstEntry.get(keyValue);
-        VarType typeData = resolveValueType(firstValue);
+        ValType typeData = resolveValueType(firstValue);
         setValType(typeData);
 
         // Parse JSON

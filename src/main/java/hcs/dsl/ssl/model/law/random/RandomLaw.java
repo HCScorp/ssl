@@ -3,7 +3,7 @@ package hcs.dsl.ssl.model.law.random;
 import hcs.dsl.ssl.model.law.Law;
 import hcs.dsl.ssl.model.misc.Interval;
 import hcs.dsl.ssl.model.misc.ListWrapper;
-import hcs.dsl.ssl.model.misc.VarType;
+import hcs.dsl.ssl.model.misc.ValType;
 
 
 public class RandomLaw extends Law {
@@ -31,7 +31,7 @@ public class RandomLaw extends Law {
         this.interval = interval;
     }
 
-    public VarType getValType() {
-        return list != null ? list.getType() : VarType.valueOf(interval.type.name());
+    public ValType getValType() {
+        return list != null ? list.getType() : ValType.valueOf(interval.type.name());
     }
 }
