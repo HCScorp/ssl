@@ -44,6 +44,8 @@ Then run the simulation by executing:
 docker run DOCKER_USER/anApp
 ```
 
+The default configuration pushes simulation data to local influxdb on port 8086 in the database "ssl".
+
 For more example scripts, navigate to the [examples directory](src/main/resources/examples/)
 
 ## Old fashioned way
@@ -81,9 +83,10 @@ docker run DOCKER_USER/anApp
 
 Otherwise, you can override default InfluxDB configuration by running the following:
 ```
-docker run -e "SSL_INFLUX_ADDRESS=http://influxdb.address.com" \
-           -e "SSL_INFLUX_USER=user" \
-           -e "SSL_INFLUX_PWD=password" \
+docker run -e "SSL_INFLUXDB_ADDRESS=http://influxdb.address.com" \
+           -e "SSL_INFLUXDB_USER=user" \
+           -e "SSL_INFLUXDB_PWD=password" \
+           -e "SSL_INFLUXDB_DB=ssl" \
            DOCKER_USER/anApp
 ```
 
