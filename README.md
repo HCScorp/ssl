@@ -7,6 +7,8 @@ Sensor Simulation Language (SSL) is a domain specific language that allows one t
 It's goal is to feed an InfluxDB with simulated sensor's data. The execution supports two modes, replay and realtime.
 The replay mode feeds the database as fast as possible whereas the realtime mode simulates sensors over time.
 
+For complete demo with local InfluxDB and Grafana, take a look at the [demo directory](demo/).
+
 ## Quick start
 
 Assuming the following example, located in '~/aScript.ssl' :
