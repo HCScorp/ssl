@@ -49,6 +49,10 @@ public class FileLawCsv extends FileLaw {
                     "' but the CSV header appears to be missing");
         }
 
+        if (entries.isEmpty()) {
+            return;
+        }
+
         if (headerPresent) {
             entries.remove(0);
         }
@@ -59,7 +63,7 @@ public class FileLawCsv extends FileLaw {
         int indexValue = fetchIndexOf(HeaderType.VALUE, headerPresent, firstEntry);
 
         // Resolve value type
-        String firstValue = firstEntry[indexValue];
+        String firstValue = entries.get(0)[indexValue];
         ValType typeData = resolveValueType(firstValue);
         setValType(typeData);
 

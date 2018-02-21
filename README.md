@@ -39,7 +39,7 @@ To generate Docker images that contains defined apps in the script, simply execu
 
 Where DOCKER_USER will be the first part of the built image tag (of the form "DOCKER_USER/anApp").
 
-Then run the simulation by executing:
+Then run the simulation by executing (Docker need to be installed):
 ```
 docker run DOCKER_USER/anApp
 ```
@@ -62,7 +62,7 @@ To generate the simulation code, simply run this command after building SSL:
 mvn exec:java -Dexec.args="PATH_TO_SSL_SCRIPT"
 ```
 
-This will create a 'generated' directory where each subfolder is an app that contains the proper simulation code, ready to be executed.
+This will create a `generated` directory where each subfolder is an app that contains the proper simulation code, ready to be executed after a `mvn clean package`.
 
 ### Compile generated code and build Docker image
 

@@ -27,9 +27,9 @@ law markov lumiDehors {
 }
 
 law function polyMilieuJournee {
-    `x%(3600*24) < 32200` => `4`
-    `x%(3600*24) > 32200` => `abs(-(2*x^2) + 5*x - 1)`
-    `x%(3600*24) = 32200` => `0`
+    `x%86400 < 32200` => `4`
+    `x%86400 > 32200` => `abs(-(2*x^2) + 5*x - 1)`
+    `x%86400 = 32200` => `0`
 }
 
 law function simpleCarre {

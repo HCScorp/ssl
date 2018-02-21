@@ -1,0 +1,81 @@
+# laws
+
+law random lawRandomTest {
+    values in interval [0.0, 100.0]
+}
+
+law markov lawMarkovTest {
+    0 -> 0.8 -> 1
+    0 -> 0.2 -> 0
+    1 -> 0.2 -> 1
+    1 -> 0.8 -> 0
+}
+
+law function lawFunctionTest {
+    `x%86400 < 32200` => `sin(2*((x%86400 - 43200)/240)^2)`
+    `x%86400 = 32200` => `0`
+    `x%86400 > 32200` => `cos(2*((x%86400 - 43200)/240)^2)`
+}
+
+law file lawFileTest {
+    named "sensorX"
+    from local csv "demo/sensorData.csv"
+    using column "timestamp" as time, column "number" as value and column 4 as name
+    with linear interpolation restricted to [0, 26]
+}
+
+
+# sensors
+
+sensor sensorRandom {
+    governed by lawRandomTest
+    period 10m
+    noise [-10.0, 10.0]
+}
+
+sensor sensorMarkov {
+    governed by lawMarkovTest
+    period 30m
+}
+
+sensor sensorFunction {
+    governed by lawFunctionTest
+    period 10s
+}
+
+sensor sensorFile {
+    governed by lawFileTest
+    period 1h
+}
+
+
+# areas
+
+area randAndMarkov {
+    has 4 sensorRandom
+    has 2 sensorMarkov
+}
+
+area funcAndFile {
+    has 1 sensorFunction
+    has 1 sensorFile with noise [0, 2]
+}
+
+
+# apps
+
+app simulight { # will be run by the run.sh demo script
+    funcAndFile: A1
+    randAndMarkov: B1, B2
+}
+
+app simuheavy { # here for syntax demo purpose, will not be run
+    funcAndFile: C1, C2, C3
+    randAndMarkov: D1, D2, D3, D4, D5
+}
+
+global {
+    replay
+        start 20/02/2018 00:00
+        end 27/02/2018 00:00
+}

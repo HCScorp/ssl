@@ -9,6 +9,8 @@ if [ ! -f ./target/ssl-antlr-1.0-SNAPSHOT.jar ]; then
     mvn clean package
 fi
 
+rm -rf generated
+
 if [ ! -f $FILE ]; then
     echo "src/main/resources/examples/$FILE.ssl"
     if [ -f "src/main/resources/examples/$FILE.ssl" ]; then
