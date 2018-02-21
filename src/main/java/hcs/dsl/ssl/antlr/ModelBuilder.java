@@ -389,7 +389,7 @@ public class ModelBuilder extends SSLBaseListener {
             Interval interval = buildInterval(def.noise().interval());
 
             ValType tLaw = laws.get(sensor.getLawRef()).getValType();
-            ValType tNoise = sensor.getNoise().getValType();
+            ValType tNoise = interval.getValType();
             if (tLaw != tNoise) {
                 throw new IllegalArgumentException("noise of type " + tNoise
                         + " cannot be applied to sensor " + sensor.getName() + " of law type " + tLaw);
