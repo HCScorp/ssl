@@ -50,7 +50,7 @@ public abstract class FileLaw extends Law {
         this.fileType = fileType;
     }
 
-    public void setValType(ValType valType) { // TODO to use at the end of the computation
+    public void setValType(ValType valType) {
         this.valType = valType;
     }
 
@@ -177,8 +177,6 @@ public abstract class FileLaw extends Law {
     }
 
     private void computeInterpolation() {
-        // TODO resolve period?
-
         if (valType == ValType.Boolean || valType == ValType.String) {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");
         }

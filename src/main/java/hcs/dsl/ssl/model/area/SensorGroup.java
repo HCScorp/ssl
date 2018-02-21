@@ -6,7 +6,7 @@ public class SensorGroup {
 
     private final Integer number;
     private final String sensorRef;
-    private Interval noise; // todo check if noise is applicable ?
+    private Interval noise;
 
     @Override
     public String toString() {
@@ -41,7 +41,6 @@ public class SensorGroup {
     }
 
     public void setNoise(Interval noise) {
-        // TODO type check
         this.noise = noise;
     }
 
