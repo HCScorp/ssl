@@ -7,7 +7,7 @@ In the [demo](.) directory, start InfluxDB and Grafana by running:
 ./up.sh
 ```
 
-Then access Grafana at the address [http://localhost:8086](http://localhost:8086) and verify that there is no data displayed (dashboard `SSL demo`).
+Then access Grafana at the address [http://localhost:3000](http://localhost:3000), connect using the 'admin' user with 'admin' as password and verify that there is no data displayed (dashboard `SSL demo`).
 
 ## Generate apps and Docker images
 
