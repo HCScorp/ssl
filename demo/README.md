@@ -17,6 +17,8 @@ We are now going to generate simulation code and build docker image for `demo.ss
 ```
 If you want to, you can edit the script but beware that any update on names or elements addition will no be reflected on the pre-configured Grafana, you will have to do it yourself.
 
+Alternatively, you can run the `generate-realtime.sh` script that will do the same as above for the `demo_realtime.ssl` script, to demonstrate the realtime extension.
+
 ## Run the simulation
 You can now run the simulation (in the demo, only the 'simulight' will be executed, so its name must not change nor be deleted) by executing:
 ```
