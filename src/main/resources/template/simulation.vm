@@ -8,6 +8,7 @@ import hcs.dsl.ssl.runtime.law.random.*;
 import hcs.dsl.ssl.runtime.law.file.*;
 import hcs.dsl.ssl.runtime.noise.*;
 import hcs.dsl.ssl.runtime.sensor.*;
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 
 #foreach($law in $laws)
     #if (${law.type.name()} == "MARKOV")
@@ -62,8 +63,7 @@ class Law_${law.name} extends FunctionLaw${functionLaw.getFcType()} {
 class Law_${law.name} extends LinearInterpolationLaw$linearType {
     public Law_${law.name}() {
         super(new TimeMetadata(${fileLaw.getMinTimestamp()}, ${fileLaw.getMaxTimestamp()}),
-            new Expression("${fileLaw.interpolation}")
-            ${fileLaw.interpolation.codeRestriction()}
+            ${fileLaw.interpolation}
         );
     }
 }

@@ -4,7 +4,9 @@ import com.google.common.primitives.Doubles;
 import hcs.dsl.ssl.model.law.Law;
 import hcs.dsl.ssl.model.misc.ValType;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.validator.UrlValidator;
 
 
@@ -40,8 +42,8 @@ public abstract class FileLaw extends Law {
     protected File file;
     protected List<SensorData> data;
 
-    private long minTimestamp;
-    private long maxTimestamp;
+    protected long minTimestamp;
+    protected long maxTimestamp;
 
     protected FileLaw(String lawName, String fileUri, String sensorName, FileType fileType) {
         super(lawName, Type.FILE);
@@ -181,18 +183,22 @@ public abstract class FileLaw extends Law {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");
         }
 
+        double[] x = data.stream()
+                .map(sd -> sd.getTimestamp() - minTimestamp)
+                .mapToDouble(Long::doubleValue)
+                .toArray();
+
         double[] y;
-        double[] x = data.stream().mapToDouble(sensorData -> (double) sensorData.getTimestamp()).toArray();
         if (valType == ValType.Integer) {
-            y = data.stream().mapToDouble(sensorData -> (double) sensorData.getInteger()).toArray();
+            y = data.stream().mapToDouble(sd -> sd.getInteger().doubleValue()).toArray();
         } else if (valType == ValType.Double) {
             y = data.stream().mapToDouble(SensorData::getDouble).toArray();
         } else {
             throw new IllegalArgumentException("cannot interpolate data values of type " + valType + " for file '" + fileUri + "'");
         }
 
-        PolynomialFunctionLagrangeForm polynomialFunctionLagrangeForm = new PolynomialFunctionLagrangeForm(x, y);
-        interpolation.setCoefPolynome(Doubles.asList(polynomialFunctionLagrangeForm.getCoefficients()));
+        PolynomialSplineFunction psf = new LinearInterpolator().interpolate(x, y);
+        interpolation.setPolynomialFc(psf);
     }
 }
 

@@ -1,22 +1,17 @@
 package hcs.dsl.ssl.model.law.file;
 
 import hcs.dsl.ssl.model.misc.Interval;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 import java.util.List;
 
 public class Interpolation {
 
     private Interval restriction;
-
-    public List<Double> getCoefPolynome() {
-        return coefPolynome;
-    }
-
-    public void setCoefPolynome(List<Double> coefPolynome) {
-        this.coefPolynome = coefPolynome;
-    }
-
-    private List<Double> coefPolynome;
+    private PolynomialSplineFunction polynomialFc;
 
     public void setRestriction(Interval restriction) {
         this.restriction = restriction;
@@ -26,22 +21,33 @@ public class Interpolation {
         return restriction;
     }
 
-    public String codeRestriction() {
-        if (restriction != null) {
-            return ",new Restriction<>" + "(" + restriction + ")";
-        }
-        return "";
+    private String codeRestriction() {
+        return restriction != null ? "new Restriction<>" + "(" + restriction + ")" : "null";
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(coefPolynome.get(0));
-        for (int i = 1; i < coefPolynome.size(); i++) {
-            result.append("+").append(coefPolynome.get(i)).append("*x^").append(i);
+        StringBuilder sb = new StringBuilder(codeRestriction()).append(",");
+
+        sb.append("new double[] {")
+                .append(join(polynomialFc.getKnots()))
+                .append("}");
+
+
+        for (PolynomialFunction pf : polynomialFc.getPolynomials()) {
+            sb.append(", new PolynomialFunction(new double[]{")
+                    .append(join(pf.getCoefficients()))
+                    .append("})");
         }
 
+        return sb.toString();
+    }
 
-        return result.toString();
+    private static String join(double[] arr) {
+        return StringUtils.join(ArrayUtils.toObject(arr), ",");
+    }
+
+    public void setPolynomialFc(PolynomialSplineFunction polynomialFc) {
+        this.polynomialFc = polynomialFc;
     }
 }

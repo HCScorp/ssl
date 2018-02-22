@@ -5,7 +5,7 @@ grammar SSL;
  ** Parser rules **
  ******************/
 
-root         :   (law|sensor|area|app|NL)+ global? EOF ;
+root         :   (law|sensor|area|app|NL)+ global? (NL)* EOF ;
 
 // Law
 law          :   'law ' (random|markov|function|file) ;
@@ -86,7 +86,7 @@ global               : 'global {' NL global_def '}' ;
  ** Lexer rules **
  *****************/
 
-COMMENT             :   ' '* '#' ~( '\r' | '\n' )*     -> skip;     // Single line comments, starting with a #
+COMMENT             :   '\n'* ' '* '#' ~( '\r' | '\n' )*  -> skip;     // Single line comments, starting with a #
 
 FILE_TYPE           :   'json'  | 'csv';
 FILE_LOCATION       :   'local' | 'distant';
