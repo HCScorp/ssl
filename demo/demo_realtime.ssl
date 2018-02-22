@@ -29,23 +29,23 @@ law file lawFileTest {
 
 sensor sensorRandom {
     governed by lawRandomTest
-    period 10m
+    period 1s
     noise [-10.0, 10.0] # [inclusive, exclusive]
 }
 
 sensor sensorMarkov {
     governed by lawMarkovTest
-    period 2h
+    period 2s
 }
 
 sensor sensorFunction {
     governed by lawFunctionTest
-    period 10s
+    period 1s
 }
 
 sensor sensorFile {
     governed by lawFileTest
-    period 30m
+    period 3s
 }
 
 
@@ -75,7 +75,5 @@ app simuheavy { # here for syntax demo purpose, will not be run
 }
 
 global {
-    replay
-        start 01/02/2018 00:00
-        end 08/02/2018 00:00
+    realtime
 }
