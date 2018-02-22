@@ -26,3 +26,8 @@ You can now run the simulation (in the demo, only the 'simulight' will be execut
 This will populate the local InfluxDB. When the simulation is done, you can visualize generated data on the demo graph available on the local Grafana.
 
 ## Voila!
+
+After contemplating for long hours the beautiful graphs on Grafana, you can shut down the demo environment by executing the script:
+```
+./down.sh
+```
