@@ -8,24 +8,13 @@ public class SensorGroup {
     private final String sensorRef;
     private Interval noise;
 
-    @Override
-    public String toString() {
-        String base = "new SensorGroup(" + number + "," + "Sensor_" + sensorRef + ".class";
-        String noiseConstruct = "";
-        if (noise != null) {
-            if (noise.type == Interval.Type.Double) {
-                noiseConstruct = ", new NoiseDouble(" + noise + ")";
-            } else {
-                noiseConstruct = ", new NoiseInteger(" + noise + ")";
-            }
-        }
-        return base + noiseConstruct + ")";
-    }
-
-
     public SensorGroup(String sensorRef, Integer number) {
         this.sensorRef = sensorRef;
         this.number = number;
+
+        if (number <= 0) {
+            throw new IllegalArgumentException("number of sensor can't be " + number + " (sensor group " + sensorRef + ")");
+        }
     }
 
     public Integer getNumber() {
@@ -44,4 +33,17 @@ public class SensorGroup {
         this.noise = noise;
     }
 
+    @Override
+    public String toString() {
+        String base = "new SensorGroup(" + number + "," + "Sensor_" + sensorRef + ".class";
+        String noiseConstruct = "";
+        if (noise != null) {
+            if (noise.type == Interval.Type.Double) {
+                noiseConstruct = ", new NoiseDouble(" + noise + ")";
+            } else {
+                noiseConstruct = ", new NoiseInteger(" + noise + ")";
+            }
+        }
+        return base + noiseConstruct + ")";
+    }
 }
